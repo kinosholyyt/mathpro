@@ -6,7 +6,7 @@
   <title>Әкімші панелі · MathPro</title>
   <meta name="robots" content="noindex">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&subset=cyrillic-ext&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=6">
+  <link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
 
@@ -43,7 +43,6 @@
       <button class="btn" data-qoiyndy="oqushy">👥 Оқушылар</button>
       <button class="btn" data-qoiyndy="sabak">📘 Сабақтар</button>
       <button class="btn" data-qoiyndy="esep">✏️ Есептер</button>
-      <button class="btn" data-qoiyndy="fail">💾 Сақтау және файл</button>
     </div>
 
 
@@ -151,35 +150,15 @@
     </section>
 
 
-    <!-- ----- Сақтау және файл ----- -->
-    <section id="q-fail" class="jasyryn">
-      <div class="tor" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">
-        <div class="karta">
-          <h3>1. Өзгерістер қайда сақталады?</h3>
-          <p class="mut" style="margin-top:8px">Панельде сақтаған сабақ пен есеп <b>Firebase дерекқорына</b> жазылады және <b>барлық оқушыға бірден</b> көрінеді. Файлды GitHub-қа салудың керегі жоқ.</p>
-        </div>
-        <div class="karta">
-          <h3>2. Сақтық көшірме</h3>
-          <p class="mut" style="margin:8px 0 14px">Барлық сабақ пен есепті derekter.js файлына жүктеп алып, сақтап қоюға болады.</p>
-          <button class="btn btn-sary" id="fail-jukteu">⬇️ derekter.js жүктеп алу</button>
-        </div>
-        <div class="karta">
-          <h3>3. Бастапқы қалпына қайтару</h3>
-          <p class="mut" style="margin:8px 0 14px">Дерекқордағы өзгерістерді өшіріп, сайтты derekter.js файлындағы бастапқы мазмұнға қайтарады.</p>
-          <button class="btn btn-qyzyl" id="qalpyna">↺ Өзгерістерді өшіру</button>
-        </div>
-      </div>
-      <p class="mut" id="ozgeris-kuii" style="margin-top:16px"></p>
-    </section>
   </main>
 
   <!-- Firebase кітапханасы (кіру және дерекқор) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="js/firebase-baptau.js?v=6"></script>
-  <script src="js/derekter.js?v=6"></script>
-  <script src="js/ortak.js?v=6"></script>
-  <script src="js/admin.js?v=6"></script>
+  <script src="js/firebase-baptau.js?v=7"></script>
+  <script src="js/derekter.js?v=7"></script>
+  <script src="js/ortak.js?v=7"></script>
+  <script src="js/admin.js?v=7"></script>
 </body>
 </html>

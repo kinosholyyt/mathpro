@@ -5,7 +5,6 @@
 
 let ozgertilipJatqanSabak = null;  // қай сабақ өзгертіліп жатыр (жаңа болса null)
 let ozgertilipJatqanEsep = null;   // қай есеп өзгертіліп жатыр (жаңа болса null)
-let mazmunDerekqordaBar = false;   // сабақтар дерекқордан алына ма
 
 
 // ----- 1. КІРУ ЖӘНЕ ШЫҒУ -----
@@ -45,7 +44,6 @@ function mazmundyJukteu() {
       let mazmun = doc.data();
       if (mazmun.SABAKTAR) SABAKTAR = mazmun.SABAKTAR;
       if (mazmun.ESEPTER) ESEPTER = mazmun.ESEPTER;
-      mazmunDerekqordaBar = true;
     }
     paneldiAshu();
   }).catch(function (q) {
@@ -61,7 +59,6 @@ function paneldiAshu() {
   sabakFormasynTazalau();
   esepTiziminKorset();
   esepFormasynTazalau();
-  ozgerisKuiin();
 }
 
 document.getElementById("kiru-btn").onclick = kiru;
@@ -81,7 +78,7 @@ let qoiyndyBatyrmalary = document.querySelectorAll("[data-qoiyndy]");
 for (let i = 0; i < qoiyndyBatyrmalary.length; i++) {
   qoiyndyBatyrmalary[i].onclick = function () {
     let atauy = this.getAttribute("data-qoiyndy");
-    let bolimder = ["stat", "oqushy", "sabak", "esep", "fail"];
+    let bolimder = ["stat", "oqushy", "sabak", "esep"];
     for (let j = 0; j < bolimder.length; j++) {
       document.getElementById("q-" + bolimder[j]).classList.add("jasyryn");
     }
@@ -141,21 +138,9 @@ function teoriyaMatini(html) {
 // Өзгерістерді дерекқорға сақтау. Барлық оқушы бірден жаңасын көреді.
 function mazmundySaqtau() {
   let mazmun = { SABAKTAR: SABAKTAR, ESEPTER: ESEPTER };
-  db.collection("mazmun").doc("negizgi").set(mazmun).then(function () {
-    mazmunDerekqordaBar = true;
-    ozgerisKuiin();
-  }).catch(function (q) {
+  db.collection("mazmun").doc("negizgi").set(mazmun).catch(function (q) {
     alert("Сақталмады! Интернетті тексер.\n" + q.message);
   });
-}
-
-function ozgerisKuiin() {
-  let kuii = document.getElementById("ozgeris-kuii");
-  if (mazmunDerekqordaBar) {
-    kuii.textContent = "✅ Сабақтар мен есептер дерекқордан алынады. Өзгерістер барлық оқушыға бірден көрінеді.";
-  } else {
-    kuii.textContent = "Сайт әзірге derekter.js файлындағы бастапқы мазмұнмен жұмыс істеп тұр. Бірінші өзгерісті сақтағанда, мазмұн дерекқорға көшеді.";
-  }
 }
 
 // Тарау таңдайтын тізімді толтыру
@@ -783,38 +768,3 @@ document.getElementById("jana-esep").onclick = function () {
 };
 document.getElementById("esep-saqtau").onclick = esepteSaqtau;
 document.getElementById("esep-boldyrmau").onclick = esepFormasynTazalau;
-
-
-// ----- 7. ФАЙЛ -----
-
-// Барлық мазмұнды derekter.js файлының мәтініне айналдыру
-function failMatini() {
-  return "// =====================================================\n" +
-    "// ДЕРЕКТЕР: сайттың барлық мазмұны осы файлда\n" +
-    "// Бұл файлды әкімші панелі жасады: " + bugingiKun() + "\n" +
-    "// =====================================================\n\n" +
-    "let TARAULAR = " + JSON.stringify(TARAULAR, null, 2) + ";\n\n" +
-    "let SABAKTAR = " + JSON.stringify(SABAKTAR, null, 2) + ";\n\n" +
-    "let ESEPTER = " + JSON.stringify(ESEPTER, null, 2) + ";\n\n" +
-    "let TESTTER = " + JSON.stringify(TESTTER, null, 2) + ";\n\n" +
-    "let FORMULALAR = " + JSON.stringify(FORMULALAR, null, 2) + ";\n\n" +
-    "let VIKTORINA = " + JSON.stringify(VIKTORINA, null, 2) + ";\n";
-}
-
-document.getElementById("fail-jukteu").onclick = function () {
-  let fail = new Blob([failMatini()], { type: "text/javascript" });
-  let silteme = document.createElement("a");
-  silteme.href = URL.createObjectURL(fail);
-  silteme.download = "derekter.js";
-  silteme.click();
-  habarKorset("⬇️ derekter.js жүктелді");
-};
-
-document.getElementById("qalpyna").onclick = function () {
-  if (!confirm("Дерекқордағы барлық өзгеріс өшеді, сайт derekter.js файлындағы бастапқы сабақтарға қайтады. Жалғастырайық па?")) return;
-  db.collection("mazmun").doc("negizgi").delete().then(function () {
-    location.reload();
-  }).catch(function (q) {
-    alert("Өшірілмеді: " + q.message);
-  });
-};
