@@ -109,14 +109,14 @@ textarea { min-height: 90px; resize: vertical; }
 /* ----- БАСТЫ БЕТ ----- */
 .basty {
   display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; align-items: center; margin-bottom: 36px;
-  background: linear-gradient(135deg, var(--kok), var(--kulgin)); color: #fff;
-  padding: 36px; border-radius: 28px; box-shadow: 0 14px 40px rgba(61, 110, 245, .25);
+  background: #1f2a5c; border: 1px solid #3a4a8a; color: #fff;
+  padding: 36px; border-radius: 28px;
 }
-.basty > div:first-child > .mut { color: #e4e8ff; }
+.basty > div:first-child > .mut { color: #b8c0e6; }
 .basty .karta { color: var(--matin); }
 .basty h1 { font-size: 50px; }
 .basty h1 em { font-style: normal; color: var(--sary); }
-.belgi { display: inline-block; background: #ffffff26; color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+.belgi { display: inline-block; background: #ffffff1a; color: #9fe1cb; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: 700; margin-bottom: 10px; }
 .batyrmalar { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
 .bolim-karta { display: block; transition: transform .15s; }
 .bolim-karta:hover { transform: translateY(-3px); }
@@ -286,8 +286,8 @@ textarea { min-height: 90px; resize: vertical; }
 .belgi-karta.jabyq { opacity: .35; filter: grayscale(1); }
 
 /* ----- КҮН ТАПСЫРМАСЫ ----- */
-.kun-karta { background: linear-gradient(135deg, var(--kok), var(--kulgin)); color: #fff; }
-.kun-karta .mut { color: #e4e8ff; }
+.kun-karta { background: #1f2a5c; border: 1px solid #3a4a8a !important; color: #fff; }
+.kun-karta .mut { color: #b8c0e6; }
 .kun-karta .jolaq { background: #ffffff33; }
 
 @media (max-width: 860px) {
