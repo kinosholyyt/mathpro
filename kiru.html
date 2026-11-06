@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Кіру · MathPro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&subset=cyrillic-ext&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="kiru-bet">
+    <div class="karta kiru-karta">
+      <div class="logo" style="justify-content:center;margin-bottom:18px"><i>∑</i><span style="color:var(--matin)">MathPro</span></div>
+
+      <!-- Қойындылар: Кіру / Тіркелу -->
+      <div class="kiru-qoiyndy">
+        <button class="btn belsendi" id="q-kiru">Кіру</button>
+        <button class="btn" id="q-tirkelu">Тіркелу</button>
+      </div>
+
+      <!-- 1. Кіру формасы -->
+      <div id="kiru-forma">
+        <div class="oris"><label>Логин</label><input type="text" id="k-login" autocomplete="username"></div>
+        <div class="oris"><label>Құпия сөз</label><input type="password" id="k-qupiya" autocomplete="current-password"></div>
+        <p class="qyzyl" id="k-qate"></p>
+        <button class="btn btn-sary" id="kiru-btn" style="width:100%">Кіру →</button>
+        <p class="mut" style="margin-top:14px;text-align:center;font-size:15px">Аккаунтың жоқ па? <a class="sary" href="#" id="tirkeluge-otu"><b>Тіркел</b></a></p>
+      </div>
+
+      <!-- 2. Тіркелу формасы -->
+      <div id="tirkelu-forma" class="jasyryn">
+        <div class="oris"><label>Атың</label><input type="text" id="t-aty" maxlength="20" placeholder="Мысалы: Әли"></div>
+        <div class="oris"><label>Логин</label><input type="text" id="t-login" maxlength="20" placeholder="Мысалы: ali2010" autocomplete="username"><small>Латын әріптері, сандар және _ белгісі, 3–20 таңба.</small></div>
+        <div class="oris"><label>Құпия сөз</label><input type="password" id="t-qupiya" autocomplete="new-password"><small>Кемінде 4 таңба.</small></div>
+        <div class="oris"><label>Құпия сөзді қайтала</label><input type="password" id="t-qupiya2" autocomplete="new-password"></div>
+        <p class="qyzyl" id="t-qate"></p>
+        <button class="btn btn-sary" id="tirkelu-btn" style="width:100%">Тіркелу →</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/derekter.js"></script>
+  <script src="js/ortak.js"></script>
+  <script src="js/kiru.js"></script>
+</body>
+</html>

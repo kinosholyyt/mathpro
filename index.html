@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MathPro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&subset=cyrillic-ext&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Мәзір осы жерге JavaScript арқылы салынады -->
+  <header id="menu"></header>
+
+  <main class="ishki bet">
+
+    <!-- Жоғарғы бөлік -->
+    <section class="basty">
+      <div>
+        <span class="belgi">● Жеке репетитор</span>
+        <h1 id="salem">Математиканы <em>түсініп</em> үйрен</h1>
+        <p class="mut">Тақырыпты оқы, есеп шығар. Қателессең, шешу жолын қадам-қадаммен көрсетемін.</p>
+        <div class="batyrmalar">
+          <a class="btn btn-sary" id="jalgastyru" href="sabaktar.html">Сабақты бастау →</a>
+          <a class="btn" href="esepter.html">Есеп шығару</a>
+        </div>
+      </div>
+
+      <!-- Тараулар бойынша прогресс -->
+      <div class="karta">
+        <h3>Менің прогресім</h3>
+        <div id="progress"></div>
+        <p class="mut" style="margin-top:14px">⭐ <span id="upai-sany">0</span> ұпай · 🔥 <span id="qatar">1</span> күн қатарынан</p>
+      </div>
+    </section>
+
+    <h2>Бөлімдер</h2>
+    <div class="tor">
+      <a class="karta bolim-karta" href="sabaktar.html">
+        <div class="ikon" style="background:#e8eeff">📘</div>
+        <h3>Сабақтар</h3>
+        <p>Видео, теория, талданған мысал және тексеру сұрағы</p>
+      </a>
+      <a class="karta bolim-karta" href="esepter.html">
+        <div class="ikon" style="background:#e3f7ee">✏️</div>
+        <h3>Есептер</h3>
+        <p>Жауабыңды жаз, жүйе бірден тексереді</p>
+      </a>
+      <a class="karta bolim-karta" href="testter.html">
+        <div class="ikon" style="background:#fff1dd">📝</div>
+        <h3>Тест орталығы</h3>
+        <p>Әр тарау бойынша тест, таймермен</p>
+      </a>
+      <a class="karta bolim-karta" href="oiyndar.html">
+        <div class="ikon" style="background:#f0e8ff">🎮</div>
+        <h3>Ойындар</h3>
+        <p>Жылдам есеп және «Рас па, өтірік пе?»</p>
+      </a>
+      <a class="karta bolim-karta" href="natizhe.html">
+        <div class="ikon" style="background:#ffe6ec">📊</div>
+        <h3>Менің нәтижем</h3>
+        <p>Ұпай, прогресс, белгішелер</p>
+      </a>
+      <a class="karta bolim-karta" href="formulalar.html">
+        <div class="ikon" style="background:#fff6d6">📐</div>
+        <h3>Формулалар</h3>
+        <p>Барлық негізгі формула, іздеуі бар</p>
+      </a>
+      <a class="karta bolim-karta kun-karta" href="kun.html">
+        <div class="ikon" style="background:#ffffff33">🏆</div>
+        <h3>Күн тапсырмасы</h3>
+        <p class="mut" id="kun-qysqa">Бүгін 5 есеп шығар, +50 ұпай ал</p>
+      </a>
+    </div>
+  </main>
+
+  <!-- Алдымен деректер, сосын ортақ функциялар, соңында осы беттің коды -->
+  <script src="js/derekter.js"></script>
+  <script src="js/ortak.js"></script>
+  <script src="js/basty.js"></script>
+</body>
+</html>

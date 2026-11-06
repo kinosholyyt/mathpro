@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Сабақ · MathPro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&subset=cyrillic-ext&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="menu"></header>
+
+  <main class="ishki bet">
+    <div class="sabak-bet">
+
+      <!-- Сол жақ: тараудың сабақтары -->
+      <aside class="karta bui-panel" id="bui-panel"></aside>
+
+      <!-- Оң жақ: сабақтың өзі -->
+      <div>
+        <p class="mut" id="jol"></p>
+        <h1 id="taqyryp"></h1>
+        <p class="mut" id="malimet" style="margin-bottom:18px"></p>
+
+        <!-- 1. Видео (бар болса) -->
+        <div id="video-orny"></div>
+
+        <!-- 2. Теория -->
+        <div class="karta bolim">
+          <h2>📖 Қысқаша теория</h2>
+          <div class="teoriya" id="teoriya"></div>
+        </div>
+
+        <!-- 3. Мысал: қадамдар бір-бірлеп ашылады -->
+        <div class="karta bolim">
+          <h2>🧩 Мысалды бірге талдаймыз</h2>
+          <p style="font-size:21px;font-weight:800" id="mysal-suraq"></p>
+          <div id="mysal-qadamdar"></div>
+          <button class="btn btn-sary btn-kishi" id="kelesi-qadam" style="margin-top:10px">Келесі қадам →</button>
+        </div>
+
+        <!-- 4. Түсінгенін тексеру -->
+        <div class="karta bolim" style="background:linear-gradient(135deg,#e3f7ee,#ffffff)">
+          <h2>✅ Түсіндің бе? Бір сұрақ:</h2>
+          <p id="tekseru-suraq" style="font-size:19px"></p>
+          <div class="nuskalar" id="nuskalar"></div>
+          <p id="tekseru-natije" style="margin-top:12px;min-height:26px"></p>
+          <div class="batyrmalar jasyryn" id="sonyndagy" style="margin-top:10px">
+            <a class="btn btn-sary" id="esepke-otu" href="#">Есептерді шығару ✏️</a>
+            <a class="btn" id="kelesi-sabak" href="#">Келесі сабақ →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/derekter.js"></script>
+  <script src="js/ortak.js"></script>
+  <script src="js/sabak.js"></script>
+</body>
+</html>

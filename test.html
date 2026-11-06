@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Тест · MathPro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&subset=cyrillic-ext&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="menu"></header>
+
+  <main class="ishki bet" style="max-width:820px">
+    <h1 id="test-aty"></h1>
+
+    <!-- 1. Сұрақтар терезесі -->
+    <div class="karta" id="suraq-bolimi">
+      <div class="test-bas">
+        <span class="mut" id="nomir"></span>
+        <span class="taimer" id="taimer">⏱ 10:00</span>
+      </div>
+      <div class="nuktelar" id="nuktelar"></div>
+      <div class="test-suraq" id="suraq"></div>
+      <div class="test-nuskalar" id="nuskalar"></div>
+      <div class="test-tomen">
+        <button class="btn btn-bos" id="artqa">← Артқа</button>
+        <button class="btn btn-sary" id="kelesi" disabled>Келесі →</button>
+      </div>
+    </div>
+
+    <!-- 2. Нәтиже терезесі -->
+    <div class="jasyryn" id="natije-bolimi">
+      <div class="karta" style="text-align:center;margin-bottom:18px">
+        <p class="mut">Сенің нәтижең</p>
+        <div class="natije-ulken" id="ball"></div>
+        <p id="baga" style="font-size:20px;font-weight:800;margin-top:10px"></p>
+        <div class="batyrmalar" style="justify-content:center">
+          <a class="btn btn-sary" id="qaita" href="#">Қайта тапсыру</a>
+          <a class="btn" href="testter.html">Барлық тесттер</a>
+        </div>
+      </div>
+      <div class="karta">
+        <h2>Сұрақтардың талдауы</h2>
+        <div id="talday"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/derekter.js"></script>
+  <script src="js/ortak.js"></script>
+  <script src="js/test.js"></script>
+</body>
+</html>

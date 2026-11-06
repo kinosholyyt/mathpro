@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ойындар · MathPro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&subset=cyrillic-ext&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="menu"></header>
+
+  <main class="ishki bet">
+    <h1>Ойындар</h1>
+    <p class="mut">Ойнап жүріп жаттық. Әр дұрыс жауап ұпай әкеледі.</p>
+
+    <!-- 1. Ойын таңдау -->
+    <div class="tor" id="oiyn-tandau" style="margin-top:24px">
+      <div class="karta">
+        <div style="font-size:40px">⚡</div>
+        <h3 style="margin:8px 0 4px">Жылдам есеп</h3>
+        <p class="mut">60 секундта қанша мысал шығарасың? Қателеспей шығарсаң, қатарынан шығарған мысалдарың (комбо) өседі.</p>
+        <p style="margin:12px 0">🏆 Рекорд: <b id="rekord-zhyldam">0</b></p>
+        <button class="btn btn-sary" id="bastau-zhyldam">Ойнау →</button>
+      </div>
+      <div class="karta">
+        <div style="font-size:40px">🧠</div>
+        <h3 style="margin:8px 0 4px">Рас па, өтірік пе?</h3>
+        <p class="mut">Математика туралы 10 тұжырым. Қайсысы рас, қайсысы өтірік екенін тап.</p>
+        <p style="margin:12px 0">🏆 Рекорд: <b id="rekord-viktorina">0</b> / 10</p>
+        <button class="btn btn-sary" id="bastau-viktorina">Ойнау →</button>
+      </div>
+    </div>
+
+    <!-- 2. Жылдам есеп ойыны -->
+    <div class="karta oiyn-alan jasyryn" id="zhyldam" style="margin-top:24px">
+      <div class="oiyn-bas">
+        <span>⏱ <b id="z-uaqyt">60</b> сек</span>
+        <span>🔥 Комбо: <b id="z-kombo">0</b></span>
+        <span>⭐ Ұпай: <b id="z-upai">0</b></span>
+      </div>
+      <div class="oiyn-suraq" id="z-suraq"></div>
+      <div class="oiyn-nuskalar" id="z-nuskalar"></div>
+      <div class="jasyryn" id="z-sony">
+        <div class="natije-ulken" id="z-natije" style="margin:10px 0"></div>
+        <p id="z-baga" style="font-size:19px;font-weight:800;margin-bottom:16px"></p>
+        <div class="batyrmalar" style="justify-content:center">
+          <button class="btn btn-sary" id="z-qaita">Қайта ойнау</button>
+          <button class="btn" onclick="menyugeOralu()">Ойындарға оралу</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Викторина -->
+    <div class="karta oiyn-alan jasyryn" id="viktorina" style="margin-top:24px">
+      <div class="oiyn-bas">
+        <span>Сұрақ <b id="v-nomir">1</b> / 10</span>
+        <span>✅ Дұрыс: <b id="v-durys">0</b></span>
+      </div>
+      <div class="viktorina-suraq" id="v-suraq"></div>
+      <div class="ras-otirik" id="v-batyrmalar">
+        <button class="btn btn-jasyl" id="v-ras">👍 Рас</button>
+        <button class="btn btn-qyzyl" id="v-otirik">👎 Өтірік</button>
+      </div>
+      <p id="v-tusindirme" style="margin-top:18px;min-height:28px;font-weight:700"></p>
+      <button class="btn btn-sary jasyryn" id="v-kelesi">Келесі →</button>
+      <div class="jasyryn" id="v-sony">
+        <div class="natije-ulken" id="v-natije" style="margin:10px 0"></div>
+        <div class="batyrmalar" style="justify-content:center">
+          <button class="btn btn-sary" id="v-qaita">Қайта ойнау</button>
+          <button class="btn" onclick="menyugeOralu()">Ойындарға оралу</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/derekter.js"></script>
+  <script src="js/ortak.js"></script>
+  <script src="js/oiyndar.js"></script>
+</body>
+</html>
