@@ -81,7 +81,7 @@ let qoiyndyBatyrmalary = document.querySelectorAll("[data-qoiyndy]");
 for (let i = 0; i < qoiyndyBatyrmalary.length; i++) {
   qoiyndyBatyrmalary[i].onclick = function () {
     let atauy = this.getAttribute("data-qoiyndy");
-    let bolimder = ["stat", "sabak", "esep", "fail"];
+    let bolimder = ["stat", "oqushy", "sabak", "esep", "fail"];
     for (let j = 0; j < bolimder.length; j++) {
       document.getElementById("q-" + bolimder[j]).classList.add("jasyryn");
     }
@@ -91,6 +91,7 @@ for (let i = 0; i < qoiyndyBatyrmalary.length; i++) {
     }
     this.classList.add("belsendi");
     if (atauy === "stat") statistikanyKorset();
+    if (atauy === "oqushy") oqushylardyKorset();
   };
 }
 
@@ -187,75 +188,257 @@ function sabakTiziminTolturu(select, barlygyBolsyn) {
 }
 
 
-// ----- 4. СТАТИСТИКА -----
+// ----- 4. СТАТИСТИКА ЖӘНЕ ОҚУШЫЛАР -----
 
-function statistikanyKorset() {
-  let kartalar = [
-    ["📘", SABAKTAR.length, "сабақ"],
-    ["✏️", ESEPTER.length, "есеп"],
-    ["📝", TESTTER.length, "тест"],
-    ["📐", FORMULALAR.length, "формула"]
-  ];
-  let html = "";
-  for (let i = 0; i < kartalar.length; i++) {
-    html += "<div class='karta'><span class='mut'>" + kartalar[i][0] + " " + kartalar[i][2] + "</span><b>" + kartalar[i][1] + "</b></div>";
-  }
-  document.getElementById("stat-kartalar").innerHTML = html;
+let OQUSHYLAR = []; // дерекқордан алынған барлық оқушы: [{ uid, ...деректері }]
 
-  // Тіркелген оқушылар кестесі: барлығын дерекқордан аламыз
-  let oryn = document.getElementById("stat-oqushy");
-  oryn.innerHTML = "<p class='mut'>Жүктелуде…</p>";
-
+// Барлық оқушыны дерекқордан жүктеу, сосын keyin() функциясын шақыру
+function oqushylardyJukteu(keyin) {
   db.collection("oqushylar").get().then(function (jauap) {
-    let kesteHtml = "";
-    let san = 0;
-
+    OQUSHYLAR = [];
     jauap.forEach(function (doc) {
-      san = san + 1;
       // Жетпейтін мәндер болса, бастапқы мәндермен толтырамыз
       let oqushy = bosOqushy();
       let saqtalgan = doc.data();
       for (let kilt in saqtalgan) oqushy[kilt] = saqtalgan[kilt];
-
-      let payz = 0;
-      if (oqushy.talpynys > 0) payz = Math.round(oqushy.durysSany * 100 / oqushy.talpynys);
-      let songyKun = oqushy.songyKun;
-      if (!songyKun) songyKun = "—";
-
-      kesteHtml +=
-        "<tr>" +
-          "<td><b>" + qauipsiz(oqushy.aty || "—") + "</b><br><span class='mut'>" + qauipsiz(oqushy.login || "") + "</span></td>" +
-          "<td>⭐ " + oqushy.upai + "</td>" +
-          "<td>" + sanau(oqushy.sabaktar) + " / " + SABAKTAR.length + "</td>" +
-          "<td>" + sanau(oqushy.esepter) + " / " + ESEPTER.length + "</td>" +
-          "<td>" + sanau(oqushy.testter) + " / " + TESTTER.length + "</td>" +
-          "<td>" + payz + "%</td>" +
-          "<td>" + songyKun + "</td>" +
-          "<td><button class='btn btn-kishi btn-qyzyl' data-oshiru='" + doc.id + "' data-aty='" + qauipsiz(oqushy.aty || "") + "' title='Нәтижесін өшіру'>🗑</button></td>" +
-        "</tr>";
+      oqushy.uid = doc.id;
+      if (!oqushy.aty) oqushy.aty = oqushy.login || "—";
+      OQUSHYLAR.push(oqushy);
     });
-
-    if (san === 0) {
-      oryn.innerHTML = "<p class='mut'>Әзірге ешкім тіркелмеген.</p>";
-    } else {
-      oryn.innerHTML =
-        "<div style='overflow-x:auto'><table class='oqushy-keste'>" +
-          "<tr><th>Оқушы</th><th>Ұпай</th><th>Сабақ</th><th>Есеп</th><th>Тест</th><th>Дәлдік</th><th>Соңғы кірген</th><th></th></tr>" +
-          kesteHtml +
-        "</table></div>";
-    }
-    document.getElementById("oqushy-sany").textContent = san;
-
-    // Өшіру батырмалары
-    let batyrmalar = oryn.querySelectorAll("[data-oshiru]");
-    for (let i = 0; i < batyrmalar.length; i++) {
-      batyrmalar[i].onclick = function () {
-        oqushynyOshiru(this.getAttribute("data-oshiru"), this.getAttribute("data-aty"));
-      };
-    }
+    keyin();
   }).catch(function (q) {
-    oryn.innerHTML = "<p class='qyzyl'>Оқушылар жүктелмеді: " + q.message + "</p>";
+    document.getElementById("stat-oqushy").innerHTML = "<p class='qyzyl'>Оқушылар жүктелмеді: " + q.message + "</p>";
   });
+}
+
+// Оқушының дәлдігі, пайызбен
+function dalDik(oqushy) {
+  if (oqushy.talpynys === 0) return 0;
+  return Math.round(oqushy.durysSany * 100 / oqushy.talpynys);
+}
+
+// Бір оқушының бір тараудағы пайызы (сабақтар мен есептер бойынша)
+function oqushyTarauPayzy(oqushy, tarauId) {
+  let barlygy = 0;
+  let oryndalgan = 0;
+  let sabaktar = tarauSabaktary(tarauId);
+  for (let i = 0; i < sabaktar.length; i++) {
+    barlygy = barlygy + 1;
+    if (oqushy.sabaktar[sabaktar[i].id]) oryndalgan = oryndalgan + 1;
+    let esepter = sabakEsepteri(sabaktar[i].id);
+    for (let j = 0; j < esepter.length; j++) {
+      barlygy = barlygy + 1;
+      if (oqushy.esepter[esepter[j].id]) oryndalgan = oryndalgan + 1;
+    }
+  }
+  if (barlygy === 0) return 0;
+  return Math.round(oryndalgan * 100 / barlygy);
+}
+
+
+// --- 4.1 Статистика қойындысы: жалпы сандар және үздік 5 оқушы ---
+
+function statistikanyKorset() {
+  oqushylardyJukteu(function () {
+    let bugin = bugingiKun();
+    let bugingiler = 0;
+    let jalpyUpai = 0;
+    for (let i = 0; i < OQUSHYLAR.length; i++) {
+      if (OQUSHYLAR[i].songyKun === bugin) bugingiler = bugingiler + 1;
+      jalpyUpai = jalpyUpai + OQUSHYLAR[i].upai;
+    }
+    let ortaUpai = 0;
+    if (OQUSHYLAR.length > 0) ortaUpai = Math.round(jalpyUpai / OQUSHYLAR.length);
+
+    let kartalar = [
+      ["👥", OQUSHYLAR.length, "оқушы"],
+      ["🟢", bugingiler, "бүгін кірді"],
+      ["⭐", ortaUpai, "орташа ұпай"],
+      ["📘", SABAKTAR.length, "сабақ"],
+      ["✏️", ESEPTER.length, "есеп"],
+      ["📝", TESTTER.length, "тест"]
+    ];
+    let html = "";
+    for (let i = 0; i < kartalar.length; i++) {
+      html += "<div class='karta'><span class='mut'>" + kartalar[i][0] + " " + kartalar[i][2] + "</span><b>" + kartalar[i][1] + "</b></div>";
+    }
+    document.getElementById("stat-kartalar").innerHTML = html;
+
+    // Үздік 5 оқушы (ұпайы бойынша)
+    let tizim = OQUSHYLAR.slice();
+    tizim.sort(function (a, b) { return b.upai - a.upai; });
+    let uzdik = "";
+    let medal = ["🥇", "🥈", "🥉", "4.", "5."];
+    for (let i = 0; i < tizim.length && i < 5; i++) {
+      uzdik += "<div class='tarau-qatar'><span>" + medal[i] + " " + qauipsiz(tizim[i].aty) + " <span class='mut'>(" + qauipsiz(tizim[i].login) + ")</span></span><b>⭐ " + tizim[i].upai + "</b></div>";
+    }
+    if (uzdik === "") uzdik = "<p class='mut'>Әзірге ешкім тіркелмеген.</p>";
+    document.getElementById("stat-uzdik").innerHTML = uzdik;
+  });
+}
+
+
+// --- 4.2 Оқушылар қойындысы: тізім ---
+
+function oqushylardyKorset() {
+  document.getElementById("oqushy-tizim-bolimi").classList.remove("jasyryn");
+  document.getElementById("oqushy-detal-bolimi").classList.add("jasyryn");
+  document.getElementById("stat-oqushy").innerHTML = "<p class='mut'>Жүктелуде…</p>";
+  oqushylardyJukteu(oqushyKestesin);
+}
+
+function oqushyKestesin() {
+  let izdeu = document.getElementById("oqushy-izdeu").value.trim().toLowerCase();
+  let suryptau = document.getElementById("oqushy-suryptau").value;
+
+  // Іздеу: аты немесе логині бойынша
+  let tizim = [];
+  for (let i = 0; i < OQUSHYLAR.length; i++) {
+    let matin = (OQUSHYLAR[i].aty + " " + OQUSHYLAR[i].login).toLowerCase();
+    if (izdeu === "" || matin.indexOf(izdeu) >= 0) tizim.push(OQUSHYLAR[i]);
+  }
+
+  // Сұрыптау
+  tizim.sort(function (a, b) {
+    if (suryptau === "aty") return a.aty.localeCompare(b.aty, "kk");
+    if (suryptau === "songyKun") return (b.songyKun || "").localeCompare(a.songyKun || "");
+    return b.upai - a.upai;
+  });
+
+  document.getElementById("oqushy-sany").textContent = OQUSHYLAR.length;
+  let oryn = document.getElementById("stat-oqushy");
+
+  if (tizim.length === 0) {
+    oryn.innerHTML = "<p class='mut'>Оқушы табылмады.</p>";
+    return;
+  }
+
+  let html = "";
+  for (let i = 0; i < tizim.length; i++) {
+    let oqushy = tizim[i];
+    let songyKun = oqushy.songyKun;
+    if (!songyKun) songyKun = "—";
+    html +=
+      "<tr class='oqushy-qatar' data-uid='" + oqushy.uid + "'>" +
+        "<td><b>" + qauipsiz(oqushy.aty) + "</b><br><span class='mut'>" + qauipsiz(oqushy.login) + "</span></td>" +
+        "<td>⭐ " + oqushy.upai + "</td>" +
+        "<td>" + sanau(oqushy.sabaktar) + " / " + SABAKTAR.length + "</td>" +
+        "<td>" + sanau(oqushy.esepter) + " / " + ESEPTER.length + "</td>" +
+        "<td>" + sanau(oqushy.testter) + " / " + TESTTER.length + "</td>" +
+        "<td>" + dalDik(oqushy) + "%</td>" +
+        "<td>" + songyKun + "</td>" +
+      "</tr>";
+  }
+  oryn.innerHTML =
+    "<div style='overflow-x:auto'><table class='oqushy-keste'>" +
+      "<tr><th>Оқушы</th><th>Ұпай</th><th>Сабақ</th><th>Есеп</th><th>Тест</th><th>Дәлдік</th><th>Соңғы кірген</th></tr>" +
+      html +
+    "</table></div>";
+
+  // Қатарды басса, оқушының толық статистикасы ашылады
+  let qatarlar = oryn.querySelectorAll(".oqushy-qatar");
+  for (let i = 0; i < qatarlar.length; i++) {
+    qatarlar[i].onclick = function () {
+      oqushyDetalin(this.getAttribute("data-uid"));
+    };
+  }
+}
+
+document.getElementById("oqushy-izdeu").oninput = oqushyKestesin;
+document.getElementById("oqushy-suryptau").onchange = oqushyKestesin;
+document.getElementById("oqushy-janartu").onclick = oqushylardyKorset;
+document.getElementById("oqushy-artqa").onclick = function () {
+  document.getElementById("oqushy-detal-bolimi").classList.add("jasyryn");
+  document.getElementById("oqushy-tizim-bolimi").classList.remove("jasyryn");
+};
+
+
+// --- 4.3 Бір оқушының толық статистикасы ---
+
+function oqushyDetalin(uid) {
+  let oqushy = null;
+  for (let i = 0; i < OQUSHYLAR.length; i++) {
+    if (OQUSHYLAR[i].uid === uid) oqushy = OQUSHYLAR[i];
+  }
+  if (oqushy === null) return;
+
+  let dengei = Math.floor(oqushy.upai / 200) + 1;
+
+  // 1) Негізгі сандар
+  let html =
+    "<div class='karta bolim'><div class='profil'>" +
+      "<span class='avatar'>" + qauipsiz(oqushy.aty.charAt(0).toUpperCase()) + "</span>" +
+      "<div><h2 style='margin:0'>" + qauipsiz(oqushy.aty) + "</h2>" +
+      "<p class='mut'>Логин: " + qauipsiz(oqushy.login) + " · 🎓 " + dengei + "-деңгей</p></div>" +
+    "</div></div>";
+
+  let sandar = [
+    ["⭐ Ұпай", oqushy.upai],
+    ["🔥 Қатарынан", oqushy.qatar + " күн"],
+    ["🎯 Дәлдік", dalDik(oqushy) + "%"],
+    ["✅ Дұрыс жауап", oqushy.durysSany + " / " + oqushy.talpynys],
+    ["📅 Соңғы кірген", oqushy.songyKun || "—"]
+  ];
+  html += "<div class='statistika'>";
+  for (let i = 0; i < sandar.length; i++) {
+    html += "<div class='karta'><span class='mut'>" + sandar[i][0] + "</span><b style='font-size:22px'>" + sandar[i][1] + "</b></div>";
+  }
+  html += "</div>";
+
+  // 2) Тараулар және сабақтар
+  html += "<div class='admin-tor'><div class='karta'><h3 style='margin-bottom:8px'>Тараулар мен сабақтар</h3>";
+  for (let t = 0; t < TARAULAR.length; t++) {
+    let tarau = TARAULAR[t];
+    let payz = oqushyTarauPayzy(oqushy, tarau.id);
+    html +=
+      "<div class='tarau-qatar'><span>" + tarau.belgi + " <b>" + tarau.aty + "</b></span><b>" + payz + "%</b></div>" +
+      "<div class='jolaq'><i style='width:" + payz + "%;background:" + tarau.tus + "'></i></div>";
+    let sabaktar = tarauSabaktary(tarau.id);
+    for (let i = 0; i < sabaktar.length; i++) {
+      let esepter = sabakEsepteri(sabaktar[i].id);
+      let sheshilgen = 0;
+      for (let j = 0; j < esepter.length; j++) {
+        if (oqushy.esepter[esepter[j].id]) sheshilgen = sheshilgen + 1;
+      }
+      let belgi = "⬜";
+      if (oqushy.sabaktar[sabaktar[i].id]) belgi = "✅";
+      html += "<div style='font-size:14px;margin:4px 0 4px 6px'>" + belgi + " " + qauipsiz(sabaktar[i].aty) +
+              " <span class='mut'>· есеп " + sheshilgen + "/" + esepter.length + "</span></div>";
+    }
+  }
+  html += "</div>";
+
+  // 3) Тесттер, ойындар, күн тапсырмасы
+  html += "<div class='karta'><h3 style='margin-bottom:8px'>Тесттер</h3>";
+  for (let i = 0; i < TESTTER.length; i++) {
+    let natije = "<span class='mut'>тапсырылмаған</span>";
+    if (oqushy.testter[TESTTER[i].id] !== undefined) {
+      natije = "<b>" + oqushy.testter[TESTTER[i].id] + " / " + TESTTER[i].suraqtar.length + "</b>";
+    }
+    html += "<div class='tarau-qatar'><span>📝 " + TESTTER[i].aty + "</span>" + natije + "</div>";
+  }
+  html += "<h3 style='margin:18px 0 8px'>Ойындар</h3>" +
+    "<div class='tarau-qatar'><span>⚡ Жылдам есеп (рекорд)</span><b>" + oqushy.oiyndar.zhyldam + "</b></div>" +
+    "<div class='tarau-qatar'><span>🧠 Рас па, өтірік пе? (рекорд)</span><b>" + oqushy.oiyndar.viktorina + " / 10</b></div>";
+
+  let kun = "<span class='mut'>бүгін орындамаған</span>";
+  if (oqushy.kun && oqushy.kun.kuni === bugingiKun()) {
+    kun = "<b>" + oqushy.kun.sheshilgen.length + " / 5</b>";
+    if (oqushy.kun.bonus) kun = "<b class='jasyl'>✅ орындалды</b>";
+  }
+  html += "<h3 style='margin:18px 0 8px'>Күн тапсырмасы</h3>" +
+    "<div class='tarau-qatar'><span>🏆 Бүгін</span>" + kun + "</div>";
+
+  html += "<button class='btn btn-qyzyl btn-kishi' id='oqushy-oshiru' style='margin-top:20px'>🗑 Нәтижесін өшіру</button>";
+  html += "</div></div>";
+
+  document.getElementById("oqushy-detal").innerHTML = html;
+  document.getElementById("oqushy-oshiru").onclick = function () {
+    oqushynyOshiru(oqushy.uid, oqushy.aty);
+  };
+  document.getElementById("oqushy-tizim-bolimi").classList.add("jasyryn");
+  document.getElementById("oqushy-detal-bolimi").classList.remove("jasyryn");
+  scrollTo(0, 0);
 }
 
 // Оқушының нәтижесін өшіру.
@@ -264,8 +447,8 @@ function statistikanyKorset() {
 function oqushynyOshiru(uid, aty) {
   if (!confirm("«" + aty + "» оқушысының барлық нәтижесі өшеді. Жалғастырайық па?")) return;
   db.collection("oqushylar").doc(uid).delete().then(function () {
-    statistikanyKorset();
     habarKorset("🗑 Нәтиже өшірілді");
+    oqushylardyKorset();
   }).catch(function (q) {
     alert("Өшірілмеді: " + q.message);
   });

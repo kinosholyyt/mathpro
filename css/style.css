@@ -316,3 +316,7 @@ body.juklenude::after {
   content: "Жүктелуде…"; position: fixed; inset: 0; display: grid; place-items: center;
   color: #b8c0e6; font-size: 20px; font-weight: 800;
 }
+
+/* Әкімші панеліндегі оқушылар кестесі: қатарды басуға болады */
+.oqushy-qatar { cursor: pointer; }
+.oqushy-qatar:hover td { background: #e8eeff; }

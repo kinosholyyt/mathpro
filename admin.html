@@ -6,7 +6,7 @@
   <title>Әкімші панелі · MathPro</title>
   <meta name="robots" content="noindex">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&subset=cyrillic-ext&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=5">
+  <link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
 
@@ -40,6 +40,7 @@
     <!-- Қойындылар -->
     <div class="qoiyndylar">
       <button class="btn belsendi" data-qoiyndy="stat">📊 Статистика</button>
+      <button class="btn" data-qoiyndy="oqushy">👥 Оқушылар</button>
       <button class="btn" data-qoiyndy="sabak">📘 Сабақтар</button>
       <button class="btn" data-qoiyndy="esep">✏️ Есептер</button>
       <button class="btn" data-qoiyndy="fail">💾 Сақтау және файл</button>
@@ -50,9 +51,36 @@
     <section id="q-stat">
       <div class="statistika" id="stat-kartalar"></div>
       <div class="karta">
-        <h3>Тіркелген оқушылар: <span id="oqushy-sany">0</span></h3>
-        <p class="mut" style="margin:6px 0 14px">Барлық құрылғыдан тіркелген оқушылар осында көрінеді. Деректер Firebase дерекқорында сақталады.</p>
+        <h3>🏆 Үздік 5 оқушы</h3>
+        <div id="stat-uzdik" style="margin-top:10px"></div>
+      </div>
+    </section>
+
+
+    <!-- ----- Оқушылар ----- -->
+    <section id="q-oqushy" class="jasyryn">
+      <!-- 1. Тізім -->
+      <div class="karta" id="oqushy-tizim-bolimi">
+        <div class="admin-bas" style="margin-bottom:12px">
+          <h3>Тіркелген оқушылар: <span id="oqushy-sany">0</span></h3>
+          <button class="btn btn-kishi" id="oqushy-janartu">↻ Жаңарту</button>
+        </div>
+        <div class="eki" style="margin-bottom:12px">
+          <input type="text" id="oqushy-izdeu" placeholder="🔍 Аты немесе логині бойынша ізде">
+          <select id="oqushy-suryptau">
+            <option value="upai">Ұпайы бойынша</option>
+            <option value="aty">Аты бойынша (А–Я)</option>
+            <option value="songyKun">Соңғы кірген күні бойынша</option>
+          </select>
+        </div>
+        <p class="mut" style="font-size:14px;margin-bottom:10px">Оқушының толық статистикасын көру үшін оның атын бас.</p>
         <div id="stat-oqushy"></div>
+      </div>
+
+      <!-- 2. Бір оқушының толық статистикасы -->
+      <div class="jasyryn" id="oqushy-detal-bolimi">
+        <button class="btn btn-kishi" id="oqushy-artqa" style="margin-bottom:14px">← Тізімге оралу</button>
+        <div id="oqushy-detal"></div>
       </div>
     </section>
 
@@ -149,9 +177,9 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="js/firebase-baptau.js?v=5"></script>
-  <script src="js/derekter.js?v=5"></script>
-  <script src="js/ortak.js?v=5"></script>
-  <script src="js/admin.js?v=5"></script>
+  <script src="js/firebase-baptau.js?v=6"></script>
+  <script src="js/derekter.js?v=6"></script>
+  <script src="js/ortak.js?v=6"></script>
+  <script src="js/admin.js?v=6"></script>
 </body>
 </html>
