@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Сабақ · MathPro</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&subset=cyrillic-ext&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=5">
 </head>
-<body>
+<!-- Деректер жүктелген соң, ortak.js осы беттің кодын (data-bet) қосады -->
+<body data-bet="js/sabak.js?v=5">
   <header id="menu"></header>
 
   <main class="ishki bet">
@@ -55,8 +56,12 @@
     </div>
   </main>
 
-  <script src="js/derekter.js?v=3"></script>
-  <script src="js/ortak.js?v=3"></script>
-  <script src="js/sabak.js?v=3"></script>
+  <!-- Firebase кітапханасы (кіру және дерекқор) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-baptau.js?v=5"></script>
+  <script src="js/derekter.js?v=5"></script>
+  <script src="js/ortak.js?v=5"></script>
 </body>
 </html>

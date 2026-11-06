@@ -3,23 +3,54 @@
 // Сабақ пен есепті қосу, өзгерту, өшіру.
 // =====================================================
 
-// Құпия сөзді осы жерден өзгертуге болады.
-// Ескерту: бұл қарапайым қорғаныс, оқушылар кездейсоқ кіріп кетпеуі үшін.
-let QUPIYA_SOZ = "matem2026";
-
 let ozgertilipJatqanSabak = null;  // қай сабақ өзгертіліп жатыр (жаңа болса null)
 let ozgertilipJatqanEsep = null;   // қай есеп өзгертіліп жатыр (жаңа болса null)
+let mazmunDerekqordaBar = false;   // сабақтар дерекқордан алына ма
 
 
 // ----- 1. КІРУ ЖӘНЕ ШЫҒУ -----
+// Әкімші Firebase-те ашылған admin@mathpro.app аккаунтымен кіреді.
+// Дерекқор ережелері сабақтарды тек осы аккаунтқа өзгертуге рұқсат береді.
+
+auth.onAuthStateChanged(function (user) {
+  if (user && user.email === AKIMSHI_POSHTA) {
+    mazmundyJukteu();
+  } else {
+    document.getElementById("kiru").classList.remove("jasyryn");
+    document.getElementById("panel").classList.add("jasyryn");
+    document.getElementById("qupiya").focus();
+  }
+});
 
 function kiru() {
-  if (document.getElementById("qupiya").value === QUPIYA_SOZ) {
-    sessionStorage.setItem("admin_kirdi", "ia"); // бет жаңарса да кірген күйде қалады
-    paneldiAshu();
-  } else {
-    document.getElementById("kiru-qate").textContent = "Құпия сөз қате.";
+  let poshta = document.getElementById("poshta").value.trim().toLowerCase();
+  let qupiya = document.getElementById("qupiya").value;
+  let qate = document.getElementById("kiru-qate");
+  qate.textContent = "";
+
+  if (poshta !== AKIMSHI_POSHTA) {
+    qate.textContent = "Бұл әкімші аккаунты емес.";
+    return;
   }
+  auth.signInWithEmailAndPassword(poshta, qupiya).catch(function () {
+    qate.textContent = "Пошта немесе құпия сөз қате.";
+  });
+  // Сәтті кірсе, жоғарыдағы onAuthStateChanged панельді өзі ашады
+}
+
+// Сабақтар мен есептерді дерекқордан жүктеп, панельді ашамыз
+function mazmundyJukteu() {
+  db.collection("mazmun").doc("negizgi").get().then(function (doc) {
+    if (doc.exists) {
+      let mazmun = doc.data();
+      if (mazmun.SABAKTAR) SABAKTAR = mazmun.SABAKTAR;
+      if (mazmun.ESEPTER) ESEPTER = mazmun.ESEPTER;
+      mazmunDerekqordaBar = true;
+    }
+    paneldiAshu();
+  }).catch(function (q) {
+    document.getElementById("kiru-qate").textContent = "Дерекқорға қосылмады: " + q.message;
+  });
 }
 
 function paneldiAshu() {
@@ -38,15 +69,10 @@ document.getElementById("qupiya").onkeydown = function (e) {
   if (e.key === "Enter") kiru();
 };
 document.getElementById("shygu").onclick = function () {
-  sessionStorage.removeItem("admin_kirdi");
-  location.reload();
+  auth.signOut().then(function () {
+    location.reload();
+  });
 };
-
-if (sessionStorage.getItem("admin_kirdi") === "ia") {
-  paneldiAshu();
-} else {
-  document.getElementById("qupiya").focus();
-}
 
 
 // ----- 2. ҚОЙЫНДЫЛАР -----
@@ -111,19 +137,23 @@ function teoriyaMatini(html) {
     .split("<br>").join("\n");
 }
 
-// Өзгерістерді жадқа сақтау. Сайттың барлық беті осыны оқиды.
+// Өзгерістерді дерекқорға сақтау. Барлық оқушы бірден жаңасын көреді.
 function mazmundySaqtau() {
   let mazmun = { SABAKTAR: SABAKTAR, ESEPTER: ESEPTER };
-  localStorage.setItem(MAZMUN_KILTI, JSON.stringify(mazmun));
-  ozgerisKuiin();
+  db.collection("mazmun").doc("negizgi").set(mazmun).then(function () {
+    mazmunDerekqordaBar = true;
+    ozgerisKuiin();
+  }).catch(function (q) {
+    alert("Сақталмады! Интернетті тексер.\n" + q.message);
+  });
 }
 
 function ozgerisKuiin() {
   let kuii = document.getElementById("ozgeris-kuii");
-  if (localStorage.getItem(MAZMUN_KILTI)) {
-    kuii.textContent = "⚠️ Бұл браузерде сақталған өзгерістер бар. Олар барлық оқушыға көрінуі үшін derekter.js файлын жүктеп алып, сайтқа салу керек.";
+  if (mazmunDerekqordaBar) {
+    kuii.textContent = "✅ Сабақтар мен есептер дерекқордан алынады. Өзгерістер барлық оқушыға бірден көрінеді.";
   } else {
-    kuii.textContent = "✅ Сайт derekter.js файлындағы мазмұнмен жұмыс істеп тұр.";
+    kuii.textContent = "Сайт әзірге derekter.js файлындағы бастапқы мазмұнмен жұмыс істеп тұр. Бірінші өзгерісті сақтағанда, мазмұн дерекқорға көшеді.";
   }
 }
 
@@ -172,58 +202,73 @@ function statistikanyKorset() {
   }
   document.getElementById("stat-kartalar").innerHTML = html;
 
-  // Тіркелген оқушылар кестесі
-  let paidalanushylar = paidalanushylardyAlu();
-  let kesteHtml = "";
-  let san = 0;
-  for (let login in paidalanushylar) {
-    san = san + 1;
-    let oqushy = oqushyAlu(login);
-    let payz = 0;
-    if (oqushy.talpynys > 0) payz = Math.round(oqushy.durysSany * 100 / oqushy.talpynys);
-    kesteHtml +=
-      "<tr>" +
-        "<td><b>" + qauipsiz(paidalanushylar[login].aty) + "</b><br><span class='mut'>" + qauipsiz(login) + "</span></td>" +
-        "<td>⭐ " + oqushy.upai + "</td>" +
-        "<td>" + sanau(oqushy.sabaktar) + " / " + SABAKTAR.length + "</td>" +
-        "<td>" + sanau(oqushy.esepter) + " / " + ESEPTER.length + "</td>" +
-        "<td>" + sanau(oqushy.testter) + " / " + TESTTER.length + "</td>" +
-        "<td>" + payz + "%</td>" +
-        "<td>" + (oqushy.songyKun || "—") + "</td>" +
-        "<td><button class='btn btn-kishi btn-qyzyl' data-oshiru='" + login + "' title='Өшіру'>🗑</button></td>" +
-      "</tr>";
-  }
-
+  // Тіркелген оқушылар кестесі: барлығын дерекқордан аламыз
   let oryn = document.getElementById("stat-oqushy");
-  if (san === 0) {
-    oryn.innerHTML = "<p class='mut'>Әзірге ешкім тіркелмеген.</p>";
-  } else {
-    oryn.innerHTML =
-      "<div style='overflow-x:auto'><table class='oqushy-keste'>" +
-        "<tr><th>Оқушы</th><th>Ұпай</th><th>Сабақ</th><th>Есеп</th><th>Тест</th><th>Дәлдік</th><th>Соңғы кірген</th><th></th></tr>" +
-        kesteHtml +
-      "</table></div>";
-  }
-  document.getElementById("oqushy-sany").textContent = san;
+  oryn.innerHTML = "<p class='mut'>Жүктелуде…</p>";
 
-  // Өшіру батырмалары
-  let batyrmalar = oryn.querySelectorAll("[data-oshiru]");
-  for (let i = 0; i < batyrmalar.length; i++) {
-    batyrmalar[i].onclick = function () {
-      oqushynyOshiru(this.getAttribute("data-oshiru"));
-    };
-  }
+  db.collection("oqushylar").get().then(function (jauap) {
+    let kesteHtml = "";
+    let san = 0;
+
+    jauap.forEach(function (doc) {
+      san = san + 1;
+      // Жетпейтін мәндер болса, бастапқы мәндермен толтырамыз
+      let oqushy = bosOqushy();
+      let saqtalgan = doc.data();
+      for (let kilt in saqtalgan) oqushy[kilt] = saqtalgan[kilt];
+
+      let payz = 0;
+      if (oqushy.talpynys > 0) payz = Math.round(oqushy.durysSany * 100 / oqushy.talpynys);
+      let songyKun = oqushy.songyKun;
+      if (!songyKun) songyKun = "—";
+
+      kesteHtml +=
+        "<tr>" +
+          "<td><b>" + qauipsiz(oqushy.aty || "—") + "</b><br><span class='mut'>" + qauipsiz(oqushy.login || "") + "</span></td>" +
+          "<td>⭐ " + oqushy.upai + "</td>" +
+          "<td>" + sanau(oqushy.sabaktar) + " / " + SABAKTAR.length + "</td>" +
+          "<td>" + sanau(oqushy.esepter) + " / " + ESEPTER.length + "</td>" +
+          "<td>" + sanau(oqushy.testter) + " / " + TESTTER.length + "</td>" +
+          "<td>" + payz + "%</td>" +
+          "<td>" + songyKun + "</td>" +
+          "<td><button class='btn btn-kishi btn-qyzyl' data-oshiru='" + doc.id + "' data-aty='" + qauipsiz(oqushy.aty || "") + "' title='Нәтижесін өшіру'>🗑</button></td>" +
+        "</tr>";
+    });
+
+    if (san === 0) {
+      oryn.innerHTML = "<p class='mut'>Әзірге ешкім тіркелмеген.</p>";
+    } else {
+      oryn.innerHTML =
+        "<div style='overflow-x:auto'><table class='oqushy-keste'>" +
+          "<tr><th>Оқушы</th><th>Ұпай</th><th>Сабақ</th><th>Есеп</th><th>Тест</th><th>Дәлдік</th><th>Соңғы кірген</th><th></th></tr>" +
+          kesteHtml +
+        "</table></div>";
+    }
+    document.getElementById("oqushy-sany").textContent = san;
+
+    // Өшіру батырмалары
+    let batyrmalar = oryn.querySelectorAll("[data-oshiru]");
+    for (let i = 0; i < batyrmalar.length; i++) {
+      batyrmalar[i].onclick = function () {
+        oqushynyOshiru(this.getAttribute("data-oshiru"), this.getAttribute("data-aty"));
+      };
+    }
+  }).catch(function (q) {
+    oryn.innerHTML = "<p class='qyzyl'>Оқушылар жүктелмеді: " + q.message + "</p>";
+  });
 }
 
-// Аккаунтты және оның барлық нәтижесін өшіру
-function oqushynyOshiru(login) {
-  let paidalanushylar = paidalanushylardyAlu();
-  if (!confirm("«" + paidalanushylar[login].aty + "» (" + login + ") аккаунты мен нәтижесі өшеді. Жалғастырайық па?")) return;
-  delete paidalanushylar[login];
-  localStorage.setItem(PAIDALANUSHY_KILTI, JSON.stringify(paidalanushylar));
-  localStorage.removeItem(oqushyKilti(login));
-  statistikanyKorset();
-  habarKorset("🗑 Аккаунт өшірілді");
+// Оқушының нәтижесін өшіру.
+// Ескерту: аккаунттың өзі (логин мен құпия сөз) Firebase Authentication-та қалады,
+// оны толық өшіру үшін Firebase консолінде Authentication → Users бөлімінен өшіру керек.
+function oqushynyOshiru(uid, aty) {
+  if (!confirm("«" + aty + "» оқушысының барлық нәтижесі өшеді. Жалғастырайық па?")) return;
+  db.collection("oqushylar").doc(uid).delete().then(function () {
+    statistikanyKorset();
+    habarKorset("🗑 Нәтиже өшірілді");
+  }).catch(function (q) {
+    alert("Өшірілмеді: " + q.message);
+  });
 }
 
 
@@ -583,8 +628,10 @@ document.getElementById("fail-jukteu").onclick = function () {
 };
 
 document.getElementById("qalpyna").onclick = function () {
-  if (confirm("Осы браузердегі барлық өзгеріс өшеді. Жалғастырайық па?")) {
-    localStorage.removeItem(MAZMUN_KILTI);
+  if (!confirm("Дерекқордағы барлық өзгеріс өшеді, сайт derekter.js файлындағы бастапқы сабақтарға қайтады. Жалғастырайық па?")) return;
+  db.collection("mazmun").doc("negizgi").delete().then(function () {
     location.reload();
-  }
+  }).catch(function (q) {
+    alert("Өшірілмеді: " + q.message);
+  });
 };

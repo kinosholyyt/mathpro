@@ -6,7 +6,7 @@
   <title>Әкімші панелі · MathPro</title>
   <meta name="robots" content="noindex">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&subset=cyrillic-ext&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=5">
 </head>
 <body>
 
@@ -14,7 +14,8 @@
   <div class="qalqan" id="kiru">
     <div class="karta">
       <h2>🔐 Әкімші панелі</h2>
-      <p class="mut">Кіру үшін құпия сөзді жаз.</p>
+      <p class="mut">Firebase-те ашылған әкімші аккаунтымен кір.</p>
+      <input type="email" id="poshta" value="admin@mathpro.app" style="margin-bottom:0">
       <input type="password" id="qupiya" placeholder="Құпия сөз">
       <button class="btn btn-sary" id="kiru-btn" style="width:100%">Кіру</button>
       <p class="qyzyl" id="kiru-qate" style="margin-top:10px"></p>
@@ -50,7 +51,7 @@
       <div class="statistika" id="stat-kartalar"></div>
       <div class="karta">
         <h3>Тіркелген оқушылар: <span id="oqushy-sany">0</span></h3>
-        <p class="mut" style="margin:6px 0 14px">Аккаунттар әр браузердің өз жадында сақталады. Мұнда осы компьютерде тіркелген оқушылар көрінеді.</p>
+        <p class="mut" style="margin:6px 0 14px">Барлық құрылғыдан тіркелген оқушылар осында көрінеді. Деректер Firebase дерекқорында сақталады.</p>
         <div id="stat-oqushy"></div>
       </div>
     </section>
@@ -127,16 +128,16 @@
       <div class="tor" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">
         <div class="karta">
           <h3>1. Өзгерістер қайда сақталады?</h3>
-          <p class="mut" style="margin-top:8px">Панельде сақтаған өзгерістер <b>осы браузерде</b> бірден көрінеді. Барлық оқушыға көрінуі үшін төмендегі батырмамен <b>derekter.js</b> файлын жүктеп ал да, сайттың <b>js</b> папкасындағы ескі файлдың орнына қой.</p>
+          <p class="mut" style="margin-top:8px">Панельде сақтаған сабақ пен есеп <b>Firebase дерекқорына</b> жазылады және <b>барлық оқушыға бірден</b> көрінеді. Файлды GitHub-қа салудың керегі жоқ.</p>
         </div>
         <div class="karta">
-          <h3>2. Файлды жүктеп алу</h3>
-          <p class="mut" style="margin:8px 0 14px">Барлық сабақ пен есеп бір файлға жазылады.</p>
+          <h3>2. Сақтық көшірме</h3>
+          <p class="mut" style="margin:8px 0 14px">Барлық сабақ пен есепті derekter.js файлына жүктеп алып, сақтап қоюға болады.</p>
           <button class="btn btn-sary" id="fail-jukteu">⬇️ derekter.js жүктеп алу</button>
         </div>
         <div class="karta">
           <h3>3. Бастапқы қалпына қайтару</h3>
-          <p class="mut" style="margin:8px 0 14px">Осы браузердегі өзгерістерді өшіріп, derekter.js файлындағы мазмұнға қайтарады.</p>
+          <p class="mut" style="margin:8px 0 14px">Дерекқордағы өзгерістерді өшіріп, сайтты derekter.js файлындағы бастапқы мазмұнға қайтарады.</p>
           <button class="btn btn-qyzyl" id="qalpyna">↺ Өзгерістерді өшіру</button>
         </div>
       </div>
@@ -144,8 +145,13 @@
     </section>
   </main>
 
-  <script src="js/derekter.js?v=3"></script>
-  <script src="js/ortak.js?v=3"></script>
-  <script src="js/admin.js?v=3"></script>
+  <!-- Firebase кітапханасы (кіру және дерекқор) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-baptau.js?v=5"></script>
+  <script src="js/derekter.js?v=5"></script>
+  <script src="js/ortak.js?v=5"></script>
+  <script src="js/admin.js?v=5"></script>
 </body>
 </html>

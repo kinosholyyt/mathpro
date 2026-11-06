@@ -1,12 +1,16 @@
 // =====================================================
 // КІРУ ЖӘНЕ ТІРКЕЛУ
-// Аккаунттар осы браузердің жадында (localStorage) сақталады.
+// Аккаунттар Firebase-те сақталады, сондықтан оқушы
+// кез келген құрылғыдан өз логинімен кіре алады.
 // =====================================================
 
+// Тіркелу жүріп жатқанда бетті ауыстырмаймыз: алдымен деректер жазылсын
+let tirkelipJatyr = false;
+
 // Оқушы бұрыннан кірген болса, бірден басты бетке жібереміз
-if (kirgenLogin()) {
-  location.replace("index.html");
-}
+auth.onAuthStateChanged(function (user) {
+  if (user && !tirkelipJatyr) location.replace("index.html");
+});
 
 
 // ----- 1. Қойындылар -----
@@ -34,6 +38,13 @@ document.getElementById("tirkeluge-otu").onclick = function (e) {
   tirkeludiKorset();
 };
 
+// Батырманы күту кезінде өшіріп қоямыз, екі рет басылмасын
+function batyrmaKutu(id, kutedi, matin) {
+  let batyrma = document.getElementById(id);
+  batyrma.disabled = kutedi;
+  batyrma.textContent = matin;
+}
+
 
 // ----- 2. Кіру -----
 
@@ -41,23 +52,26 @@ function kiru() {
   let login = document.getElementById("k-login").value.trim().toLowerCase();
   let qupiya = document.getElementById("k-qupiya").value;
   let qate = document.getElementById("k-qate");
+  qate.textContent = "";
 
   if (login === "" || qupiya === "") {
     qate.textContent = "Логин мен құпия сөзді жаз.";
     return;
   }
-
-  let paidalanushylar = paidalanushylardyAlu();
-  let paidalanushy = paidalanushylar[login];
-
-  // Логин жоқ немесе құпия сөз сәйкес келмесе
-  if (!paidalanushy || paidalanushy.qupiya !== qupiyaHash(login, qupiya)) {
+  if (!loginDurysPa(login)) {
     qate.textContent = "Логин немесе құпия сөз қате.";
     return;
   }
 
-  localStorage.setItem(KIRGEN_KILTI, login);
-  location.href = "index.html";
+  batyrmaKutu("kiru-btn", true, "Күте тұр…");
+  auth.signInWithEmailAndPassword(loginnenPoshta(login), qupiya)
+    .then(function () {
+      location.href = "index.html";
+    })
+    .catch(function (q) {
+      batyrmaKutu("kiru-btn", false, "Кіру →");
+      qate.textContent = qateMatini(q.code);
+    });
 }
 
 document.getElementById("kiru-btn").onclick = kiru;
@@ -74,6 +88,7 @@ function tirkelu() {
   let qupiya = document.getElementById("t-qupiya").value;
   let qupiya2 = document.getElementById("t-qupiya2").value;
   let qate = document.getElementById("t-qate");
+  qate.textContent = "";
 
   // Тексерулер
   if (aty === "") {
@@ -84,8 +99,12 @@ function tirkelu() {
     qate.textContent = "Логинге тек латын әріптері, сандар және _ белгісі жарайды (3–20 таңба).";
     return;
   }
-  if (qupiya.length < 4) {
-    qate.textContent = "Құпия сөз кемінде 4 таңба болуы керек.";
+  if (login === "admin") {
+    qate.textContent = "Бұл логин бос емес. Басқасын ойлап тап.";
+    return;
+  }
+  if (qupiya.length < 6) {
+    qate.textContent = "Құпия сөз кемінде 6 таңба болуы керек.";
     return;
   }
   if (qupiya !== qupiya2) {
@@ -93,27 +112,26 @@ function tirkelu() {
     return;
   }
 
-  let paidalanushylar = paidalanushylardyAlu();
-  if (paidalanushylar[login]) {
-    qate.textContent = "Бұл логин бос емес. Басқасын ойлап тап.";
-    return;
-  }
+  batyrmaKutu("tirkelu-btn", true, "Күте тұр…");
+  tirkelipJatyr = true;
 
-  // Жаңа аккаунтты сақтаймыз
-  paidalanushylar[login] = {
-    aty: aty,
-    qupiya: qupiyaHash(login, qupiya),
-    tirkelgen: bugingiKun()
-  };
-  localStorage.setItem(PAIDALANUSHY_KILTI, JSON.stringify(paidalanushylar));
-
-  // Бірден кіргіземіз және атын оқушы деректеріне жазамыз
-  localStorage.setItem(KIRGEN_KILTI, login);
-  let oqushy = oqushyAlu();
-  oqushy.aty = aty;
-  oqushySaqtau(oqushy);
-
-  location.href = "index.html";
+  // 1) Firebase-те аккаунт ашамыз
+  auth.createUserWithEmailAndPassword(loginnenPoshta(login), qupiya)
+    .then(function (natije) {
+      // 2) Оқушының бастапқы деректерін дерекқорға жазамыз
+      let oqushy = bosOqushy();
+      oqushy.aty = aty;
+      oqushy.login = login;
+      return db.collection("oqushylar").doc(natije.user.uid).set(oqushy);
+    })
+    .then(function () {
+      location.href = "index.html";
+    })
+    .catch(function (q) {
+      tirkelipJatyr = false;
+      batyrmaKutu("tirkelu-btn", false, "Тіркелу →");
+      qate.textContent = qateMatini(q.code);
+    });
 }
 
 // Логин: тек a-z, 0-9 және _ , ұзындығы 3–20
@@ -124,6 +142,16 @@ function loginDurysPa(login) {
     if (ruqsat.indexOf(login.charAt(i)) === -1) return false;
   }
   return true;
+}
+
+// Firebase қатесін қазақшаға аудару
+function qateMatini(kod) {
+  if (kod === "auth/email-already-in-use") return "Бұл логин бос емес. Басқасын ойлап тап.";
+  if (kod === "auth/weak-password") return "Құпия сөз тым қарапайым. Кемінде 6 таңба жаз.";
+  if (kod === "auth/network-request-failed") return "Интернет жоқ сияқты. Қайта көр.";
+  if (kod === "auth/too-many-requests") return "Тым көп талпыныс. Біраз күтіп, қайта көр.";
+  if (kod === "auth/operation-not-allowed") return "Кіру әлі қосылмаған (Firebase баптауы).";
+  return "Логин немесе құпия сөз қате.";
 }
 
 document.getElementById("tirkelu-btn").onclick = tirkelu;

@@ -5,88 +5,84 @@
 // =====================================================
 
 
-// Барлық аккаунттың тізімі жадта осы атпен сақталады
-let PAIDALANUSHY_KILTI = "mathpro_paidalanushylar";
+// Бұл файлдың алдында firebase-baptau.js қосылуы керек (auth, db).
 
-// Қазір кірген оқушының логині осы атпен сақталады
-let KIRGEN_KILTI = "mathpro_kirgen";
-
-// Әкімші панелінде өзгертілген мазмұн осы атпен сақталады
-let MAZMUN_KILTI = "matematika_alemi_mazmun";
+// Қазір кірген оқушы және оның деректері (бет ашылғанда дерекқордан жүктеледі)
+let KIRGEN = null;
+let OQUSHY = null;
 
 
-// ----- 0. ӘКІМШІ ӨЗГЕРТКЕН МАЗМҰНДЫ ЖҮКТЕУ -----
-// Әкімші панелінде сабақ не есеп өзгертілсе, олар жадта сақталады.
-// Сол кезде derekter.js ішіндегі тізімдердің орнына жадтағылар алынады.
+// ----- 0. БЕТТІ ІСКЕ ҚОСУ -----
+// Әр беттің <body> белгісінде data-bet="js/esepter.js" деп жазылған.
+// Алдымен оқушы кірген бе, соны тексереміз, оның деректерін және
+// сабақтарды дерекқордан жүктейміз. Сосын ғана беттің өз кодын қосамыз.
 
-function mazmundyJukteu() {
-  let matin = localStorage.getItem(MAZMUN_KILTI);
-  if (!matin) return;
-  let mazmun = JSON.parse(matin);
-  if (mazmun.SABAKTAR) SABAKTAR = mazmun.SABAKTAR;
-  if (mazmun.ESEPTER) ESEPTER = mazmun.ESEPTER;
-}
+function betDaiyndau(betKody) {
+  document.body.classList.add("juklenude");
+  let bastaldy = false;
 
-mazmundyJukteu();
+  auth.onAuthStateChanged(function (user) {
+    if (bastaldy) return; // бір-ақ рет іске қосылсын
+    bastaldy = true;
 
+    // Кірмеген болса — кіру бетіне
+    if (!user) {
+      location.replace("kiru.html");
+      return;
+    }
+    KIRGEN = user;
 
-// ----- 1. АККАУНТТАР -----
+    let oqushyJukteu = db.collection("oqushylar").doc(user.uid).get();
+    let mazmunJukteu = db.collection("mazmun").doc("negizgi").get();
 
-// Барлық аккаунт: { ali2010: { aty: "Әли", qupiya: "...", tirkelgen: "2026-11-06" } }
-function paidalanushylardyAlu() {
-  let matin = localStorage.getItem(PAIDALANUSHY_KILTI);
-  if (!matin) return {};
-  return JSON.parse(matin);
-}
+    Promise.all([oqushyJukteu, mazmunJukteu]).then(function (natijeler) {
+      // Оқушының деректері
+      OQUSHY = bosOqushy();
+      if (natijeler[0].exists) {
+        let saqtalgan = natijeler[0].data();
+        for (let kilt in saqtalgan) {
+          OQUSHY[kilt] = saqtalgan[kilt];
+        }
+      }
+      // Логин мен аты жоқ болса, поштадан аламыз: ali2010@mathpro.app → ali2010
+      if (!OQUSHY.login) OQUSHY.login = user.email.split("@")[0];
+      if (!OQUSHY.aty) OQUSHY.aty = OQUSHY.login;
 
-// Қазір кірген оқушының логині (ешкім кірмесе — null)
-function kirgenLogin() {
-  let login = localStorage.getItem(KIRGEN_KILTI);
-  // Аккаунт өшірілген болса, кірмеген деп есептейміз
-  if (login && !paidalanushylardyAlu()[login]) {
-    localStorage.removeItem(KIRGEN_KILTI);
-    return null;
-  }
-  return login;
-}
+      // Әкімші өзгерткен сабақтар мен есептер (болса)
+      if (natijeler[1].exists) {
+        let mazmun = natijeler[1].data();
+        if (mazmun.SABAKTAR) SABAKTAR = mazmun.SABAKTAR;
+        if (mazmun.ESEPTER) ESEPTER = mazmun.ESEPTER;
+      }
 
-// Әр оқушының деректері өз логинімен бөлек сақталады
-function oqushyKilti(login) {
-  return "mathpro_oqushy_" + login;
-}
-
-// Құпия сөзді ашық күйде сақтамаймыз: оны санға айналдырамыз (хэш).
-// Логинді де қосамыз, сонда екі оқушының құпия сөзі бірдей болса да, хэші әртүрлі шығады.
-// Ескерту: бұл оқу жобасына арналған қарапайым қорғаныс.
-function qupiyaHash(login, qupiya) {
-  let matin = login + ":" + qupiya;
-  let hash = 7;
-  for (let i = 0; i < matin.length; i++) {
-    hash = (hash * 31 + matin.charCodeAt(i)) % 1000000007;
-  }
-  return String(hash);
-}
-
-// Кірмеген оқушыны кіру бетіне жібереміз
-function kiruKerek() {
-  if (!kirgenLogin()) {
-    location.replace("kiru.html");
-  }
+      // Енді беттің өз кодын қосамыз
+      let skript = document.createElement("script");
+      skript.src = betKody;
+      document.body.appendChild(skript);
+      document.body.classList.remove("juklenude");
+    }).catch(function (qate) {
+      document.body.classList.remove("juklenude");
+      document.querySelector("main").innerHTML =
+        "<div class='karta'><h2>Деректер жүктелмеді 😕</h2><p class='mut'>Интернетті тексеріп, бетті жаңарт.</p><p class='mut' style='font-size:13px'>" + qate.message + "</p></div>";
+    });
+  });
 }
 
 // Аккаунттан шығу
 function shygu() {
-  localStorage.removeItem(KIRGEN_KILTI);
-  location.href = "kiru.html";
+  auth.signOut().then(function () {
+    location.href = "kiru.html";
+  });
 }
 
 
-// ----- 2. ОҚУШЫНЫҢ ДЕРЕКТЕРІ -----
+// ----- 1. ОҚУШЫНЫҢ ДЕРЕКТЕРІ -----
 
 // Жаңа оқушының бастапқы деректері
 function bosOqushy() {
   return {
     aty: "",            // оқушының аты
+    login: "",          // оқушының логині
     upai: 0,            // жалпы ұпай
     sabaktar: {},       // өтілген сабақтар: { alg1: true }
     esepter: {},        // шешілген есептер: { e1: true }
@@ -100,33 +96,23 @@ function bosOqushy() {
   };
 }
 
-// Деректерді жадтан оқу.
-// login берілмесе, қазір кірген оқушының деректері алынады.
-function oqushyAlu(login) {
-  if (!login) login = kirgenLogin();
-  let matin = localStorage.getItem(oqushyKilti(login));
-  let oqushy = bosOqushy();
-  if (matin) {
-    let saqtalgan = JSON.parse(matin);
-    // Сақталған мәндерді бастапқы деректердің үстіне жазамыз
-    for (let kilt in saqtalgan) {
-      oqushy[kilt] = saqtalgan[kilt];
-    }
-  }
-  // Атын аккаунттан аламыз
-  let akkaunt = paidalanushylardyAlu()[login];
-  if (akkaunt) oqushy.aty = akkaunt.aty;
-  return oqushy;
+// Оқушының деректерінің көшірмесін алу.
+// Көшірмені өзгертіп, oqushySaqtau() арқылы сақтаймыз.
+function oqushyAlu() {
+  return JSON.parse(JSON.stringify(OQUSHY));
 }
 
-// Деректерді жадқа жазу
+// Деректерді сақтау: жадта бірден жаңарады, дерекқорға фонда жазылады
 function oqushySaqtau(oqushy) {
-  if (!kirgenLogin()) return; // ешкім кірмесе, ештеңе сақтамаймыз
-  localStorage.setItem(oqushyKilti(kirgenLogin()), JSON.stringify(oqushy));
+  if (!KIRGEN) return;
+  OQUSHY = JSON.parse(JSON.stringify(oqushy));
+  db.collection("oqushylar").doc(KIRGEN.uid).set(OQUSHY).catch(function () {
+    habarKorset("⚠️ Сақталмады. Интернетті тексер.");
+  });
 }
 
 
-// ----- 3. КҮНДЕР -----
+// ----- 2. КҮНДЕР -----
 
 // Бүгінгі күн "2026-11-06" түрінде
 function kunMatini(kun) {
@@ -163,7 +149,7 @@ function kunderdiTirkeu() {
 }
 
 
-// ----- 4. ҰПАЙ ЖӘНЕ ХАБАРЛАМА -----
+// ----- 3. ҰПАЙ ЖӘНЕ ХАБАРЛАМА -----
 
 // Ұпай қосып, экранға хабар шығарамыз
 function upaiQosu(san) {
@@ -199,10 +185,9 @@ function habarKorset(matin) {
 }
 
 
-// ----- 5. МӘЗІР (барлық беттің жоғарғы жағы) -----
+// ----- 4. МӘЗІР (барлық беттің жоғарғы жағы) -----
 
 function menuSalu(belsendiBet) {
-  kiruKerek();       // кірмеген болса, кіру бетіне
   kunderdiTirkeu();
   let oqushy = oqushyAlu();
 
@@ -245,7 +230,7 @@ function menuSalu(belsendiBet) {
 }
 
 
-// ----- 6. ЖАУАПТЫ ТЕКСЕРУ -----
+// ----- 5. ЖАУАПТЫ ТЕКСЕРУ -----
 
 // Оқушы жазған мәтінді санға айналдыру.
 // "x = 5", "0,5", "1/2", " 3 " — бәрін түсінеді.
@@ -285,7 +270,7 @@ function sandyJazu(san) {
 }
 
 
-// ----- 7. ЕСЕП КАРТАСЫ -----
+// ----- 6. ЕСЕП КАРТАСЫ -----
 // Бір есепті экранға шығарады: сұрақ, жауап жолы, тексеру,
 // кеңес және шешу жолы. Есептер, Күн тапсырмасы беттерінде қолданылады.
 
@@ -377,7 +362,7 @@ function esepKartasy(esep, konteiner, durysBolganda) {
 }
 
 
-// ----- 8. ІЗДЕУ ЖӘНЕ ЕСЕПТЕУ КӨМЕКШІЛЕРІ -----
+// ----- 7. ІЗДЕУ ЖӘНЕ ЕСЕПТЕУ КӨМЕКШІЛЕРІ -----
 
 function taraudyTabu(id) {
   for (let i = 0; i < TARAULAR.length; i++) {
@@ -465,7 +450,7 @@ function sanau(obekt) {
 }
 
 
-// ----- 9. КҮН ТАПСЫРМАСЫ -----
+// ----- 8. КҮН ТАПСЫРМАСЫ -----
 // Күн сайын 5 есеп таңдалады. Бір күні бәріне бірдей есептер шығады.
 
 function kunTapsyrmasyEsepteri() {
@@ -495,7 +480,7 @@ function kunDeregi() {
 }
 
 
-// ----- 10. YOUTUBE СІЛТЕМЕСІНЕН ВИДЕО КОДЫН АЛУ -----
+// ----- 9. YOUTUBE СІЛТЕМЕСІНЕН ВИДЕО КОДЫН АЛУ -----
 // "https://www.youtube.com/watch?v=ABC123" → "ABC123"
 // "https://youtu.be/ABC123" → "ABC123"
 
@@ -515,7 +500,7 @@ function youtubeKodyn(silteme) {
 }
 
 
-// ----- 11. АРАЛАСТЫРУ (ойындар мен викторина үшін) -----
+// ----- 10. АРАЛАСТЫРУ (ойындар мен викторина үшін) -----
 
 function aralastyru(tizim) {
   let koshirme = tizim.slice();
@@ -528,3 +513,12 @@ function aralastyru(tizim) {
   return koshirme;
 }
 
+
+// ----- 11. ЕҢ СОҢЫНДА: БЕТТІ ІСКЕ ҚОСУ -----
+// <body data-bet="..."> бар беттерде деректерді жүктеп, беттің кодын қосамыз.
+// Кіру беті мен әкімші панелінде data-bet жоқ, олар өздері басқарады.
+
+let betKody = document.body.getAttribute("data-bet");
+if (betKody) {
+  betDaiyndau(betKody);
+}

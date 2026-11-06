@@ -308,3 +308,11 @@ textarea { min-height: 90px; resize: vertical; }
 .oqushy-keste { width: 100%; border-collapse: collapse; font-size: 15px; }
 .oqushy-keste th { text-align: left; color: var(--mut); font-size: 13px; padding: 8px; border-bottom: 2px solid var(--shekara); white-space: nowrap; }
 .oqushy-keste td { padding: 10px 8px; border-bottom: 1px solid var(--shekara); white-space: nowrap; }
+
+/* ----- ЖҮКТЕЛУ -----
+   Деректер дерекқордан келгенше бетті жасырып, жүктелу белгісін көрсетеміз */
+body.juklenude main, body.juklenude #menu { visibility: hidden; }
+body.juklenude::after {
+  content: "Жүктелуде…"; position: fixed; inset: 0; display: grid; place-items: center;
+  color: #b8c0e6; font-size: 20px; font-weight: 800;
+}
