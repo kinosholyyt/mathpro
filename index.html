@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MathPro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&subset=cyrillic-ext&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=9">
+</head>
+<!-- Деректер жүктелген соң, ortak.js осы беттің кодын (data-bet) қосады -->
+<body data-bet="js/basty.js?v=9">
+
+  <!-- Мәзір осы жерге JavaScript арқылы салынады -->
+  <header id="menu"></header>
+
+  <main class="ishki bet">
+
+    <!-- Жоғарғы бөлік -->
+    <section class="basty">
+      <div>
+        <span class="belgi">● Жеке репетитор</span>
+        <h1 id="salem">Математиканы <em>түсініп</em> үйрен</h1>
+        <p class="mut">Тақырыпты оқы, мысалды қадам-қадаммен талда, сұраққа жауап бер.</p>
+        <div class="batyrmalar">
+          <a class="btn btn-sary" id="jalgastyru" href="sabaktar.html">Сабақты бастау →</a>
+          <a class="btn" href="sabaktar.html">Барлық сабақтар</a>
+        </div>
+      </div>
+
+      <!-- Тараулар бойынша прогресс -->
+      <div class="karta">
+        <h3>Менің прогресім</h3>
+        <div id="progress"></div>
+        <p class="mut" style="margin-top:14px">⭐ <span id="upai-sany">0</span> ұпай · 🔥 <span id="qatar">1</span> күн қатарынан</p>
+      </div>
+    </section>
+
+    <h2>Бөлімдер</h2>
+    <div class="tor">
+      <a class="karta bolim-karta" href="sabaktar.html">
+        <div class="ikon" style="background:#e8eeff">📘</div>
+        <h3>Сабақтар</h3>
+        <p>Видео, теория, талданған мысал және тексеру сұрағы</p>
+      </a>
+      <!-- Бұл бөлімдер әлі жасалмаған -->
+      <div class="karta bolim-karta jabyq">
+        <div class="ikon" style="background:#e3f7ee">✏️</div>
+        <h3>Есептер</h3>
+        <p>Жақында</p>
+      </div>
+      <div class="karta bolim-karta jabyq">
+        <div class="ikon" style="background:#fff1dd">📝</div>
+        <h3>Тест орталығы</h3>
+        <p>Жақында</p>
+      </div>
+      <div class="karta bolim-karta jabyq">
+        <div class="ikon" style="background:#f0e8ff">🎮</div>
+        <h3>Ойындар</h3>
+        <p>Жақында</p>
+      </div>
+      <div class="karta bolim-karta jabyq">
+        <div class="ikon" style="background:#ffe6ec">📊</div>
+        <h3>Менің нәтижем</h3>
+        <p>Жақында</p>
+      </div>
+      <div class="karta bolim-karta jabyq">
+        <div class="ikon" style="background:#fff6d6">📐</div>
+        <h3>Формулалар</h3>
+        <p>Жақында</p>
+      </div>
+      <div class="karta bolim-karta jabyq">
+        <div class="ikon" style="background:#e7f5ec">🏆</div>
+        <h3>Күн тапсырмасы</h3>
+        <p>Жақында</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Firebase кітапханасы (кіру және дерекқор) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-baptau.js?v=9"></script>
+  <script src="js/derekter.js?v=9"></script>
+  <script src="js/ortak.js?v=9"></script>
+</body>
+</html>

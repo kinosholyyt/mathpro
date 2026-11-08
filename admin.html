@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Әкімші панелі · MathPro</title>
+  <meta name="robots" content="noindex">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&subset=cyrillic-ext&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=9">
+</head>
+<body>
+
+  <!-- ===== 1. КІРУ ТЕРЕЗЕСІ ===== -->
+  <div class="qalqan" id="kiru">
+    <div class="karta">
+      <h2>🔐 Әкімші панелі</h2>
+      <p class="mut">Firebase-те ашылған әкімші аккаунтымен кір.</p>
+      <input type="email" id="poshta" value="admin@mathpro.app" style="margin-bottom:0">
+      <input type="password" id="qupiya" placeholder="Құпия сөз">
+      <button class="btn btn-sary" id="kiru-btn" style="width:100%">Кіру</button>
+      <p class="qyzyl" id="kiru-qate" style="margin-top:10px"></p>
+      <p style="margin-top:10px"><a class="mut" href="index.html">← Сайтқа оралу</a></p>
+    </div>
+  </div>
+
+
+  <!-- ===== 2. ПАНЕЛЬДІҢ ӨЗІ ===== -->
+  <main class="ishki bet jasyryn" id="panel">
+    <div class="admin-bas">
+      <div>
+        <h1>⚙️ Әкімші панелі</h1>
+        <p class="mut">Сабақ пен есепті осы жерден қосып, өзгертіп, өшіресің.</p>
+      </div>
+      <div class="batyrmalar" style="margin:0">
+        <a class="btn" href="index.html" target="_blank">Сайтты ашу ↗</a>
+        <button class="btn btn-bos" id="shygu">Шығу</button>
+      </div>
+    </div>
+
+    <!-- Қойындылар -->
+    <div class="qoiyndylar">
+      <button class="btn belsendi" data-qoiyndy="stat">📊 Статистика</button>
+      <button class="btn" data-qoiyndy="oqushy">👥 Оқушылар</button>
+      <button class="btn" data-qoiyndy="sabak">📘 Сабақтар</button>
+      <button class="btn" data-qoiyndy="esep">✏️ Есептер</button>
+    </div>
+
+
+    <!-- ----- Статистика ----- -->
+    <section id="q-stat">
+      <div class="statistika" id="stat-kartalar"></div>
+      <div class="karta">
+        <h3>🏆 Үздік 5 оқушы</h3>
+        <div id="stat-uzdik" style="margin-top:10px"></div>
+      </div>
+    </section>
+
+
+    <!-- ----- Оқушылар ----- -->
+    <section id="q-oqushy" class="jasyryn">
+      <!-- 1. Тізім -->
+      <div class="karta" id="oqushy-tizim-bolimi">
+        <div class="admin-bas" style="margin-bottom:12px">
+          <h3>Тіркелген оқушылар: <span id="oqushy-sany">0</span></h3>
+          <button class="btn btn-kishi" id="oqushy-janartu">↻ Жаңарту</button>
+        </div>
+        <div class="eki" style="margin-bottom:12px">
+          <input type="text" id="oqushy-izdeu" placeholder="🔍 Аты немесе логині бойынша ізде">
+          <select id="oqushy-suryptau">
+            <option value="upai">Ұпайы бойынша</option>
+            <option value="aty">Аты бойынша (А–Я)</option>
+            <option value="songyKun">Соңғы кірген күні бойынша</option>
+          </select>
+        </div>
+        <p class="mut" style="font-size:14px;margin-bottom:10px">Оқушының толық статистикасын көру үшін оның атын бас.</p>
+        <div id="stat-oqushy"></div>
+      </div>
+
+      <!-- 2. Бір оқушының толық статистикасы -->
+      <div class="jasyryn" id="oqushy-detal-bolimi">
+        <button class="btn btn-kishi" id="oqushy-artqa" style="margin-bottom:14px">← Тізімге оралу</button>
+        <div id="oqushy-detal"></div>
+      </div>
+    </section>
+
+
+    <!-- ----- Сабақтар ----- -->
+    <section id="q-sabak" class="jasyryn">
+      <div class="admin-tor">
+        <div class="karta">
+          <div class="admin-bas" style="margin-bottom:12px">
+            <h3>Сабақтар тізімі</h3>
+            <button class="btn btn-sary btn-kishi" id="jana-sabak">+ Жаңа сабақ</button>
+          </div>
+          <div id="sabak-tizimi"></div>
+        </div>
+
+        <div class="karta">
+          <h3 id="sabak-forma-taqyryp" style="margin-bottom:14px">Жаңа сабақ</h3>
+          <div class="eki">
+            <div class="oris"><label>Тарау</label><select id="s-tarau"></select></div>
+            <div class="oris"><label>Ұзақтығы (минут)</label><input type="number" id="s-uaqyt" min="1" value="10"></div>
+          </div>
+          <div class="oris"><label>Сабақтың атауы *</label><input type="text" id="s-aty" placeholder="Мысалы: Виет теоремасы"></div>
+          <div class="oris"><label>YouTube видео сілтемесі</label><input type="text" id="s-video" placeholder="https://www.youtube.com/watch?v=..."><small>Бос қалдырсаң, видео көрсетілмейді.</small></div>
+          <div class="oris"><label>Теория *</label><textarea id="s-teoriya" rows="5"></textarea><small>Жаңа абзац үшін бос жол қалдыр. Сөзді қалың ету: &lt;b&gt;сөз&lt;/b&gt;</small></div>
+          <div class="oris"><label>Негізгі формула</label><input type="text" id="s-formula" placeholder="Мысалы: x₁ + x₂ = −b/a"></div>
+          <div class="oris"><label>Ережелер (әр жолға біреуден)</label><textarea id="s-erezheler" rows="3"></textarea></div>
+          <div class="oris"><label>Мысалдың шарты *</label><input type="text" id="s-mysal" placeholder="Мысалы: x² − 5x + 6 = 0"></div>
+          <div class="oris"><label>Мысалдың шешу қадамдары * (әр жолға бір қадам)</label><textarea id="s-mysal-qadam" rows="4"></textarea></div>
+          <div class="oris"><label>Тексеру сұрағы *</label><input type="text" id="s-tekseru"></div>
+          <div class="oris"><label>Жауап нұсқалары * (әр жолға біреуден, 2–4 нұсқа)</label><textarea id="s-nuskalar" rows="3"></textarea></div>
+          <div class="oris"><label>Дұрыс нұсқаның нөмірі *</label><input type="number" id="s-durys" min="1" value="1"><small>Жоғарыдағы тізімде нешінші жолда тұр: 1, 2, 3 немесе 4.</small></div>
+          <p class="qyzyl" id="sabak-qate"></p>
+          <div class="batyrmalar" style="margin-top:8px">
+            <button class="btn btn-jasyl" id="sabak-saqtau">💾 Сақтау</button>
+            <button class="btn btn-bos" id="sabak-boldyrmau">Болдырмау</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ----- Есептер ----- -->
+    <section id="q-esep" class="jasyryn">
+      <div class="admin-tor">
+        <div class="karta">
+          <div class="admin-bas" style="margin-bottom:12px">
+            <h3>Есептер тізімі</h3>
+            <button class="btn btn-sary btn-kishi" id="jana-esep">+ Жаңа есеп</button>
+          </div>
+          <div class="oris"><select id="esep-suzgi"></select></div>
+          <div id="esep-tizimi"></div>
+        </div>
+
+        <div class="karta">
+          <h3 id="esep-forma-taqyryp" style="margin-bottom:14px">Жаңа есеп</h3>
+          <div class="oris"><label>Қай сабаққа *</label><select id="e-sabak"></select></div>
+          <div class="oris"><label>Есептің шарты *</label><input type="text" id="e-suraq" placeholder="Мысалы: 2x + 3 = 11. x = ?"></div>
+          <div class="oris"><label>Дұрыс жауап * (тек сан)</label><input type="text" id="e-jauap" placeholder="Мысалы: 4 немесе 0,5"><small>Оқушы «0,5», «1/2», «x = 0,5» деп жазса да, жүйе дұрыс деп қабылдайды.</small></div>
+          <div class="oris"><label>Кеңес (1-қатеден кейін шығады)</label><input type="text" id="e-kenes"></div>
+          <div class="oris"><label>Шешу қадамдары * (әр жолға бір қадам)</label><textarea id="e-qadamdar" rows="4"></textarea></div>
+          <p class="qyzyl" id="esep-qate"></p>
+          <div class="batyrmalar" style="margin-top:8px">
+            <button class="btn btn-jasyl" id="esep-saqtau">💾 Сақтау</button>
+            <button class="btn btn-bos" id="esep-boldyrmau">Болдырмау</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+  </main>
+
+  <!-- Firebase кітапханасы (кіру және дерекқор) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-baptau.js?v=9"></script>
+  <script src="js/derekter.js?v=9"></script>
+  <script src="js/ortak.js?v=9"></script>
+  <script src="js/admin.js?v=9"></script>
+</body>
+</html>

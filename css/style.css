@@ -1,0 +1,246 @@
+/* =====================================================
+   СТИЛЬ: сайттың сыртқы көрінісі
+   Түстерді өзгерту үшін :root ішіндегі мәндерді ауыстыр.
+   ===================================================== */
+
+:root {
+  --fon: #eefaf3;        /* негізгі фон (ақшыл жасыл) */
+  --karta: #ffffff;      /* карта түсі */
+  --karta2: #e7f5ec;     /* ақшыл жасыл батырма, жолақ */
+  --shekara: #d3ecdd;    /* жиектер */
+  --qoiu: #0f2e22;       /* қою жасыл (күн тапсырмасы) */
+  --matin: #0f2e22;      /* мәтін */
+  --mut: #5b7a6c;        /* сұр мәтін */
+  --sary: #fde047;       /* сары батырма */
+  --sary-matin: #9a7400; /* сары түсті мәтін (ақ фонда оқылуы үшін қоюлау) */
+  --jasyl: #16a34a;      /* негізгі жасыл */
+  --jasyl-matin: #0b7a4b;
+  --kok: #0ea5a3;        /* көгілдір-жасыл (екінші түс) */
+  --kulgin: #16a34a;
+  --qyzyl: #ef4565;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--fon);
+  color: var(--matin);
+  font-family: "Nunito", Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+a { color: inherit; text-decoration: none; }
+h1 { font-size: 40px; font-weight: 900; line-height: 1.15; margin-bottom: 10px; }
+h2 { font-size: 26px; font-weight: 800; margin-bottom: 14px; }
+h3 { font-size: 20px; font-weight: 800; }
+
+/* Беттің ортасындағы жолақ */
+.ishki { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+.bet { padding-top: 26px; padding-bottom: 60px; }
+
+.mut { color: var(--mut); }
+.jasyl { color: var(--jasyl-matin); font-weight: 700; }
+.qyzyl { color: var(--qyzyl); font-weight: 700; }
+.sary { color: var(--sary-matin); }
+.jasyryn { display: none !important; }
+
+
+/* ----- МӘЗІР ----- */
+#menu { background: #fff; color: var(--matin); position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 12px rgba(15, 46, 34, .06); }
+.menu-ishi { display: flex; align-items: center; gap: 24px; height: 70px; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 20px; white-space: nowrap; }
+.logo i {
+  width: 40px; height: 40px; border-radius: 12px; font-style: normal; font-size: 22px;
+  background: var(--jasyl); color: #fff;
+  display: grid; place-items: center;
+}
+nav { display: flex; gap: 6px; flex: 1; overflow-x: auto; scrollbar-width: none; }
+nav::-webkit-scrollbar { display: none; }
+nav a { padding: 8px 14px; border-radius: 12px; color: #3f6153; font-weight: 700; white-space: nowrap; }
+nav a:hover { color: var(--jasyl-matin); background: var(--karta2); }
+nav a.belsendi { color: var(--jasyl-matin); background: #dcf5e7; }
+nav .jaqynda { padding: 8px 14px; color: #b5cbbf; font-weight: 700; white-space: nowrap; cursor: default; }
+.paidalanushy { display: flex; align-items: center; gap: 10px; background: var(--fon); color: var(--matin); padding: 6px 14px 6px 6px; border-radius: 30px; font-size: 14px; line-height: 1.2; }
+.paidalanushy b { color: var(--sary-matin); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--kulgin); color: #fff; display: grid; place-items: center; font-weight: 900; }
+
+
+/* ----- КАРТА, БАТЫРМА, ЕНГІЗУ ----- */
+.karta { background: var(--karta); border: 1px solid var(--shekara); border-radius: 20px; padding: 22px; box-shadow: 0 6px 18px rgba(15, 46, 34, .07); }
+
+.btn {
+  display: inline-block; border: none; cursor: pointer; font-family: inherit;
+  font-size: 16px; font-weight: 800; padding: 13px 22px; border-radius: 14px;
+  background: var(--karta2); color: var(--matin); transition: transform .1s, filter .1s;
+}
+.btn:hover { filter: brightness(1.05); }
+.btn:active { transform: scale(.97); }
+.btn-sary { background: var(--sary); color: #3a2f00; box-shadow: 0 4px 0 #caa900; }
+.btn-sary:active { box-shadow: 0 2px 0 #caa900; }
+.btn-jasyl { background: var(--jasyl); color: #fff; }
+.btn-qyzyl { background: var(--qyzyl); color: #fff; }
+.btn-bos { background: transparent; border: 2px solid var(--shekara); color: var(--mut); }
+.btn-kishi { padding: 8px 14px; font-size: 14px; border-radius: 10px; }
+
+input, select, textarea {
+  font-family: inherit; font-size: 17px; color: var(--matin);
+  background: #fff; border: 2px solid var(--shekara); border-radius: 12px;
+  padding: 12px 14px; width: 100%; outline: none;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--kok); }
+input.durys { border-color: var(--jasyl); }
+input.qate { border-color: var(--qyzyl); animation: silkinu .3s; }
+textarea { min-height: 90px; resize: vertical; }
+
+@keyframes silkinu {
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+/* Прогресс жолағы */
+.jolaq { height: 10px; background: var(--karta2); border-radius: 6px; overflow: hidden; }
+.jolaq i { display: block; height: 100%; border-radius: 6px; transition: width .4s; }
+
+/* Карталар торы */
+.tor { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+
+
+/* ----- БАСТЫ БЕТ ----- */
+.basty {
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; align-items: center; margin-bottom: 36px;
+  background: linear-gradient(135deg, var(--jasyl), var(--kok)); color: #fff;
+  padding: 36px; border-radius: 28px; box-shadow: 0 18px 40px rgba(22, 163, 74, .25);
+}
+.basty > div:first-child > .mut { color: #e3fbef; }
+.basty .btn:not(.btn-sary) { background: #ffffff26; color: #fff; border: 1px solid #ffffff55; }
+.basty .karta { color: var(--matin); }
+.basty h1 { font-size: 50px; }
+.basty h1 em { font-style: normal; color: var(--sary); }
+.belgi { display: inline-block; background: #ffffff2e; color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+.batyrmalar { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+.bolim-karta { display: block; transition: transform .15s; }
+.bolim-karta:hover { transform: translateY(-3px); }
+.bolim-karta .ikon { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; margin-bottom: 12px; }
+.bolim-karta p { color: var(--mut); font-size: 15px; margin-top: 4px; }
+.bolim-karta.jabyq { opacity: .45; pointer-events: none; }
+
+.tarau-qatar { display: flex; justify-content: space-between; margin: 12px 0 6px; font-size: 15px; }
+
+
+/* ----- САБАҚТАР ----- */
+.sabak-tizim { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.sabak-qatar { display: flex; align-items: center; gap: 12px; padding: 13px 16px; background: var(--fon); border: 1px solid var(--shekara); border-radius: 14px; }
+.sabak-qatar:hover { border-color: var(--jasyl); }
+.sabak-qatar .san { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 800; background: #fff; border: 1px solid var(--shekara); flex: none; }
+.sabak-qatar.otken .san { background: var(--jasyl); border-color: var(--jasyl); color: #fff; }
+.sabak-qatar.jabyq { opacity: .5; cursor: not-allowed; }
+.sabak-qatar .ong { margin-left: auto; color: var(--mut); font-size: 14px; white-space: nowrap; }
+
+/* Сабақ беті */
+.sabak-bet { display: grid; grid-template-columns: 270px 1fr; gap: 26px; align-items: start; }
+.bui-panel { position: sticky; top: 90px; }
+.bui-panel a { display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 12px; font-size: 15px; margin-bottom: 2px; }
+.bui-panel a.qazir { background: #dcf5e7; color: var(--jasyl-matin); font-weight: 800; }
+.bui-panel a.jabyq { opacity: .45; pointer-events: none; }
+.bui-panel .san { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; background: var(--karta2); flex: none; }
+.bui-panel .otken .san { background: var(--jasyl); color: #fff; }
+
+.video { position: relative; padding-top: 56.25%; border-radius: 20px; overflow: hidden; background: #000; margin-bottom: 18px; }
+.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+.formula { background: #fff8e6; border: 2px dashed var(--sary); border-radius: 14px; padding: 16px; text-align: center; font-size: 24px; font-weight: 800; color: var(--sary-matin); margin: 14px 0; }
+.teoriya p { margin-bottom: 10px; }
+.erezhe { margin: 6px 0; }
+.keste { border-collapse: collapse; margin: 10px 0; font-size: 18px; }
+.keste th, .keste td { border: 1px solid var(--shekara); padding: 8px 16px; text-align: center; }
+.keste th { color: var(--sary-matin); }
+
+.qadam { display: flex; gap: 12px; align-items: flex-start; margin: 10px 0; }
+.qadam b { min-width: 28px; height: 28px; border-radius: 50%; background: #dcf5e7; color: var(--jasyl-matin); display: grid; place-items: center; font-size: 14px; }
+
+.nuskalar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.nuska { min-width: 90px; }
+.nuska.durys { background: var(--jasyl); color: #fff; }
+.nuska.qate { background: var(--qyzyl); color: #fff; }
+
+.bolim { margin-bottom: 18px; }
+
+
+/* ----- ХАБАРЛАМА ----- */
+#habar {
+  position: fixed; left: 50%; bottom: 30px; transform: translate(-50%, 120px);
+  background: var(--sary); color: #3a2f00; font-weight: 900; padding: 14px 26px;
+  border-radius: 30px; transition: transform .3s; z-index: 100;
+}
+#habar.korinedi { transform: translate(-50%, 0); }
+
+
+/* ----- ТЕРЕЗЕ (аты сұрау, растау) ----- */
+.qalqan { position: fixed; inset: 0; background: rgba(15, 46, 34, .5); display: grid; place-items: center; z-index: 50; padding: 20px; }
+.qalqan .karta { width: 100%; max-width: 420px; }
+.qalqan input { margin: 14px 0; }
+
+
+/* ----- ӘКІМШІ ПАНЕЛІ ----- */
+.admin-bas { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.qoiyndylar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.qoiyndylar .btn.belsendi { background: var(--jasyl); color: #fff; }
+.admin-tor { display: grid; grid-template-columns: 1fr 1.2fr; gap: 20px; align-items: start; }
+.admin-qatar { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--fon); border: 1px solid var(--shekara); border-radius: 12px; margin-bottom: 6px; font-size: 15px; }
+.admin-qatar .aty { flex: 1; }
+.oris { margin-bottom: 14px; }
+.oris label { display: block; font-size: 14px; color: var(--mut); font-weight: 700; margin-bottom: 5px; }
+.oris small { color: var(--mut); font-size: 13px; }
+.eki { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.statistika { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.statistika .karta b { display: block; font-size: 30px; }
+
+
+/* ----- ТАР ЭКРАН: мәзір екі қатарға түседі ----- */
+@media (max-width: 1100px) {
+  .menu-ishi { flex-wrap: wrap; height: auto; padding-top: 10px; padding-bottom: 8px; gap: 8px; }
+  nav { order: 3; width: 100%; flex: none; }
+  .paidalanushy { margin-left: auto; }
+}
+
+/* ----- ТЕЛЕФОН ----- */
+@media (max-width: 860px) {
+  .basty, .sabak-bet, .admin-tor { grid-template-columns: 1fr; }
+  .basty h1 { font-size: 36px; }
+  .basty { padding: 24px; }
+  h1 { font-size: 30px; }
+  .bui-panel { position: static; }
+  .eki { grid-template-columns: 1fr; }
+}
+
+
+
+/* Карталарда жиек жоқ, тек жұмсақ көлеңке */
+.karta { border: none; }
+
+
+/* ----- КІРУ БЕТІ ----- */
+.kiru-bet { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+.kiru-karta { width: 100%; max-width: 420px; }
+.kiru-qoiyndy { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--karta2); padding: 5px; border-radius: 14px; margin-bottom: 18px; }
+.kiru-qoiyndy .btn { background: transparent; color: var(--mut); }
+.kiru-qoiyndy .btn.belsendi { background: #fff; color: var(--matin); box-shadow: 0 2px 8px rgba(15, 46, 34, .08); }
+.shygu-btn { background: var(--fon); color: var(--mut); }
+.shygu-btn:hover { color: var(--qyzyl); }
+.oqushy-keste { width: 100%; border-collapse: collapse; font-size: 15px; }
+.oqushy-keste th { text-align: left; color: var(--mut); font-size: 13px; padding: 8px; border-bottom: 2px solid var(--shekara); white-space: nowrap; }
+.oqushy-keste td { padding: 10px 8px; border-bottom: 1px solid var(--shekara); white-space: nowrap; }
+
+/* ----- ЖҮКТЕЛУ -----
+   Деректер дерекқордан келгенше бетті жасырып, жүктелу белгісін көрсетеміз */
+body.juklenude main, body.juklenude #menu { visibility: hidden; }
+body.juklenude::after {
+  content: "Жүктелуде…"; position: fixed; inset: 0; display: grid; place-items: center;
+  color: var(--mut); font-size: 20px; font-weight: 800;
+}
+
+/* Әкімші панеліндегі оқушылар кестесі: қатарды басуға болады */
+.oqushy-qatar { cursor: pointer; }
+.oqushy-qatar:hover td { background: var(--karta2); }
