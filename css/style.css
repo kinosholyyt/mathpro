@@ -166,6 +166,22 @@ textarea { min-height: 90px; resize: vertical; }
 .bolim { margin-bottom: 18px; }
 
 
+/* ----- ЕСЕПТЕР ----- */
+.suzgi { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 24px; }
+.suzgi .btn.belsendi { background: var(--jasyl); color: #fff; }
+.esep-tizim { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 16px; }
+.esep.sheshilgen { border-color: var(--jasyl); box-shadow: 0 0 0 1px var(--jasyl); }
+.esep-bas { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; }
+.belgi-jasyl { color: var(--jasyl-matin); font-weight: 800; }
+.esep-suraq { font-size: 21px; font-weight: 800; margin-bottom: 14px; }
+.esep-jol { display: flex; gap: 10px; }
+.esep-jol input { flex: 1; }
+.esep-natije { min-height: 26px; margin: 10px 0 4px; }
+.esep-kenes { background: #fff8e6; border-radius: 12px; padding: 12px 14px; font-size: 15px; margin-bottom: 10px; }
+.qadamdar { background: var(--fon); border-radius: 12px; padding: 6px 14px; margin-top: 8px; font-size: 15px; }
+.sabak-tobi { margin: 30px 0 12px; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+
+
 /* ----- ХАБАРЛАМА ----- */
 #habar {
   position: fixed; left: 50%; bottom: 30px; transform: translate(-50%, 120px);
@@ -210,6 +226,7 @@ textarea { min-height: 90px; resize: vertical; }
   .basty { padding: 24px; }
   h1 { font-size: 30px; }
   .bui-panel { position: static; }
+  .esep-tizim { grid-template-columns: 1fr; }
   .eki { grid-template-columns: 1fr; }
 }
 
@@ -218,6 +235,11 @@ textarea { min-height: 90px; resize: vertical; }
 /* Карталарда жиек жоқ, тек жұмсақ көлеңке */
 .karta { border: none; }
 
+
+/* ----- ФОРМУЛАЛАР ----- */
+.izdeu { max-width: 520px; margin: 16px 0 8px; }
+.formula-karta .f { font-size: 24px; font-weight: 900; color: var(--sary-matin); margin: 8px 0; }
+.formula-karta .mysal { background: var(--fon); border-radius: 10px; padding: 8px 12px; font-size: 15px; color: var(--mut); }
 
 /* ----- КІРУ БЕТІ ----- */
 .kiru-bet { min-height: 100vh; display: grid; place-items: center; padding: 20px; }

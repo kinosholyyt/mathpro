@@ -195,7 +195,9 @@ function menuSalu(belsendiBet) {
   // Жаңа бет қосылса, осы тізімге жаңа жол қос.
   let siltemeler = [
     ["index.html", "Басты бет"],
-    ["sabaktar.html", "Сабақтар"]
+    ["sabaktar.html", "Сабақтар"],
+    ["esepter.html", "Есептер"],
+    ["formulalar.html", "Формулалар"]
   ];
 
   let menuHtml = "";
@@ -220,7 +222,7 @@ function menuSalu(belsendiBet) {
 }
 
 
-// ----- 5. САНДАР (әкімші панелінде есептің жауабы үшін) -----
+// ----- 5. ЖАУАПТЫ ТЕКСЕРУ -----
 
 // Оқушы жазған мәтінді санға айналдыру.
 // "x = 5", "0,5", "1/2", " 3 " — бәрін түсінеді.
@@ -247,13 +249,112 @@ function sanGaAinaldyru(matin) {
   return Number(matin);
 }
 
+// Жауап дұрыс па? (0,01 дәлдікпен салыстырамыз)
+function jauapDurysPa(engizilgen, durysJauap) {
+  let san = sanGaAinaldyru(engizilgen);
+  if (isNaN(san)) return false;
+  return Math.abs(san - durysJauap) < 0.01;
+}
+
 // Санды қазақша жазу: 0.5 → "0,5"
 function sandyJazu(san) {
   return String(san).replace(".", ",").replace("-", "−");
 }
 
 
-// ----- 6. ІЗДЕУ ЖӘНЕ ЕСЕПТЕУ КӨМЕКШІЛЕРІ -----
+// ----- 6. ЕСЕП КАРТАСЫ -----
+// Бір есепті экранға шығарады: сұрақ, жауап жолы, тексеру,
+// кеңес және шешу жолы. Есептер, Күн тапсырмасы беттерінде қолданылады.
+
+function esepKartasy(esep, konteiner, durysBolganda) {
+  let oqushy = oqushyAlu();
+  let buryn = oqushy.esepter[esep.id] === true;
+
+  let karta = document.createElement("div");
+  karta.className = "karta esep";
+  if (buryn) karta.className += " sheshilgen";
+
+  // Шешу жолының қадамдары
+  let qadamHtml = "";
+  for (let i = 0; i < esep.qadamdar.length; i++) {
+    qadamHtml += "<div class='qadam'><b>" + (i + 1) + "</b><span>" + esep.qadamdar[i] + "</span></div>";
+  }
+
+  let belgi = "";
+  if (buryn) belgi = "<span class='belgi-jasyl'>✓ Шешілген</span>";
+
+  karta.innerHTML =
+    "<div class='esep-bas'><span class='mut'>Есеп</span>" + belgi + "</div>" +
+    "<div class='esep-suraq'>" + esep.suraq + "</div>" +
+    "<div class='esep-jol'>" +
+      "<input type='text' inputmode='decimal' placeholder='Жауабыңды жаз'>" +
+      "<button class='btn btn-sary'>Тексеру</button>" +
+    "</div>" +
+    "<div class='esep-natije'></div>" +
+    "<div class='esep-kenes jasyryn'>💡 <b>Кеңес:</b> " + esep.kenes + "</div>" +
+    "<button class='btn btn-bos sheshu-btn jasyryn'>Шешу жолын көру</button>" +
+    "<div class='qadamdar jasyryn'>" + qadamHtml + "</div>";
+
+  konteiner.appendChild(karta);
+
+  let engizu = karta.querySelector("input");
+  let batyrma = karta.querySelector(".esep-jol button");
+  let natije = karta.querySelector(".esep-natije");
+  let kenes = karta.querySelector(".esep-kenes");
+  let sheshuBtn = karta.querySelector(".sheshu-btn");
+  let qadamdar = karta.querySelector(".qadamdar");
+  let qateSany = 0;
+
+  // "Тексеру" батырмасы басылғанда
+  function tekseru() {
+    if (engizu.value.trim() === "") {
+      natije.innerHTML = "<span class='mut'>Алдымен жауабыңды жаз.</span>";
+      return;
+    }
+
+    let oqushy = oqushyAlu();
+    oqushy.talpynys = oqushy.talpynys + 1;
+
+    if (jauapDurysPa(engizu.value, esep.jauap)) {
+      oqushy.durysSany = oqushy.durysSany + 1;
+      let jana = oqushy.esepter[esep.id] !== true;
+      oqushy.esepter[esep.id] = true;
+      oqushySaqtau(oqushy);
+
+      engizu.className = "durys";
+      karta.className = "karta esep sheshilgen";
+      natije.innerHTML = "<span class='jasyl'>✅ Дұрыс! Жарайсың!</span>";
+      qadamdar.classList.remove("jasyryn");
+      sheshuBtn.classList.add("jasyryn");
+
+      if (jana) {
+        // Бірінші талпыныста шешсе 10 ұпай, әйтпесе 5 ұпай
+        if (qateSany === 0) upaiQosu(10);
+        else upaiQosu(5);
+      }
+      if (durysBolganda) durysBolganda(esep);
+    } else {
+      oqushySaqtau(oqushy);
+      qateSany = qateSany + 1;
+      engizu.className = "qate";
+      natije.innerHTML = "<span class='qyzyl'>❌ Қате. Тағы көр!</span>";
+      kenes.classList.remove("jasyryn");          // 1-қатеден кейін кеңес
+      if (qateSany >= 2) sheshuBtn.classList.remove("jasyryn"); // 2-қатеден кейін шешу жолы
+    }
+  }
+
+  batyrma.onclick = tekseru;
+  engizu.onkeydown = function (e) {
+    if (e.key === "Enter") tekseru();
+  };
+  sheshuBtn.onclick = function () {
+    qadamdar.classList.remove("jasyryn");
+    sheshuBtn.classList.add("jasyryn");
+  };
+}
+
+
+// ----- 7. ІЗДЕУ ЖӘНЕ ЕСЕПТЕУ КӨМЕКШІЛЕРІ -----
 
 function taraudyTabu(id) {
   for (let i = 0; i < TARAULAR.length; i++) {
@@ -341,7 +442,7 @@ function sanau(obekt) {
 }
 
 
-// ----- 7. YOUTUBE СІЛТЕМЕСІНЕН ВИДЕО КОДЫН АЛУ -----
+// ----- 8. YOUTUBE СІЛТЕМЕСІНЕН ВИДЕО КОДЫН АЛУ -----
 // "https://www.youtube.com/watch?v=ABC123" → "ABC123"
 // "https://youtu.be/ABC123" → "ABC123"
 
@@ -361,7 +462,7 @@ function youtubeKodyn(silteme) {
 }
 
 
-// ----- 8. ЕҢ СОҢЫНДА: БЕТТІ ІСКЕ ҚОСУ -----
+// ----- 9. ЕҢ СОҢЫНДА: БЕТТІ ІСКЕ ҚОСУ -----
 // <body data-bet="..."> бар беттерде деректерді жүктеп, беттің кодын қосамыз.
 // Кіру беті мен әкімші панелінде data-bet жоқ, олар өздері басқарады.
 

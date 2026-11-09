@@ -155,6 +155,7 @@ function sabaktyAyaqtau() {
 
 function sonyndagyBatyrmalar() {
   document.getElementById("sonyndagy").classList.remove("jasyryn");
+  document.getElementById("esepke-otu").href = "esepter.html?sabak=" + sabak.id;
 
   // Келесі сабақ: дәл осы тараудағы келесісі, болмаса тізімге
   let sabaktar = tarauSabaktary(sabak.tarau);

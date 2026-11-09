@@ -252,3 +252,33 @@ let ESEPTER = [
   { id: "e47", sabak: "func3", suraq: "y = 2x² − 8x + 1. Төбесінің x₀ = ?", jauap: 2, kenes: "x₀ = −b : 2a", qadamdar: ["a = 2, b = −8", "x₀ = 8 : 4 = 2"] },
   { id: "e48", sabak: "func3", suraq: "y = x² − 4 графигі Ox осін қиятын оң нүкте x = ?", jauap: 2, kenes: "Ox осінде y = 0: x² − 4 = 0", qadamdar: ["x² = 4", "x = ±2", "Оң нүкте: x = 2"] }
 ];
+
+
+// ----- ФОРМУЛАЛАР -----
+let FORMULALAR = [
+  { tarau: "alg",  aty: "Сызықтық теңдеудің шешімі",  formula: "ax + b = c  →  x = (c − b) : a", mysal: "3x + 7 = 22  →  x = 5" },
+  { tarau: "alg",  aty: "Дискриминант",               formula: "D = b² − 4ac",                    mysal: "x² − 5x + 6 = 0  →  D = 1" },
+  { tarau: "alg",  aty: "Квадрат теңдеудің түбірлері", formula: "x = (−b ± √D) : 2a",              mysal: "x² − 5x + 6 = 0  →  x = 2; 3" },
+  { tarau: "alg",  aty: "Дәрежелерді көбейту",         formula: "aᵐ · aⁿ = aᵐ⁺ⁿ",                  mysal: "2³ · 2² = 2⁵ = 32" },
+  { tarau: "alg",  aty: "Дәрежелерді бөлу",            formula: "aᵐ : aⁿ = aᵐ⁻ⁿ",                  mysal: "5⁶ : 5⁴ = 5² = 25" },
+  { tarau: "alg",  aty: "Дәрежені дәрежеге шығару",    formula: "(aᵐ)ⁿ = aᵐ·ⁿ",                    mysal: "(2³)² = 2⁶ = 64" },
+  { tarau: "alg",  aty: "Нөлдік дәреже",               formula: "a⁰ = 1",                          mysal: "10⁰ = 1" },
+  { tarau: "alg",  aty: "Қосындының квадраты",         formula: "(a + b)² = a² + 2ab + b²",        mysal: "(x + 3)² = x² + 6x + 9" },
+  { tarau: "alg",  aty: "Квадраттардың айырымы",       formula: "a² − b² = (a − b)(a + b)",        mysal: "x² − 9 = (x − 3)(x + 3)" },
+  { tarau: "geo",  aty: "Үшбұрыш бұрыштарының қосындысы", formula: "∠A + ∠B + ∠C = 180°",          mysal: "50° + 60° + 70° = 180°" },
+  { tarau: "geo",  aty: "Үшбұрыштың ауданы",           formula: "S = ½ · a · h",                   mysal: "a = 10, h = 6  →  S = 30" },
+  { tarau: "geo",  aty: "Пифагор теоремасы",           formula: "c² = a² + b²",                    mysal: "3² + 4² = 5²" },
+  { tarau: "geo",  aty: "Тіктөртбұрыштың ауданы",      formula: "S = a · b",                       mysal: "a = 4, b = 5  →  S = 20" },
+  { tarau: "geo",  aty: "Квадраттың ауданы",           formula: "S = a²",                          mysal: "a = 5  →  S = 25" },
+  { tarau: "geo",  aty: "Трапецияның ауданы",          formula: "S = ½ · (a + b) · h",             mysal: "a = 4, b = 6, h = 3  →  S = 15" },
+  { tarau: "geo",  aty: "Шеңбердің ұзындығы",          formula: "C = 2πr",                         mysal: "r = 5  →  C = 31,4" },
+  { tarau: "geo",  aty: "Дөңгелектің ауданы",          formula: "S = πr²",                         mysal: "r = 10  →  S = 314" },
+  { tarau: "trig", aty: "Синус",                       formula: "sin A = қарсы катет : гипотенуза", mysal: "3 : 5 = 0,6" },
+  { tarau: "trig", aty: "Косинус",                     formula: "cos A = іргелес катет : гипотенуза", mysal: "4 : 5 = 0,8" },
+  { tarau: "trig", aty: "Тангенс",                     formula: "tg A = sin A : cos A",            mysal: "0,6 : 0,8 = 0,75" },
+  { tarau: "trig", aty: "Негізгі тепе-теңдік",         formula: "sin²α + cos²α = 1",               mysal: "0,6² + 0,8² = 1" },
+  { tarau: "trig", aty: "Негізгі мәндер",              formula: "sin 30° = 1/2,  cos 60° = 1/2,  tg 45° = 1", mysal: "sin 30° + cos 60° = 1" },
+  { tarau: "func", aty: "Сызықтық функция",            formula: "y = kx + b",                      mysal: "y = 2x − 4: k = 2, b = −4" },
+  { tarau: "func", aty: "Квадраттық функция",          formula: "y = ax² + bx + c",                mysal: "y = x² − 4x + 3" },
+  { tarau: "func", aty: "Параболаның төбесі",          formula: "x₀ = −b : 2a",                    mysal: "y = x² − 4x + 3  →  x₀ = 2" }
+];

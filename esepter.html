@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Есептер · MathPro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&subset=cyrillic-ext&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=8">
+</head>
+<!-- Деректер жүктелген соң, ortak.js осы беттің кодын (data-bet) қосады -->
+<body data-bet="js/esepter.js?v=8">
+  <header id="menu"></header>
+
+  <main class="ishki bet">
+    <h1>Есептер</h1>
+    <p class="mut">Жауабыңды жазып, «Тексеру» бас. Қателессең кеңес шығады, екі рет қателессең шешу жолын көре аласың.</p>
+    <p style="margin-top:8px">Шешілді: <b class="jasyl" id="sheshildi">0</b> / <span id="barlygy">0</span></p>
+
+    <!-- Тарау бойынша сүзгі батырмалары -->
+    <div class="suzgi" id="suzgi"></div>
+
+    <!-- Есептер осы жерге шығады -->
+    <div id="esepter"></div>
+  </main>
+
+  <!-- Firebase кітапханасы (кіру және дерекқор) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-baptau.js?v=8"></script>
+  <script src="js/derekter.js?v=8"></script>
+  <script src="js/ortak.js?v=8"></script>
+</body>
+</html>
