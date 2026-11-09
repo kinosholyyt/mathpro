@@ -61,7 +61,6 @@ nav::-webkit-scrollbar { display: none; }
 nav a { padding: 8px 14px; border-radius: 12px; color: #3f6153; font-weight: 700; white-space: nowrap; }
 nav a:hover { color: var(--jasyl-matin); background: var(--karta2); }
 nav a.belsendi { color: var(--jasyl-matin); background: #dcf5e7; }
-nav .jaqynda { padding: 8px 14px; color: #b5cbbf; font-weight: 700; white-space: nowrap; cursor: default; }
 .paidalanushy { display: flex; align-items: center; gap: 10px; background: var(--fon); color: var(--matin); padding: 6px 14px 6px 6px; border-radius: 30px; font-size: 14px; line-height: 1.2; }
 .paidalanushy b { color: var(--sary-matin); }
 .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--kulgin); color: #fff; display: grid; place-items: center; font-weight: 900; }
@@ -124,7 +123,6 @@ textarea { min-height: 90px; resize: vertical; }
 .bolim-karta:hover { transform: translateY(-3px); }
 .bolim-karta .ikon { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; font-size: 26px; margin-bottom: 12px; }
 .bolim-karta p { color: var(--mut); font-size: 15px; margin-top: 4px; }
-.bolim-karta.jabyq { opacity: .45; pointer-events: none; }
 
 .tarau-qatar { display: flex; justify-content: space-between; margin: 12px 0 6px; font-size: 15px; }
 

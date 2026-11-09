@@ -191,25 +191,15 @@ function menuSalu(belsendiBet) {
   kunderdiTirkeu();
   let oqushy = oqushyAlu();
 
-  // [бет, атауы, дайын ба]
-  // Бет дайын болғанда үшінші мәнді true қыл.
+  // [бет, атауы]
+  // Жаңа бет қосылса, осы тізімге жаңа жол қос.
   let siltemeler = [
-    ["index.html", "Басты бет", true],
-    ["sabaktar.html", "Сабақтар", true],
-    ["esepter.html", "Есептер", false],
-    ["testter.html", "Тесттер", false],
-    ["oiyndar.html", "Ойындар", false],
-    ["formulalar.html", "Формулалар", false],
-    ["natizhe.html", "Нәтижем", false]
+    ["index.html", "Басты бет"],
+    ["sabaktar.html", "Сабақтар"]
   ];
 
   let menuHtml = "";
   for (let i = 0; i < siltemeler.length; i++) {
-    if (siltemeler[i][2] === false) {
-      // Дайын емес бет: басылмайды
-      menuHtml += "<span class='jaqynda' title='Жақында'>" + siltemeler[i][1] + "</span>";
-      continue;
-    }
     let synyp = "";
     if (siltemeler[i][0] === belsendiBet) synyp = "belsendi";
     menuHtml += "<a class='" + synyp + "' href='" + siltemeler[i][0] + "'>" + siltemeler[i][1] + "</a>";
