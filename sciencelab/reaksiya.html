@@ -65,7 +65,7 @@ details.home b{color:var(--ink);font-weight:500}
   </div>
 
   <aside class="r">
-    <div class="sec"><h4>Нұсқаулық <span id="gn">1-қадам</span></h4><div class="gd" id="gd"></div></div>
+    <div class="sec"><h4>Нұсқаулық <span id="gn">1-қадам</span></h4><p class="what" style="margin-bottom:4px"><b>Затты қалай қосады?</b>Затты тышқанмен (телефонда саусақпен) ұстап, ыдыстың үстіне апар. Ол өзі еңкейіп, ұстап тұрғаныңша құйыла береді. Дәл мөлшер керек болса, төмендегі − + және «Құю» батырмасын қолдан. Натрий кесегін сүзгі қағазға, тақтайшаға, сосын суға сүйреп апар.</p><div class="gd" id="gd"></div></div>
     <div class="sec"><h4>Өлшеу <span id="live">күтуде</span></h4>
       <div class="big"><div><small id="gasN">БӨЛІНГЕН ГАЗ</small><b id="gv">0,00 л</b></div><div class="fm" id="gasF"></div></div>
       <div class="kv" id="kv"></div></div>
@@ -96,6 +96,8 @@ const K = await window.SLkit;
 const { THREE, V, M, makeWorld, table, erlen, beaker, RoundedBoxGeometry, fmt, initNav, addPts, toast, quiz, progress } = K;
 initNav();
 try { await document.fonts.ready; } catch (e) { }
+// Барлық await осы жерде: сахна іске қосылғаннан кейін кідіріс болмауы керек
+const { MarchingCubes } = await import("three/addons/objects/MarchingCubes.js");
 const $ = (id) => document.getElementById(id);
 const Vm = 24; // 1 моль газ бөлме температурасында шамамен 24 л орын алады
 
@@ -230,13 +232,13 @@ place("h2o2", bottle({ r: 0.36, h: 1.45, solid: 0x4a2f18, a: "H₂O₂", b: "п�
 place("pp", dropper(0xf1dfe6, "Ф-фталеин", "индикатор"), -2.3, 1.9, 0.3);
 { const j = jar("Натрий", "керосинде", 0.8, new THREE.MeshPhysicalMaterial({ color: 0xc9a94a, roughness: 0.1, transmission: 0.5, thickness: 0.5, transparent: true, opacity: 0.85 }));
   for (let i = 0; i < 4; i++) { const c = new THREE.Mesh(new RoundedBoxGeometry(0.16, 0.12, 0.14, 2, 0.03), M.matte(0x9da0a6, 0.6)); c.position.set((i % 2 - .5) * 0.22, 0.1 + (i > 1 ? 0.13 : 0), (i % 3 - 1) * 0.1); c.rotation.y = i; j.add(c); }
-  place("na", j, 3.2, -0.2, -0.2); }
+  place("na", j, 3.3, -0.8, -0.2); }
 // натрийге арналған құралдар: сүзгі қағаз, тақтайша, пышақ, пинцет
 const tools = new THREE.Group(); sc.add(tools);
-{ const paper = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.012, 0.8), M.matte(0xf2f0ea, 0.95)); paper.position.set(2.5, 0.006, 1.6); tools.add(paper);
-  const board = new THREE.Mesh(new RoundedBoxGeometry(1.1, 0.06, 0.8, 2, 0.02), M.matte(0x8a6a4a, 0.8)); board.position.set(3.9, 0.03, 1.5); tools.add(board);
-  const kn = new THREE.Group(); const bl = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.008, 0.09), M.chrome()); bl.position.x = 0.2; kn.add(bl); const hn = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.04, 0.07), M.matte(0x2b2b2b, 0.6)); hn.position.x = -0.22; kn.add(hn); kn.position.set(3.95, 0.075, 1.72); kn.rotation.y = 0.2; tools.add(kn);
-  const tw = new THREE.Group(); [-1, 1].forEach(s => { const a = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.012, 0.03), M.chrome()); a.position.set(0, 0.02, s * 0.03); a.rotation.y = s * 0.05; tw.add(a); }); tw.position.set(2.3, 0.01, 2.2); tw.rotation.y = -0.3; tools.add(tw);
+{ const paper = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.012, 0.8), M.matte(0xf2f0ea, 0.95)); paper.position.set(2.55, 0.006, 0.9); tools.add(paper);
+  const board = new THREE.Mesh(new RoundedBoxGeometry(1.1, 0.06, 0.8, 2, 0.02), M.matte(0x8a6a4a, 0.8)); board.position.set(3.1, 0.03, 2.0); tools.add(board);
+  const kn = new THREE.Group(); const bl = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.008, 0.09), M.chrome()); bl.position.x = 0.2; kn.add(bl); const hn = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.04, 0.07), M.matte(0x2b2b2b, 0.6)); hn.position.x = -0.22; kn.add(hn); kn.position.set(3.15, 0.075, 2.25); kn.rotation.y = 0.2; tools.add(kn);
+  const tw = new THREE.Group(); [-1, 1].forEach(s => { const a = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.012, 0.03), M.chrome()); a.position.set(0, 0.02, s * 0.03); a.rotation.y = s * 0.05; tw.add(a); }); tw.position.set(1.75, 0.01, 2.35); tw.rotation.y = -0.3; tools.add(tw);
   W.shadows(tools); }
 const naPiece = new THREE.Mesh(new RoundedBoxGeometry(1, 0.8, 0.9, 2, 0.12), new THREE.MeshStandardMaterial({ color: 0x8f9298, metalness: 0.6, roughness: 0.6 })); naPiece.visible = false; naPiece.castShadow = true; sc.add(naPiece);
 
@@ -272,7 +274,6 @@ let pIdx = 0;
 // kind: 0 көбік (үйіледі), 1 көпіршік (уақытша), 2 тамшы/ұнтақ (түскенде жоғалады)
 function spawn(pos, vel, r, c, kind, life) { const i = pIdx, q = P[i]; pIdx = (pIdx + 1) % NP; q.on = true; q.st = false; q.p.copy(pos); q.v.copy(vel); q.r = r; q.kind = kind; q.life = life || 99; parts.setColorAt(i, col.set(c)); parts.instanceColor.needsUpdate = true; }
 // --- тұтас көбік: шарлар емес, бір-біріне қосылып кететін жұмсақ масса ---
-const { MarchingCubes } = await import("three/addons/objects/MarchingCubes.js");
 const MS = 4.2; // көбік көлемінің жарты өлшемі
 const mc = new MarchingCubes(76, new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.8, metalness: 0 }), false, false, 120000);
 mc.isolation = 80; mc.scale.setScalar(MS); mc.position.set(0, MS - 0.4, 0.3); mc.castShadow = true; mc.receiveShadow = true; mc.frustumCulled = false; sc.add(mc);
@@ -331,43 +332,156 @@ const logA = [];
 function log(t) { logA.push(t); $("log").innerHTML = logA.map((l, i) => `<div><i>${String(i + 1).padStart(2, "0")}</i><span>${l}</span></div>`).join(""); $("log").scrollTop = 1e6; }
 const fa = (v, s) => s.unit === "г" && s.step < 1 ? fmt(v, 1) : String(v);
 
-function add() {
-  if (anim || !sel) return;
-  const s = SUB[sel], a = amt, o = OBJ[sel];
-  if (s.kind === "na") return naAction();
-  if ((s.unit === "мл") && C.vol + a > RX[cur].cap) { toast("Ыдысқа сыймайды: азырақ құй немесе ↺ арқылы босат"); return; }
-  const m = mouth(), side = o.userData.home.x < 0 ? -1 : 1, h = o.userData.h || 0.8;
-  const color = sel === "dye" ? DYE[dyeC] : s.color;
-  const pour = s.kind === "liquid";
-  const target = pour ? V(m.x + side * 0.9 * h, m.y + 0.2 + 0.32 * h, m.z) : V(m.x + side * 0.12, m.y + 0.75, m.z);
-  anim = { o, t: 0, dur: pour ? 1.8 : 1.5, from: o.position.clone(), to: target, rot: pour ? side * 1.9 : side * 0.5, kind: s.kind, color, done: false, n: s.kind === "drop" ? a : 0, next: 0.45,
-    apply: () => {
-      if (sel === "vinegar") { C.vinegar += a; C.nA += a * 0.09 / 60; C.vol += a; log(`Колбаға <b>${a} мл сірке суын</b> құйдың.`); }
-      if (sel === "soda") { C.soda += a; C.nS += a / 84; if (C.nA < 1e-4 && C.vinegar > 0) { C.tried = true; log(`Тағы <b>${a} г сода</b> салдың, бірақ <b>көбік шықпады</b>: сірке қышқылы бітіп қалған. Сода түбіне шөкті.`); explain("limit"); } else if (C.vinegar === 0) log(`Колбаға <b>${a} г сода</b> салдың. Ештеңе болмады: сода жалғыз өзі әрекеттеспейді, оған қышқыл керек.`); else log(`Колбаға <b>${a} г сода</b> салдың.`); }
-      if (sel === "soap") { C.soap += a; C.vol += a; log(`<b>${a} мл сұйық сабын</b> қостың.`); }
-      if (sel === "dye") { C.dye += a; C.dyeCol = DYE[dyeC]; log(`<b>${a} тамшы ${dyeC} бояу</b> тамыздың.`); }
-      if (sel === "water") { C.water += a; C.vol += a; log(`Ыдысқа <b>${a} мл су</b> құйдың.`); }
-      if (sel === "h2o2") { C.concEff = (C.nP > 1e-4 ? (C.concEff + conc) / 2 : conc); C.h2o2 += a; C.nP += a * conc / 100 / 34; C.vol += a; log(`Цилиндрге <b>${a} мл ${conc}% сутегі асқын тотығын</b> құйдың.${C.ki > 0 ? " Катализатор ыдыста қалғандықтан, реакция бірден басталды." : " Әзірге ештеңе байқалмайды."}`); }
-      if (sel === "ki") { C.ki += a; C.vol += a; log(C.nP > 1e-4 ? `<b>${a} мл калий иодиді</b> ерітіндісін (катализатор) құйдың.` : `<b>${a} мл калий иодидін</b> құйдың. Ештеңе болмады: ыдыста ыдырайтын зат (H₂O₂) жоқ.`); }
-      if (sel === "pp") { C.pp += a; log(`Суға <b>${a} тамшы фенолфталеин</b> тамыздың. Су түссіз қалды.`); }
-      C.started = true; ui();
-    } };
+// Затты ыдысқа қосу. Мөлшері кез келген бола алады, сондықтан үздіксіз құюға да жарайды.
+function addAmount(id, a) {
+  if (id === "vinegar") { C.vinegar += a; C.nA += a * 0.09 / 60; C.vol += a; }
+  if (id === "soda") { C.soda += a; C.nS += a / 84; }
+  if (id === "soap") { C.soap += a; C.vol += a; }
+  if (id === "dye") { C.dye += a; C.dyeCol = DYE[dyeC]; }
+  if (id === "water") { C.water += a; C.vol += a; }
+  if (id === "h2o2") { C.concEff = conc; C.h2o2 += a; C.nP += a * conc / 100 / 34; C.vol += a; }
+  if (id === "ki") { C.ki += a; C.vol += a; }
+  if (id === "pp") C.pp += a;
+  C.started = true;
 }
-// натриймен жұмыс: алу → кептіру → кесу → тастау
-const PAPER = V(2.5, 0.08, 1.6), BOARD = V(3.9, 0.12, 1.45);
+const snap = () => ({ nA: C.nA, vin: C.vinegar, nP: C.nP, ki: C.ki });
+function logPour(id, a, pre) {
+  const q = SUB[id].unit === "г" ? fmt(a, a % 1 ? 1 : 0) : Math.max(1, Math.round(a));
+  if (id === "vinegar") log(`Колбаға <b>${q} мл сірке суын</b> құйдың.`);
+  if (id === "soda") {
+    if (pre.nA < 1e-4 && pre.vin > 0) { C.tried = true; log(`Тағы <b>${q} г сода</b> салдың, бірақ <b>көбік шықпады</b>: сірке қышқылы бітіп қалған. Сода түбіне шөкті.`); explain("limit"); }
+    else if (pre.vin === 0) log(`Колбаға <b>${q} г сода</b> салдың. Ештеңе болмады: сода жалғыз өзі әрекеттеспейді, оған қышқыл керек.`);
+    else log(`Колбаға <b>${q} г сода</b> салдың.`);
+  }
+  if (id === "soap") log(`<b>${q} мл сұйық сабын</b> қостың.`);
+  if (id === "dye") log(`<b>${q} тамшы ${dyeC} бояу</b> тамыздың.`);
+  if (id === "water") log(`Ыдысқа <b>${q} мл су</b> құйдың.`);
+  if (id === "h2o2") log(`Цилиндрге <b>${q} мл ${conc}% сутегі асқын тотығын</b> құйдың.${pre.ki > 0 ? " Катализатор ыдыста қалғандықтан, реакция бірден басталды." : " Әзірге ештеңе байқалмайды."}`);
+  if (id === "ki") log(pre.nP > 1e-4 ? `<b>${q} мл калий иодиді</b> ерітіндісін (катализатор) құйдың.` : `<b>${q} мл калий иодидін</b> құйдың. Ештеңе болмады: ыдыста ыдырайтын зат (H₂O₂) жоқ.`);
+  if (id === "pp") log(`Суға <b>${q} тамшы фенолфталеин</b> тамыздың. Су түссіз қалды.`);
+  ui();
+}
+// «Құю» батырмасы: дәл мөлшерді автоматты түрде қосады
+function add() {
+  if (anim || mv || drag || !sel) return;
+  const id = sel, s = SUB[id], a = amt, o = OBJ[id];
+  if (s.kind === "na") return naAction();
+  if (s.unit === "мл" && C.vol + a > RX[cur].cap) { toast("Ыдысқа сыймайды: азырақ құй немесе ↺ арқылы босат"); return; }
+  const m = mouth(), side = o.position.x < m.x ? -1 : 1, h = o.userData.h || 0.8, pour = s.kind === "liquid";
+  const target = pour ? V(m.x + side * 0.9 * h, m.y + 0.2 + 0.32 * h, m.z) : V(m.x + side * 0.12, m.y + 0.75, m.z);
+  delete o.userData.settle;
+  anim = { o, t: 0, dur: pour ? 1.8 : 1.5, from: o.position.clone(), to: target, rot: pour ? side * 1.9 : side * 0.5, kind: s.kind, color: id === "dye" ? DYE[dyeC] : s.color, done: false, n: s.kind === "drop" ? a : 0, next: 0.45,
+    apply: () => { const pre = snap(); addAmount(id, a); logPour(id, a, pre); } };
+}
+// --- натриймен жұмыс: алу → кептіру → кесу → суға тастау ---
+const PAPER = V(2.55, 0.08, 0.9), BOARD = V(3.1, 0.12, 1.95);
+function naTake() { C.prep = 1; naPiece.visible = true; naPiece.scale.set(0.26, 0.2, 0.22); naPiece.material.color.set(0x7d7f84); naPiece.material.roughness = 0.25; naPiece.material.metalness = 0.6; naPiece.position.copy(OBJ.na.position).add(V(0, 1.2, 0)); log("Пинцетпен керосиннен <b>натрий кесегін</b> алдың. Беті керосиннен жылтырап тұр."); }
+function naDry() { C.prep = 2; naPiece.material.color.set(0x8f9298); naPiece.material.roughness = 0.7; log("Кесекті <b>сүзгі қағазбен кептірдің</b>. Беті күңгірт сұр: ауада тотыққан қабық."); }
+function naCut(m) { C.prep = 3; C.cutM = m; const k = 0.07 + Math.cbrt(m) * 0.09; naPiece.scale.set(k * 2, k * 1.6, k * 1.8); naPiece.material.color.set(0xd8dade); naPiece.material.roughness = 0.3; naPiece.material.metalness = 0.9; log(`Пышақпен <b>${fmt(m, 1)} г</b> кесіп алдың. Кесілген жері күмістей жылтыр: бұл таза натрий.`); }
+function naDrop() { const m = C.cutM; C.prep = 0; C.piece = { n: m / 23, n0: m / 23, m, v: V(0, 0, 0), exploded: false }; if (m >= 0.5) C.big = true; log(`<b>${fmt(m, 1)} г натрийді</b> суға тастадың.`); ui(); }
 function naAction() {
   if (C.piece) { toast("Алдыңғы кесек әлі әрекеттесіп жатыр"); return; }
-  if (C.prep === 0) { C.prep = 1; naPiece.visible = true; naPiece.scale.set(0.26, 0.2, 0.22); naPiece.material.color.set(0x7d7f84); naPiece.material.roughness = 0.25; naPiece.position.copy(OBJ.na.position).add(V(0, 1.2, 0)); moveTo(naPiece, PAPER, 0.7); log("Пинцетпен керосиннен <b>натрий кесегін</b> алдың. Беті керосиннен жылтырап тұр."); }
-  else if (C.prep === 1) { C.prep = 2; naPiece.material.color.set(0x8f9298); naPiece.material.roughness = 0.7; log("Кесекті <b>сүзгі қағазбен кептірдің</b>. Беті күңгірт сұр: ауада тотыққан қабық."); }
-  else if (C.prep === 2) { C.prep = 3; C.cutM = amt; const s = 0.07 + Math.cbrt(amt) * 0.09; naPiece.scale.set(s * 2, s * 1.6, s * 1.8); naPiece.material.color.set(0xd8dade); naPiece.material.roughness = 0.3; naPiece.material.metalness = 0.9; moveTo(naPiece, BOARD, 0.5); log(`Пышақпен <b>${fmt(amt, 1)} г</b> кесіп алдың. Кесілген жері күмістей жылтыр: бұл таза натрий.`); }
-  else if (C.prep === 3) {
-    if (C.water <= 0) { toast("Ыдыста су жоқ: алдымен су құй"); return; }
-    C.prep = 0; const m = C.cutM; moveTo(naPiece, V(0, surfaceY() + 0.04, 0.3), 0.6, () => { C.piece = { n: m / 23, n0: m / 23, m, v: V(0, 0, 0), exploded: false }; if (m >= 0.5) C.big = true; log(`<b>${fmt(m, 1)} г натрийді</b> суға тастадың.`); ui(); });
-  }
+  if (C.prep === 0) { naTake(); moveTo(naPiece, PAPER, 0.7); }
+  else if (C.prep === 1) { naDry(); moveTo(naPiece, PAPER, 0.2, null, 0); }
+  else if (C.prep === 2) { naCut(amt); moveTo(naPiece, BOARD, 0.5); }
+  else if (C.prep === 3) { if (C.water <= 0) { toast("Ыдыста су жоқ: алдымен су құй"); return; } moveTo(naPiece, V(0, surfaceY() + 0.04, 0.3), 0.6, naDrop); }
+  ui();
+}
+// кесекті сүйреп әкеліп жібергенде
+function naRelease() {
+  const p = naPiece.position, near = (t, rx, rz) => Math.abs(p.x - t.x) < rx && Math.abs(p.z - t.z) < rz;
+  if (Math.hypot(p.x, p.z - 0.3) < 1.75) {
+    if (C.prep < 3) { toast(C.prep === 1 ? "Алдымен кесекті сүзгі қағазда кептір" : "Алдымен тақтайшада кішкене кесек кесіп ал"); moveTo(naPiece, PAPER, 0.5); }
+    else if (C.water <= 0) { toast("Ыдыста су жоқ: алдымен су құй"); moveTo(naPiece, BOARD, 0.5); }
+    else moveTo(naPiece, V(p.x, surfaceY() + 0.04, p.z), 0.25, naDrop, 0);
+  } else if (near(PAPER, 0.65, 0.55)) { if (C.prep === 1) naDry(); moveTo(naPiece, PAPER, 0.2, null, 0); }
+  else if (near(BOARD, 0.7, 0.55)) {
+    if (C.prep === 1) { toast("Алдымен кесекті сүзгі қағазда кептір"); moveTo(naPiece, PAPER, 0.5); }
+    else { if (C.prep === 2) naCut(amt); moveTo(naPiece, BOARD, 0.2, null, 0); }
+  } else moveTo(naPiece, V(p.x, 0.08, p.z), 0.2, null, 0);
   ui();
 }
 let mv = null;
-function moveTo(o, to, dur, cb) { mv = { o, from: o.position.clone(), to, t: 0, dur, cb }; }
+function moveTo(o, to, dur, cb, arc) { mv = { o, from: o.position.clone(), to: to.clone(), t: 0, dur, cb, arc: arc === undefined ? 0.9 : arc }; }
+
+/* ---------------------------------------------------------
+   Сүйреу: затты тышқанмен ұстап, ыдыстың үстіне апарып құю
+   --------------------------------------------------------- */
+let drag = null;
+const lastP = { x: 0, y: 0 }, ray = new THREE.Raycaster(), mp = new THREE.Vector2(), plane = new THREE.Plane(), hitP = V(0, 0, 0);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const RATE = { vinegar: 45, water: 70, h2o2: 30, soap: 8, ki: 6, soda: 6 }; // секундына мл немесе г
+function pRay(x, y) { const r = W.canvas.getBoundingClientRect(); mp.set((x - r.left) / r.width * 2 - 1, -((y - r.top) / r.height) * 2 + 1); ray.setFromCamera(mp, W.cam); return ray; }
+function hitObj(x, y) {
+  pRay(x, y); const list = RX[cur].subs.map(id => OBJ[id]); if (naPiece.visible && !C.piece) list.push(naPiece);
+  const h = ray.intersectObjects(list, true)[0]; if (!h) return null;
+  let o = h.object; while (o && o !== naPiece && !o.userData.sub) o = o.parent; return o;
+}
+function endPour(d) { if (d.poured > 0) { logPour(d.id, d.poured, d.pre); d.poured = 0; d.pre = null; } stream.visible = false; }
+function dragStep(dt) {
+  const d = drag, o = d.o, m = mouth(), R = pRay(lastP.x, lastP.y).ray;
+  if (d.na) { plane.set(V(0, 1, 0), -0.1); if (R.intersectPlane(plane, hitP)) o.position.set(clamp(hitP.x, -5.5, 5.5), 0.5, clamp(hitP.z, -2.4, 2.8)); return; }   // курсор үстелдегі нүктені көрсетеді, кесек соның үстінде қалқиды
+  o.position.z += (m.z - o.position.z) * Math.min(1, dt * 8);   // ыдыспен бір тереңдікке келеді
+  plane.set(V(0, 0, 1), -o.position.z);
+  if (R.intersectPlane(plane, hitP)) { o.position.x = clamp(hitP.x - d.off.x, -5.8, 5.8); o.position.y = clamp(hitP.y - d.off.y, 0, 6.5); }
+  const s = SUB[d.id], h = o.userData.h || 0.8, side = o.position.x < m.x ? -1 : 1, mr = cur === "na" ? 1.6 : 0.42;
+  let pouring = false, tx = o.position.x, ty = o.position.y;
+  if (s.kind === "drop") pouring = Math.abs(tx - m.x) < mr && ty > m.y && ty < m.y + 2;
+  else {
+    const ang = s.kind === "liquid" ? 1.9 : 1.7;
+    tx = o.position.x - side * Math.sin(ang) * h; ty = o.position.y + Math.cos(ang) * h;   // еңкейгендегі аузының орны
+    const zone = Math.abs(tx - m.x) < mr + 0.2 && ty > m.y - 0.1 && ty < m.y + 1.8;
+    o.rotation.z += ((zone ? side * ang : 0) - o.rotation.z) * Math.min(1, dt * 7);
+    pouring = zone && Math.abs(o.rotation.z) > ang * 0.8;
+  }
+  let q = 0;
+  if (pouring) {
+    if (!d.pre) d.pre = snap();
+    if (s.kind === "drop") { d.dropT += dt; if (d.dropT > 0.38) { d.dropT = 0; q = 1; spawn(V(tx, ty - 0.02, m.z), V(0, -0.3, 0), 0.05, d.id === "dye" ? DYE[dyeC] : s.color, 2); } }
+    else q = RATE[d.id] * dt;
+    if (s.unit === "мл" && C.vol + q > RX[cur].cap) { q = 0; if (!d.warned) { d.warned = true; toast("Ыдыс толды: ↺ арқылы босатуға болады"); } }
+    if (q > 0) { addAmount(d.id, q); d.poured += q; }
+    if (s.kind === "powder" && q > 0) for (let i = 0; i < 3; i++) spawn(V(tx + (Math.random() - .5) * 0.15, ty, m.z + (Math.random() - .5) * 0.15), V((Math.random() - .5) * 0.3, -0.5, (Math.random() - .5) * 0.3), 0.025 + Math.random() * 0.02, 0xf4f4f0, 2);
+    Ls.el.innerHTML = `<u>▸</u>${s.n}<small>+${s.unit === "г" ? fmt(d.poured, 1) : Math.round(d.poured)} ${s.unit}</small>`;
+  } else if (d.poured > 0) endPour(d);
+  stream.visible = pouring && s.kind === "liquid" && q > 0;
+  if (stream.visible) { const y1 = surfaceY(); stream.material.color.set(s.color); stream.material.emissive.set(s.color); stream.scale.y = Math.max(0.05, ty - y1); stream.position.set(clamp(tx, m.x - mr, m.x + mr), (ty + y1) / 2, m.z); }
+}
+function settleStep(dt) { // жіберілген зат үстелге түсіп, тік тұрады
+  for (const id of RX[cur].subs) { const o = OBJ[id], t = o.userData.settle; if (!t) continue; const k = Math.min(1, dt * 9);
+    o.position.x += (t.x - o.position.x) * k; o.position.z += (t.z - o.position.z) * k; o.position.y += (0 - o.position.y) * k; o.rotation.z += (0 - o.rotation.z) * k;
+    if (Math.abs(o.position.y) < 0.004 && Math.abs(o.rotation.z) < 0.01 && Math.abs(t.z - o.position.z) < 0.01) { o.position.set(t.x, 0, t.z); o.rotation.z = 0; delete o.userData.settle; } }
+}
+W.canvas.addEventListener("pointerdown", e => {
+  if (anim || mv || drag || e.button > 0) return;
+  const o = hitObj(e.clientX, e.clientY); if (!o) return;
+  lastP.x = e.clientX; lastP.y = e.clientY;
+  if (o === naPiece) drag = { o, na: true };
+  else {
+    const id = o.userData.sub; pick(id);
+    if (id === "na") {
+      if (C.piece) { toast("Алдыңғы кесек әлі әрекеттесіп жатыр"); return; }
+      if (C.prep > 0) { toast("Кесек алынып қойған: соның өзін сүйре"); return; }
+      naTake(); ui(); drag = { o: naPiece, na: true };
+    } else {
+      plane.set(V(0, 0, 1), -o.position.z); pRay(e.clientX, e.clientY).ray.intersectPlane(plane, hitP);
+      delete o.userData.settle;
+      drag = { o, id, off: { x: hitP.x - o.position.x, y: hitP.y - o.position.y }, poured: 0, pre: null, dropT: 0, warned: false };
+    }
+  }
+  e.stopImmediatePropagation(); e.preventDefault(); W.ctl.enabled = false; W.canvas.style.cursor = "grabbing";
+  try { W.canvas.setPointerCapture(e.pointerId); } catch (x) { }
+}, true);
+window.addEventListener("pointermove", e => { lastP.x = e.clientX; lastP.y = e.clientY; if (!drag && e.target === W.canvas && !e.buttons) W.canvas.style.cursor = hitObj(e.clientX, e.clientY) ? "grab" : ""; });
+function endDrag() {
+  if (!drag) return; const d = drag, o = d.o, m = mouth(); drag = null; W.ctl.enabled = true; W.canvas.style.cursor = "";
+  if (d.na) { naRelease(); return; }
+  endPour(d);
+  const vr = cur === "volcano" ? 1.35 : cur === "elephant" ? 0.95 : 1.95; let x = o.position.x;
+  if (Math.abs(x - m.x) < vr + 0.5) x = m.x + (x < m.x ? -1 : 1) * (vr + 0.5);   // ыдыстың үстіне қоймайды
+  o.userData.settle = { x, z: o.userData.home.z }; ui();
+}
+window.addEventListener("pointerup", endDrag); window.addEventListener("pointercancel", endDrag);
 
 /* =========================================================
    6. РЕАКЦИЯ: газ бөлінуі
@@ -416,6 +530,8 @@ function explain(why) {
 let shake = 0, uiT = 0;
 W.frames.push((dtRaw) => {
   const dt = dtRaw * (slow ? 0.3 : 1);
+  if (drag) dragStep(dtRaw);
+  settleStep(dtRaw);
   // зат қосу анимациясы
   if (anim) {
     const a = anim; a.t += dtRaw; const k = a.t / a.dur, e = (x) => x * x * (3 - 2 * x);
@@ -428,7 +544,7 @@ W.frames.push((dtRaw) => {
     if (!a.done && k > 0.55) { a.done = true; a.apply(); }
     if (k >= 1) { a.o.position.copy(a.from); a.o.rotation.z = 0; stream.visible = false; anim = null; }
   }
-  if (mv) { mv.t += dtRaw; const k = Math.min(1, mv.t / mv.dur); mv.o.position.lerpVectors(mv.from, mv.to, k * k * (3 - 2 * k)); mv.o.position.y += Math.sin(k * Math.PI) * 0.9; if (k >= 1) { const cb = mv.cb; mv = null; cb && cb(); } }
+  if (mv) { mv.t += dtRaw; const k = Math.min(1, mv.t / mv.dur); mv.o.position.lerpVectors(mv.from, mv.to, k * k * (3 - 2 * k)); mv.o.position.y += Math.sin(k * Math.PI) * mv.arc; if (k >= 1) { const cb = mv.cb; mv = null; cb && cb(); } }
   // реакция
   const dV = C.started || C.piece ? react(dt) : 0;
   if (C.started || C.gas > 0) { C.t += dt; if (!C.hist.length || C.t - C.hist[C.hist.length - 1][0] > 0.1) { C.hist.push([C.t, C.gas]); if (C.hist.length > 1500) C.hist.shift(); } }
@@ -543,13 +659,13 @@ function meter() {
   const r = RX[cur];
   $("gasN").textContent = "БӨЛІНГЕН " + r.gasN; $("gasF").textContent = r.gas; $("gv").textContent = fmt(C.gas, cur === "na" ? 3 : 2) + " л";
   let kv = "";
-  if (cur === "volcano") kv = `<span>Сірке қышқылы қалды</span><b>${fmt(Math.max(0, C.nA) * 60, 1)} г</b><span>Сода қалды</span><b>${fmt(Math.max(0, C.nS) * 84, 1)} г</b><span>Сабын</span><b>${C.soap ? C.soap + " мл" : "жоқ"}</b>`;
-  if (cur === "elephant") kv = `<span>H₂O₂ қалды</span><b>${fmt(Math.max(0, C.nP) * 34, 1)} г</b><span>Катализатор</span><b>${C.ki ? "бар, жұмсалмайды" : "жоқ"}</b><span>Сабын</span><b>${C.soap ? C.soap + " мл" : "жоқ"}</b>`;
-  if (cur === "na") kv = `<span>Су</span><b>${C.water} мл</b><span>Натрий қалды</span><b>${C.piece ? fmt(C.piece.n * 23, 2) + " г" : "—"}</b><span>Түзілген сілті</span><b>${fmt(C.naoh * 40, 2)} г</b>`;
+  if (cur === "volcano") kv = `<span>Сірке қышқылы қалды</span><b>${fmt(Math.max(0, C.nA) * 60, 1)} г</b><span>Сода қалды</span><b>${fmt(Math.max(0, C.nS) * 84, 1)} г</b><span>Сабын</span><b>${C.soap ? Math.round(C.soap) + " мл" : "жоқ"}</b>`;
+  if (cur === "elephant") kv = `<span>H₂O₂ қалды</span><b>${fmt(Math.max(0, C.nP) * 34, 1)} г</b><span>Катализатор</span><b>${C.ki ? "бар, жұмсалмайды" : "жоқ"}</b><span>Сабын</span><b>${C.soap ? Math.round(C.soap) + " мл" : "жоқ"}</b>`;
+  if (cur === "na") kv = `<span>Су</span><b>${Math.round(C.water)} мл</b><span>Натрий қалды</span><b>${C.piece ? fmt(C.piece.n * 23, 2) + " г" : "—"}</b><span>Түзілген сілті</span><b>${fmt(C.naoh * 40, 2)} г</b>`;
   kv += `<span>Тағы бөлінуі мүмкін</span><b>${fmt(potential(), 2)} л</b>`;
   $("kv").innerHTML = kv;
   if (!C.active && C.runs === 0) $("live").textContent = cur === "elephant" && C.nP > 0 && !C.ki ? "өте баяу" : "күтуде";
-  Lv.el.innerHTML = `<u>${r.gas}</u>${C.gas > 0.001 ? fmt(C.gas, 2) + " л бөлінді" : C.vol > 0 ? `ыдыста ${C.vol} мл` : "ыдыс бос"}<small>${r.n}</small>`;
+  Lv.el.innerHTML = `<u>${r.gas}</u>${C.gas > 0.001 ? fmt(C.gas, 2) + " л бөлінді" : C.vol > 0 ? `ыдыста ${Math.round(C.vol)} мл` : "ыдыс бос"}<small>${r.n}</small>`;
 }
 const cv = $("ch"), cx = cv.getContext("2d");
 function drawChart() {
@@ -579,16 +695,6 @@ $("mn").onclick = () => { const s = SUB[sel]; amt = Math.max(s.step, Math.round(
 $("pl").onclick = () => { const s = SUB[sel]; amt = Math.min(s.max, Math.round((amt + s.step) * 10) / 10); ui(); };
 $("slow").onclick = () => { slow = !slow; $("slow").classList.toggle("on", slow); };
 $("rs").onclick = () => { select(cur); toast("Ыдыс босатылды"); };
-// затты 3D-да басып таңдау
-const ray = new THREE.Raycaster(), mp = new THREE.Vector2(); let down = null;
-W.canvas.addEventListener("pointerdown", e => down = [e.clientX, e.clientY]);
-W.canvas.addEventListener("pointerup", e => {
-  if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 6) return; const r = W.canvas.getBoundingClientRect();
-  mp.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(mp, W.cam);
-  const hit = ray.intersectObjects(RX[cur].subs.map(id => OBJ[id]), true)[0]; if (!hit) return;
-  let o = hit.object; while (o && !o.userData.sub) o = o.parent; if (o) pick(o.userData.sub);
-});
-
 quiz(document.querySelector('.qset[data-r="volcano"]'), () => addPts(20, "«Неге?»: вулкан", "rx_qz_volcano"));
 quiz(document.querySelector('.qset[data-r="elephant"]'), () => addPts(20, "«Неге?»: катализатор", "rx_qz_elephant"));
 quiz(document.querySelector('.qset[data-r="na"]'), () => addPts(20, "«Неге?»: натрий", "rx_qz_na"));
