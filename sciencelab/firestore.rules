@@ -1,0 +1,39 @@
+rules_version = '2';
+
+// MathPro дерекқорының ережелері.
+// Firebase консолі → Firestore Database → Rules бөліміне осыны қойып, Publish бас.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Әкімші — тек admin@mathpro.app аккаунты
+    function akimshiMa() {
+      return request.auth != null && request.auth.token.email == "admin@mathpro.app";
+    }
+
+    // Оқушының деректері: әр оқушы тек өзінікін оқиды және өзгертеді.
+    // Әкімші барлығын оқи алады және өшіре алады.
+    match /oqushylar/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+      allow read, delete: if akimshiMa();
+    }
+
+    // ===== ScienceLab (sciencelab/ папкасы) =====
+    // Оқушының ScienceLab нәтижесі: тек өзі оқиды/жазады, әкімші оқиды және өшіреді.
+    match /sciencelab/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+      allow read, delete: if akimshiMa();
+    }
+
+    // ScienceLab баптаулары (қай тәжірибе ашық): бәрі оқиды, тек әкімші өзгертеді.
+    match /sciencelab_baptau/{qujat} {
+      allow read: if true;
+      allow write: if akimshiMa();
+    }
+
+    // Сабақтар мен есептер: бәрі оқиды, тек әкімші өзгертеді.
+    match /mazmun/{qujat} {
+      allow read: if true;
+      allow write: if akimshiMa();
+    }
+  }
+}

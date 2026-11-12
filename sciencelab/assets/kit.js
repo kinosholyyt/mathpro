@@ -176,15 +176,25 @@ function rack(colors) {
 
 /* ---------- интерфейс ---------- */
 function initNav() {
+  if (window.SLsync) window.SLsync.onReady(showPts);
   const b = document.querySelector(".menu-btn"), n = document.querySelector(".nv");
   if (b && n) b.addEventListener("click", () => n.classList.toggle("open"));
   showPts();
 }
 function getPts() { try { return Number(localStorage.getItem("sl_pts") || 0); } catch (e) { return 0; } }
-function showPts() { const el = document.querySelector(".pts b"); if (el) el.textContent = getPts(); }
-function addPts(n, title) {
-  const v = getPts() + n;
-  try { localStorage.setItem("sl_pts", v); } catch (e) { }
+function showPts() {
+  const Y = window.SLsync; if (Y && Y.data) { Y.showPts(); return; }
+  const el = document.querySelector(".pts b"); if (el) el.textContent = getPts();
+}
+// Ұпай қосу. key: жетістіктің бірегей аты, бір жетістікке бір рет қана ұпай беріледі.
+// Кірген оқушыда ұпай Firebase-ке, қонақта осы браузерге сақталады.
+function addPts(n, title, key) {
+  const Y = window.SLsync;
+  if (Y && Y.data) { const r = Y.award(key || title, n, title); if (r === "dup") { toast(title, "бұрын алынған"); return; } toast(title, `+${n} ұпай`); return; }
+  let keys = {}; try { keys = JSON.parse(localStorage.getItem("sl_keys") || "{}"); } catch (e) { }
+  if (keys[key || title]) { toast(title, "бұрын алынған"); return; }
+  keys[key || title] = 1;
+  try { localStorage.setItem("sl_keys", JSON.stringify(keys)); localStorage.setItem("sl_pts", getPts() + n); } catch (e) { }
   showPts(); toast(title, `+${n} ұпай`);
 }
 let tt;
@@ -196,15 +206,18 @@ function toast(text, sub) {
 }
 function quiz(root, onOk) {
   root.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
-    if (root.classList.contains("done")) return;
-    if (b.dataset.ok !== undefined) { b.classList.add("ok"); root.classList.add("done"); onOk && onOk(); }
+    if (root.classList.contains("done") || b.classList.contains("no")) return;
+    const ok = b.dataset.ok !== undefined;
+    if (window.SLsync) window.SLsync.quiz(document.body.dataset.exp, ok);
+    if (ok) { b.classList.add("ok"); root.classList.add("done"); onOk && onOk(); }
     else b.classList.add("no");
   }));
 }
+function progress(obj) { if (window.SLsync) window.SLsync.progress(document.body.dataset.exp, obj); }
 function rangeFill(inp) {
   const f = () => inp.style.setProperty("--p", ((inp.value - inp.min) / (inp.max - inp.min) * 100) + "%");
   inp.addEventListener("input", f); f();
 }
 
-return { THREE, RoundedBoxGeometry, OrbitControls, V, fmt, makeWorld, M, table, erlen, beaker, tube, gradCyl, rack, initNav, addPts, toast, quiz, rangeFill };
+return { THREE, RoundedBoxGeometry, OrbitControls, V, fmt, makeWorld, M, table, erlen, beaker, tube, gradCyl, rack, initNav, addPts, toast, quiz, rangeFill, progress };
 })();

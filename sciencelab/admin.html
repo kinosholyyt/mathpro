@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Әкімші панелі · ScienceLab</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=3">
+<style>
+.adm{flex:1;margin:0 var(--pad);padding:34px 0 60px}
+.adm h1{font:400 40px/1.1 var(--serif);letter-spacing:-.02em;margin:12px 0 6px}
+.tabs{display:flex;gap:28px;border-bottom:1px solid var(--line);margin:26px 0 26px}
+.tabs button{padding:0 0 12px;font-size:16px;color:var(--mut);border-bottom:1px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--ink)}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:30px}
+.cards div{padding:18px 20px 20px 0}
+.cards div + div{padding-left:20px;border-left:1px solid var(--line)}
+.cards small{display:block;font:500 11.5px var(--mono);letter-spacing:.12em;color:var(--mut);text-transform:uppercase}
+.cards b{display:block;font:400 42px/1.1 var(--serif);margin-top:8px}
+.cards span{font-size:13px;color:var(--dim)}
+.grid2{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-bottom:34px}
+.exp h3{font:400 24px var(--serif);margin:10px 0 12px}
+.tool{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.tool input,.tool select{background:transparent;border:1px solid var(--line2);border-radius:3px;padding:10px 12px;color:var(--ink);font:400 15px var(--sans);outline:none}
+.tool select option{background:var(--bg2)}
+.tool input{flex:1;min-width:200px}
+table.st{width:100%;border-collapse:collapse;font-size:14.5px}
+table.st th{font:500 11.5px var(--mono);letter-spacing:.1em;color:var(--mut);text-transform:uppercase;text-align:left;padding:10px 8px;border-bottom:1px solid var(--line2);white-space:nowrap}
+table.st td{padding:12px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.st tr.r{cursor:pointer}
+table.st tr.r:hover td{background:rgba(236,233,227,.03)}
+table.st td.n{font-family:var(--mono)}
+.tg{font:400 12.5px var(--mono);white-space:nowrap}
+.tg.ok{color:var(--ok)}.tg.mid{color:var(--acc)}.tg.no{color:var(--dim)}
+.det{border:1px solid var(--line2);padding:24px;margin-top:22px}
+.det h2{font:400 30px var(--serif)}
+.det .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:18px}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
+.sw b{font:400 22px var(--serif)}
+.sw small{display:block;color:var(--mut);font-size:13.5px}
+.gate{max-width:420px;margin:60px auto}
+.f{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.f label{font:500 11.5px var(--mono);letter-spacing:.12em;color:var(--mut);text-transform:uppercase}
+.f input{background:transparent;border:1px solid var(--line2);border-radius:3px;padding:12px 14px;color:var(--ink);font:400 16px var(--sans);outline:none}
+.err{color:var(--bad);font-size:14px;min-height:20px;margin-bottom:10px}
+.hide{display:none}
+.scroll{overflow-x:auto}
+@media (max-width:900px){.cards{grid-template-columns:1fr 1fr}.cards div:nth-child(3){padding-left:0;border-left:0}.grid2,.det .cols{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-exp="">
+<header class="top"><a class="logo" href="index.html"><i></i>ScienceLab</a>
+  <nav class="nv"><a href="index.html">Тәжірибелер</a><a href="fizika.html">Физика</a><a href="himiya.html">Химия</a><a href="biologiya.html">Биология</a><a href="admin.html" class="on">Мұғалімге</a></nav>
+  <div class="r"><span class="pts mono" id="who"></span><a class="b1" href="#" id="out" style="display:none">Шығу</a><button class="menu-btn" aria-label="Мәзір">≡</button></div></header>
+
+<main class="adm">
+  <!-- Кіру -->
+  <div class="gate hide" id="gate">
+    <div class="kick">Әкімші панелі</div>
+    <h1>Мұғалімге кіру</h1>
+    <p class="mut" style="margin-bottom:24px">MathPro-ның әкімші аккаунтымен кір (логин: <span class="mono">admin</span>).</p>
+    <div class="f"><label>Логин</label><input id="gL" value="admin" autocomplete="username"></div>
+    <div class="f"><label>Құпия сөз</label><input id="gP" type="password" autocomplete="current-password"></div>
+    <p class="err" id="gE"></p>
+    <button class="b1" id="gB" style="width:100%">Кіру →</button>
+  </div>
+
+  <!-- Панель -->
+  <div id="panel" class="hide">
+    <div class="kick">Әкімші панелі · ScienceLab</div>
+    <h1>Оқушылар және тәжірибелер</h1>
+    <p class="mut" id="upd">Жүктеліп жатыр…</p>
+    <div class="tabs"><button data-t="sh" class="on">Шолу</button><button data-t="oq">Оқушылар</button><button data-t="bt">Тәжірибелерді басқару</button></div>
+
+    <section id="t-sh">
+      <div class="cards" id="cards"></div>
+      <div class="grid2" id="exps"></div>
+      <div class="sec"><h4>Үздік оқушылар <span>ұпай бойынша</span></h4><div id="top"></div></div>
+    </section>
+
+    <section id="t-oq" class="hide">
+      <div class="tool"><input id="q" placeholder="Аты немесе логин бойынша іздеу"><select id="so"><option value="upai">Ұпай бойынша</option><option value="aty">Аты бойынша</option><option value="songy">Соңғы белсенділік</option></select>
+        <button class="b2" id="rf">↻ Жаңарту</button><button class="b2" id="csv">CSV жүктеу</button></div>
+      <div class="scroll"><table class="st"><thead><tr><th>Оқушы</th><th>Ұпай</th><th>Химия</th><th>Физика</th><th>Биология</th><th>«Неге?»</th><th>Соңғы</th></tr></thead><tbody id="tb"></tbody></table></div>
+      <div id="det"></div>
+    </section>
+
+    <section id="t-bt" class="hide">
+      <p class="mut" style="max-width:640px;margin-bottom:10px">Жабылған тәжірибені оқушылар аша алмайды: «Уақытша жабық» деген жазу шығады. Өзгеріс бірден барлығына көрінеді.</p>
+      <div id="sws"></div>
+    </section>
+  </div>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="assets/fb.js?v=3"></script>
+<script>
+const $ = (id) => document.getElementById(id), Y = window.SLsync;
+document.querySelector(".menu-btn").onclick = () => document.querySelector(".nv").classList.toggle("open");
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+const EXP = {
+  himiya: { n: "Химия", t: "Қышқыл мен сілтіні ажырату", done: (d) => !!(d && d.neut), part: (d) => d ? `қадам ${d.qadam || 1}/4` : "" },
+  fizika: { n: "Физика", t: "Математикалық маятник", done: (d) => !!(d && d.olsheu >= 3), part: (d) => d ? `${d.olsheu || 0}/3 өлшеу` : "" },
+  biologiya: { n: "Биология", t: "Жануар жасушасы", done: (d) => !!(d && d.tabyldy >= 7), part: (d) => d ? `${d.tabyldy || 0}/7 органоид` : "" },
+};
+const KEYS = Object.keys(EXP);
+let ALL = [], SET = {};
+
+/* ---------- кіру ---------- */
+Y.onReady(start);
+function start() {
+  const u = Y.user;
+  if (!u || u.email !== Y.ADMIN) { $("gate").classList.remove("hide"); $("panel").classList.add("hide"); if (u) $("gE").textContent = "Бұл аккаунт әкімші емес. Әкімші ретінде кір."; $("gP").focus(); return; }
+  $("gate").classList.add("hide"); $("panel").classList.remove("hide");
+  $("who").textContent = "admin"; $("out").style.display = "";
+  load();
+}
+$("out").onclick = (e) => { e.preventDefault(); Y.auth.signOut().then(() => location.reload()); };
+function gate() {
+  const l = $("gL").value.trim().toLowerCase(), p = $("gP").value; $("gE").textContent = "";
+  if (!l || !p) { $("gE").textContent = "Логин мен құпия сөзді жаз."; return; }
+  $("gB").disabled = true; $("gB").textContent = "Күте тұр…";
+  Y.auth.signInWithEmailAndPassword(Y.poshta(l), p).then(() => location.reload()).catch(() => { $("gB").disabled = false; $("gB").textContent = "Кіру →"; $("gE").textContent = "Логин немесе құпия сөз қате."; });
+}
+$("gB").onclick = gate; $("gP").onkeydown = (e) => { if (e.key === "Enter") gate(); };
+
+/* ---------- қойындылар ---------- */
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+  ["sh", "oq", "bt"].forEach(t => $("t-" + t).classList.toggle("hide", t !== b.dataset.t));
+});
+
+/* ---------- деректер ---------- */
+function ms(v) { if (!v) return 0; if (typeof v === "number") return v; if (v.toMillis) return v.toMillis(); return 0; }
+function ago(t) {
+  if (!t) return "—"; const s = (Date.now() - t) / 1000;
+  if (s < 3600) return Math.max(1, Math.round(s / 60)) + " мин бұрын";
+  if (s < 86400) return Math.round(s / 3600) + " сағ бұрын";
+  if (s < 86400 * 30) return Math.round(s / 86400) + " күн бұрын";
+  return new Date(t).toLocaleDateString("kk-KZ");
+}
+function load() {
+  $("upd").textContent = "Жүктеліп жатыр…";
+  Promise.all([Y.db.collection("sciencelab").get(), Y.db.collection("sciencelab_baptau").doc("negizgi").get()]).then(([q, s]) => {
+    ALL = q.docs.map(d => { const x = d.data(); return { uid: d.id, aty: x.aty || x.login || "—", login: x.login || "", upai: x.upai || 0, tajiribe: x.tajiribe || {}, suraq: x.suraq || {}, jetistik: x.jetistik || {}, kirgen: x.kirgen || {}, songy: ms(x.songy), tirkelgen: ms(x.tirkelgen) }; });
+    SET = s.exists ? s.data() : {};
+    $("upd").textContent = `Соңғы жаңарту: ${new Date().toLocaleTimeString("kk-KZ").slice(0, 5)} · ${ALL.length} оқушы`;
+    overview(); table(); switches();
+  }).catch(e => {
+    $("upd").innerHTML = `<span style="color:var(--bad)">Деректер жүктелмеді (${esc(e.code || e.message)}).</span> Firebase ережелеріне ScienceLab бөлімі қосылғанын тексер: нұсқаулықтағы 1-қадам.`;
+  });
+}
+const st = (o, k) => { const d = o.tajiribe[k]; if (EXP[k].done(d)) return ["ok", "орындалды"]; if (d || o.kirgen[k]) return ["mid", EXP[k].part(d) || "басталды"]; return ["no", "—"]; };
+
+function overview() {
+  const n = ALL.length, avg = n ? Math.round(ALL.reduce((a, o) => a + o.upai, 0) / n) : 0;
+  const week = ALL.filter(o => Date.now() - o.songy < 7 * 864e5).length;
+  let qa = 0, qok = 0; ALL.forEach(o => KEYS.forEach(k => { const q = o.suraq[k]; if (q) { qa++; if (q.durys && q.talpynys === 1) qok++; } }));
+  $("cards").innerHTML = [
+    ["Оқушылар", n, "тіркелген"], ["Орташа ұпай", avg, "бір оқушыға"], ["Осы аптада", week, "белсенді оқушы"],
+    ["«Неге?» бірден дұрыс", qa ? Math.round(qok / qa * 100) + "%" : "—", `${qa} жауаптан`],
+  ].map(c => `<div><small>${c[0]}</small><b>${c[1]}</b><span>${c[2]}</span></div>`).join("");
+  $("exps").innerHTML = KEYS.map(k => {
+    const started = ALL.filter(o => o.tajiribe[k] || o.kirgen[k]).length, done = ALL.filter(o => EXP[k].done(o.tajiribe[k])).length;
+    const qs = ALL.map(o => o.suraq[k]).filter(Boolean), qd = qs.filter(q => q.durys).length;
+    const pct = n ? Math.round(done / n * 100) : 0;
+    return `<div class="sec exp"><h4>${EXP[k].n} <span>${SET[k] === false ? "жабық" : "ашық"}</span></h4><h3>${EXP[k].t}</h3>
+      <div class="kv"><span>Бастағандар</span><b>${started}</b><span>Орындағандар</span><b>${done}</b><span>«Неге?» дұрыс жауап</span><b>${qd} / ${qs.length}</b></div>
+      <div class="bar" style="--c:var(--${k === "himiya" ? "him" : k === "fizika" ? "fiz" : "bio"});margin-top:12px;grid-template-columns:1fr 50px"><i style="--w:${pct}%"></i><b>${pct}%</b></div></div>`;
+  }).join("");
+  const top = [...ALL].sort((a, b) => b.upai - a.upai).slice(0, 5);
+  $("top").innerHTML = top.length ? `<table class="st"><tbody>${top.map((o, i) => `<tr><td class="n" style="width:40px;color:var(--dim)">${i + 1}</td><td>${esc(o.aty)} <span class="mut mono" style="font-size:12.5px">${esc(o.login)}</span></td><td class="n" style="text-align:right">${o.upai}</td></tr>`).join("")}</tbody></table>` : `<p class="mut">Әзірге ScienceLab-та тіркелген оқушы жоқ.</p>`;
+}
+function rows() {
+  const q = $("q").value.trim().toLowerCase(), so = $("so").value;
+  return ALL.filter(o => (o.aty + " " + o.login).toLowerCase().includes(q)).sort((a, b) => so === "aty" ? a.aty.localeCompare(b.aty, "kk") : so === "songy" ? b.songy - a.songy : b.upai - a.upai);
+}
+function table() {
+  const R = rows();
+  $("tb").innerHTML = R.length ? R.map(o => `<tr class="r" data-u="${o.uid}"><td><b style="font-weight:500">${esc(o.aty)}</b><br><span class="mut mono" style="font-size:12.5px">${esc(o.login)}</span></td><td class="n">${o.upai}</td>
+    ${KEYS.map(k => { const s = st(o, k); return `<td><span class="tg ${s[0]}">${s[1]}</span></td>`; }).join("")}
+    <td class="tg">${KEYS.map(k => { const x = o.suraq[k]; return x ? (x.durys ? `<span class="tg ok">✓</span>` : `<span class="tg" style="color:var(--bad)">✗</span>`) : `<span class="tg no">·</span>`; }).join(" ")}</td>
+    <td class="tg no">${ago(o.songy)}</td></tr>`).join("") : `<tr><td colspan="7" class="mut">Оқушы табылмады</td></tr>`;
+  document.querySelectorAll("#tb tr.r").forEach(tr => tr.onclick = () => detail(tr.dataset.u));
+}
+function detail(uid) {
+  const o = ALL.find(x => x.uid === uid); if (!o) return;
+  const j = Object.entries(o.jetistik).sort((a, b) => b[1].t - a[1].t);
+  $("det").innerHTML = `<div class="det"><div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start">
+      <div><div class="kick">${esc(o.login)} · ${o.upai} ұпай</div><h2 style="margin-top:10px">${esc(o.aty)}</h2><p class="mut" style="font-size:13.5px">Тіркелген: ${o.tirkelgen ? new Date(o.tirkelgen).toLocaleDateString("kk-KZ") : "—"} · соңғы белсенділік: ${ago(o.songy)}</p></div>
+      <div style="display:flex;gap:10px"><button class="b2" id="dx">Жабу</button><button class="b2" id="dd" style="border-color:var(--bad);color:var(--bad)">Нәтижесін өшіру</button></div></div>
+    <div class="cols">${KEYS.map(k => { const d = o.tajiribe[k] || {}, q = o.suraq[k], s = st(o, k);
+      let extra = "";
+      if (k === "himiya") extra = `<span>Соңғы pH</span><b>${d.ph ?? "—"}</b><span>Индикатор</span><b>${({ pp: "фенолфталеин", mo: "метилоранж", lt: "лакмус" })[d.ind] || "—"}</b>`;
+      if (k === "fizika") extra = `<span>Өлшеулер</span><b>${(d.rows || []).map(r => `L=${r.L}: ${r.T} с`).join("<br>") || "—"}</b>`;
+      if (k === "biologiya") extra = `<span>Табылған органоид</span><b>${d.tabyldy || 0} / 7</b>`;
+      return `<div class="sec"><h4>${EXP[k].n} <span class="tg ${s[0]}">${s[1]}</span></h4><div class="kv">${extra}<span>«Неге?»</span><b>${q ? (q.durys ? `дұрыс · ${q.talpynys}-талпыныс` : `қате · ${q.talpynys} рет`) : "—"}</b></div></div>`; }).join("")}</div>
+    <div class="sec" style="margin-top:22px"><h4>Жетістіктер <span>${j.length}</span></h4><div class="log" style="max-height:none">${j.length ? j.map(([k, v]) => `<div><i>+${v.upai}</i><span>${esc(v.aty)} <span style="color:var(--dim)">· ${ago(v.t)}</span></span></div>`).join("") : `<span class="empty">Әзірге жоқ</span>`}</div></div></div>`;
+  $("dx").onclick = () => $("det").innerHTML = "";
+  $("dd").onclick = () => {
+    if (!confirm(`«${o.aty}» оқушысының ScienceLab-тағы барлық нәтижесі өшеді. MathPro-дағы деректері мен аккаунты қалады. Жалғастырайық па?`)) return;
+    Y.db.collection("sciencelab").doc(uid).delete().then(() => { $("det").innerHTML = ""; load(); }).catch(e => alert("Өшірілмеді: " + (e.code || e.message)));
+  };
+  $("det").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+$("q").oninput = table; $("so").onchange = table; $("rf").onclick = load;
+$("csv").onclick = () => {
+  const head = ["Аты", "Логин", "Ұпай", ...KEYS.map(k => EXP[k].n), ...KEYS.map(k => "Неге? " + EXP[k].n), "Соңғы белсенділік"];
+  const body = rows().map(o => [o.aty, o.login, o.upai, ...KEYS.map(k => st(o, k)[1]), ...KEYS.map(k => o.suraq[k] ? (o.suraq[k].durys ? "дұрыс" : "қате") : ""), o.songy ? new Date(o.songy).toLocaleString("kk-KZ") : ""]);
+  const csv = "﻿" + [head, ...body].map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(";")).join("\r\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })); a.download = "sciencelab-oqushylar.csv"; a.click();
+};
+
+/* ---------- тәжірибелерді ашу/жабу ---------- */
+function switches() {
+  $("sws").innerHTML = KEYS.map(k => `<div class="sw"><div><b>${EXP[k].n} · ${EXP[k].t}</b><small>${SET[k] === false ? "Жабық: оқушылар көрмейді" : "Ашық: барлық оқушыға қолжетімді"}</small></div>
+    <div class="seg" style="width:180px"><button data-k="${k}" data-v="1" class="${SET[k] === false ? "" : "on"}">Ашық</button><button data-k="${k}" data-v="0" class="${SET[k] === false ? "on" : ""}">Жабық</button></div></div>`).join("");
+  document.querySelectorAll("#sws button").forEach(b => b.onclick = () => {
+    const k = b.dataset.k, v = b.dataset.v === "1";
+    Y.db.collection("sciencelab_baptau").doc("negizgi").set({ [k]: v }, { merge: true }).then(() => { SET[k] = v; switches(); overview(); }).catch(e => alert("Сақталмады: " + (e.code || e.message)));
+  });
+}
+</script>
+</body>
+</html>

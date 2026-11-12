@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кіру · ScienceLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=3">
+<style>
+.auth{flex:1;display:grid;grid-template-columns:1fr 1fr;margin:0 var(--pad);min-height:calc(100vh - 76px)}
+.auth .side{padding:72px 56px 40px 0;border-right:1px solid var(--line)}
+.auth .side h1{font:400 clamp(36px,4vw,56px)/1.05 var(--serif);letter-spacing:-.02em;margin:22px 0 18px}
+.auth .side h1 em{color:var(--acc)}
+.auth .form{padding:72px 0 40px 56px;max-width:520px}
+.tabs{display:flex;gap:28px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.tabs button{padding:0 0 12px;font-size:16px;color:var(--mut);border-bottom:1px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--ink)}
+.f{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.f label{font:500 11.5px var(--mono);letter-spacing:.12em;color:var(--mut);text-transform:uppercase}
+.f input{background:transparent;border:1px solid var(--line2);border-radius:3px;padding:12px 14px;color:var(--ink);font:400 16px var(--sans);outline:none}
+.f input:focus{border-color:var(--ink)}
+.f small{font-size:12.5px;color:var(--dim)}
+.err{color:var(--bad);font-size:14px;min-height:20px;margin-bottom:10px}
+.hide{display:none}
+@media (max-width:900px){.auth{grid-template-columns:1fr}.auth .side{border-right:0;padding:36px 0 0}.auth .form{padding:28px 0 40px}}
+</style>
+</head>
+<body data-exp="">
+<header class="top"><a class="logo" href="index.html"><i></i>ScienceLab</a>
+  <nav class="nv"><a href="index.html">Тәжірибелер</a><a href="fizika.html">Физика</a><a href="himiya.html">Химия</a><a href="biologiya.html">Биология</a><a href="admin.html">Мұғалімге</a></nav>
+  <div class="r"><button class="menu-btn" aria-label="Мәзір">≡</button></div></header>
+
+<main class="auth">
+  <div class="side">
+    <div class="kick">Оқушы аккаунты</div>
+    <h1>Нәтижең<br><em>сақталсын</em></h1>
+    <p class="lead">Кірсең, ұпайың мен орындаған тәжірибелерің бұлтта сақталады және кез келген құрылғыдан ашылады. Мұғалім сенің нәтижеңді көреді.</p>
+    <p class="mut" style="font-size:14px;max-width:440px">MathPro-да аккаунтың болса, сол логин мен құпия сөзбен кір. Тіркелмей-ақ тәжірибе жасауға болады, бірақ онда ұпай тек осы браузерде қалады.</p>
+  </div>
+  <div class="form">
+    <div class="tabs"><button id="tIn" class="on">Кіру</button><button id="tReg">Тіркелу</button></div>
+    <div id="fIn">
+      <div class="f"><label>Логин</label><input id="inL" autocomplete="username"></div>
+      <div class="f"><label>Құпия сөз</label><input id="inP" type="password" autocomplete="current-password"></div>
+      <p class="err" id="inE"></p>
+      <button class="b1" id="inB" style="width:100%">Кіру →</button>
+    </div>
+    <div id="fReg" class="hide">
+      <div class="f"><label>Атың</label><input id="rN" maxlength="20" placeholder="Мысалы: Әли"></div>
+      <div class="f"><label>Логин</label><input id="rL" maxlength="20" placeholder="ali2010" autocomplete="username"><small>Латын әріптері, сандар және _ белгісі, 3–20 таңба.</small></div>
+      <div class="f"><label>Құпия сөз</label><input id="rP" type="password" autocomplete="new-password"><small>Кемінде 6 таңба.</small></div>
+      <div class="f"><label>Құпия сөзді қайтала</label><input id="rP2" type="password" autocomplete="new-password"></div>
+      <p class="err" id="rE"></p>
+      <button class="b1" id="rB" style="width:100%">Тіркелу →</button>
+    </div>
+  </div>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="assets/fb.js?v=3"></script>
+<script>
+const $ = (id) => document.getElementById(id), Y = window.SLsync;
+document.querySelector(".menu-btn").onclick = () => document.querySelector(".nv").classList.toggle("open");
+function tab(reg) { $("fIn").classList.toggle("hide", reg); $("fReg").classList.toggle("hide", !reg); $("tIn").classList.toggle("on", !reg); $("tReg").classList.toggle("on", reg); (reg ? $("rN") : $("inL")).focus(); }
+$("tIn").onclick = () => tab(false); $("tReg").onclick = () => tab(true);
+if (location.hash === "#t") tab(true); else $("inL").focus();
+
+let busy = false;
+const next = () => { const n = new URLSearchParams(location.search).get("next"); return n && /^[a-z]+\.html$/.test(n) ? n : "index.html"; };
+// Кірген соң профиль жасалғанын күтіп, бетке қайтамыз
+function go() { const t0 = Date.now(); (function w() { if (Y.data || Date.now() - t0 > 6000) location.href = Y.user && Y.user.email === Y.ADMIN ? "admin.html" : next(); else setTimeout(w, 150); })(); }
+Y.onReady(() => { if (Y.user && !busy) location.replace(Y.user.email === Y.ADMIN ? "admin.html" : next()); });
+
+const okLogin = (l) => /^[a-z0-9_]{3,20}$/.test(l);
+function msg(c) {
+  if (c === "auth/email-already-in-use") return "Бұл логин бос емес. Басқасын ойлап тап.";
+  if (c === "auth/weak-password") return "Құпия сөз тым қарапайым. Кемінде 6 таңба жаз.";
+  if (c === "auth/network-request-failed") return "Интернет жоқ сияқты. Қайта көр.";
+  if (c === "auth/too-many-requests") return "Тым көп талпыныс. Біраз күтіп, қайта көр.";
+  return "Логин немесе құпия сөз қате.";
+}
+function login() {
+  const l = $("inL").value.trim().toLowerCase(), p = $("inP").value; $("inE").textContent = "";
+  if (!l || !p) { $("inE").textContent = "Логин мен құпия сөзді жаз."; return; }
+  if (!okLogin(l)) { $("inE").textContent = "Логин немесе құпия сөз қате."; return; }
+  busy = true; $("inB").disabled = true; $("inB").textContent = "Күте тұр…";
+  Y.auth.signInWithEmailAndPassword(Y.poshta(l), p).then(go).catch(e => { busy = false; $("inB").disabled = false; $("inB").textContent = "Кіру →"; $("inE").textContent = msg(e.code); });
+}
+function register() {
+  const n = $("rN").value.trim(), l = $("rL").value.trim().toLowerCase(), p = $("rP").value, p2 = $("rP2").value; $("rE").textContent = "";
+  if (!n) { $("rE").textContent = "Атыңды жаз."; return; }
+  if (!okLogin(l)) { $("rE").textContent = "Логинге тек латын әріптері, сандар және _ жарайды (3–20 таңба)."; return; }
+  if (l === "admin") { $("rE").textContent = "Бұл логин бос емес. Басқасын ойлап тап."; return; }
+  if (p.length < 6) { $("rE").textContent = "Құпия сөз кемінде 6 таңба болуы керек."; return; }
+  if (p !== p2) { $("rE").textContent = "Құпия сөздер сәйкес келмейді."; return; }
+  busy = true; Y.pendingName = n; $("rB").disabled = true; $("rB").textContent = "Күте тұр…";
+  Y.auth.createUserWithEmailAndPassword(Y.poshta(l), p).then(go).catch(e => { busy = false; $("rB").disabled = false; $("rB").textContent = "Тіркелу →"; $("rE").textContent = msg(e.code); });
+}
+$("inB").onclick = login; $("inP").onkeydown = (e) => { if (e.key === "Enter") login(); };
+$("rB").onclick = register; $("rP2").onkeydown = (e) => { if (e.key === "Enter") register(); };
+</script>
+</body>
+</html>
