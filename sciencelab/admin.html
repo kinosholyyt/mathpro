@@ -20,7 +20,8 @@
 .cards small{display:block;font:500 11.5px var(--mono);letter-spacing:.12em;color:var(--mut);text-transform:uppercase}
 .cards b{display:block;font:400 42px/1.1 var(--serif);margin-top:8px}
 .cards span{font-size:13px;color:var(--dim)}
-.grid2{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-bottom:34px}
+.grid2{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-bottom:34px}
+@media (max-width:1180px){.grid2{grid-template-columns:1fr 1fr}}
 .exp h3{font:400 24px var(--serif);margin:10px 0 12px}
 .tool{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
 .tool input,.tool select{background:transparent;border:1px solid var(--line2);border-radius:3px;padding:10px 12px;color:var(--ink);font:400 15px var(--sans);outline:none}
@@ -36,7 +37,7 @@ table.st td.n{font-family:var(--mono)}
 .tg.ok{color:var(--ok)}.tg.mid{color:var(--acc)}.tg.no{color:var(--dim)}
 .det{border:1px solid var(--line2);padding:24px;margin-top:22px}
 .det h2{font:400 30px var(--serif)}
-.det .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:18px}
+.det .cols{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:18px}
 .sw{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
 .sw b{font:400 22px var(--serif)}
 .sw small{display:block;color:var(--mut);font-size:13.5px}
@@ -83,7 +84,7 @@ table.st td.n{font-family:var(--mono)}
     <section id="t-oq" class="hide">
       <div class="tool"><input id="q" placeholder="Аты немесе логин бойынша іздеу"><select id="so"><option value="upai">Ұпай бойынша</option><option value="aty">Аты бойынша</option><option value="songy">Соңғы белсенділік</option></select>
         <button class="b2" id="rf">↻ Жаңарту</button><button class="b2" id="csv">CSV жүктеу</button></div>
-      <div class="scroll"><table class="st"><thead><tr><th>Оқушы</th><th>Ұпай</th><th>Химия</th><th>Физика</th><th>Биология</th><th>«Неге?»</th><th>Соңғы</th></tr></thead><tbody id="tb"></tbody></table></div>
+      <div class="scroll"><table class="st"><thead><tr><th>Оқушы</th><th>Ұпай</th><th>Химия</th><th>Реакциялар</th><th>Физика</th><th>Биология</th><th>«Неге?»</th><th>Соңғы</th></tr></thead><tbody id="tb"></tbody></table></div>
       <div id="det"></div>
     </section>
 
@@ -105,6 +106,7 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<"
 
 const EXP = {
   himiya: { n: "Химия", t: "Қышқыл мен сілтіні ажырату", done: (d) => !!(d && d.neut), part: (d) => d ? `қадам ${d.qadam || 1}/4` : "" },
+  reaksiya: { n: "Реакциялар", t: "Әсерлі реакциялар: газ бөлінуі", done: (d) => !!(d && d.volcano && d.elephant && d.na), part: (d) => d ? `${d.done || 0}/3 реакция` : "" },
   fizika: { n: "Физика", t: "Математикалық маятник", done: (d) => !!(d && d.olsheu >= 3), part: (d) => d ? `${d.olsheu || 0}/3 өлшеу` : "" },
   biologiya: { n: "Биология", t: "Жануар жасушасы", done: (d) => !!(d && d.tabyldy >= 7), part: (d) => d ? `${d.tabyldy || 0}/7 органоид` : "" },
 };
@@ -171,7 +173,7 @@ function overview() {
     const pct = n ? Math.round(done / n * 100) : 0;
     return `<div class="sec exp"><h4>${EXP[k].n} <span>${SET[k] === false ? "жабық" : "ашық"}</span></h4><h3>${EXP[k].t}</h3>
       <div class="kv"><span>Бастағандар</span><b>${started}</b><span>Орындағандар</span><b>${done}</b><span>«Неге?» дұрыс жауап</span><b>${qd} / ${qs.length}</b></div>
-      <div class="bar" style="--c:var(--${k === "himiya" ? "him" : k === "fizika" ? "fiz" : "bio"});margin-top:12px;grid-template-columns:1fr 50px"><i style="--w:${pct}%"></i><b>${pct}%</b></div></div>`;
+      <div class="bar" style="--c:var(--${k === "himiya" || k === "reaksiya" ? "him" : k === "fizika" ? "fiz" : "bio"});margin-top:12px;grid-template-columns:1fr 50px"><i style="--w:${pct}%"></i><b>${pct}%</b></div></div>`;
   }).join("");
   const top = [...ALL].sort((a, b) => b.upai - a.upai).slice(0, 5);
   $("top").innerHTML = top.length ? `<table class="st"><tbody>${top.map((o, i) => `<tr><td class="n" style="width:40px;color:var(--dim)">${i + 1}</td><td>${esc(o.aty)} <span class="mut mono" style="font-size:12.5px">${esc(o.login)}</span></td><td class="n" style="text-align:right">${o.upai}</td></tr>`).join("")}</tbody></table>` : `<p class="mut">Әзірге ScienceLab-та тіркелген оқушы жоқ.</p>`;
@@ -185,7 +187,7 @@ function table() {
   $("tb").innerHTML = R.length ? R.map(o => `<tr class="r" data-u="${o.uid}"><td><b style="font-weight:500">${esc(o.aty)}</b><br><span class="mut mono" style="font-size:12.5px">${esc(o.login)}</span></td><td class="n">${o.upai}</td>
     ${KEYS.map(k => { const s = st(o, k); return `<td><span class="tg ${s[0]}">${s[1]}</span></td>`; }).join("")}
     <td class="tg">${KEYS.map(k => { const x = o.suraq[k]; return x ? (x.durys ? `<span class="tg ok">✓</span>` : `<span class="tg" style="color:var(--bad)">✗</span>`) : `<span class="tg no">·</span>`; }).join(" ")}</td>
-    <td class="tg no">${ago(o.songy)}</td></tr>`).join("") : `<tr><td colspan="7" class="mut">Оқушы табылмады</td></tr>`;
+    <td class="tg no">${ago(o.songy)}</td></tr>`).join("") : `<tr><td colspan="8" class="mut">Оқушы табылмады</td></tr>`;
   document.querySelectorAll("#tb tr.r").forEach(tr => tr.onclick = () => detail(tr.dataset.u));
 }
 function detail(uid) {
@@ -198,6 +200,7 @@ function detail(uid) {
       let extra = "";
       if (k === "himiya") extra = `<span>Соңғы pH</span><b>${d.ph ?? "—"}</b><span>Индикатор</span><b>${({ pp: "фенолфталеин", mo: "метилоранж", lt: "лакмус" })[d.ind] || "—"}</b>`;
       if (k === "fizika") extra = `<span>Өлшеулер</span><b>${(d.rows || []).map(r => `L=${r.L}: ${r.T} с`).join("<br>") || "—"}</b>`;
+      if (k === "reaksiya") extra = `<span>Жасалған реакциялар</span><b>${["volcano", "elephant", "na"].filter(x => d[x]).map(x => ({ volcano: "вулкан", elephant: "піл тіс пастасы", na: "натрий" })[x]).join(", ") || "—"}</b><span>Катализаторсыз тексерді</span><b>${d.nokat ? "иә" : "жоқ"}</b>`;
       if (k === "biologiya") extra = `<span>Табылған органоид</span><b>${d.tabyldy || 0} / 7</b>`;
       return `<div class="sec"><h4>${EXP[k].n} <span class="tg ${s[0]}">${s[1]}</span></h4><div class="kv">${extra}<span>«Неге?»</span><b>${q ? (q.durys ? `дұрыс · ${q.talpynys}-талпыныс` : `қате · ${q.talpynys} рет`) : "—"}</b></div></div>`; }).join("")}</div>
     <div class="sec" style="margin-top:22px"><h4>Жетістіктер <span>${j.length}</span></h4><div class="log" style="max-height:none">${j.length ? j.map(([k, v]) => `<div><i>+${v.upai}</i><span>${esc(v.aty)} <span style="color:var(--dim)">· ${ago(v.t)}</span></span></div>`).join("") : `<span class="empty">Әзірге жоқ</span>`}</div></div></div>`;

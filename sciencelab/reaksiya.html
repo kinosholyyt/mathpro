@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Химия · Әсерлі реакциялар · ScienceLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=3">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+<script src="assets/kit.js?v=3"></script>
+<style>
+.rx{display:flex;flex-direction:column;gap:6px}
+.rx button{display:grid;grid-template-columns:1fr auto;gap:2px 10px;text-align:left;padding:11px 12px;border:1px solid var(--line);border-radius:3px;transition:border-color .15s}
+.rx button:hover{border-color:var(--line2)}
+.rx button.on{border-color:var(--ink);background:rgba(236,233,227,.04)}
+.rx b{font:500 15px var(--sans)}
+.rx small{grid-column:1;font:400 12.5px var(--mono);color:var(--mut)}
+.rx .ck{grid-row:1 / span 2;grid-column:2;align-self:center;font:400 12px var(--mono);color:var(--dim)}
+.rx button.done .ck{color:var(--ok)}
+.chk{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer}
+.chk input{accent-color:#ece9e3;width:16px;height:16px}
+.qset{display:none}.qset.on{display:block}
+</style>
+</head>
+<body data-exp="reaksiya">
+<header class="top"><a class="logo" href="index.html"><i></i>ScienceLab</a>
+  <nav class="nv"><a href="index.html">Тәжірибелер</a><a href="fizika.html">Физика</a><a href="himiya.html" class="on">Химия</a><a href="biologiya.html">Биология</a><a href="admin.html">Мұғалімге</a></nav>
+  <div class="r"><span class="pts">Ұпай <b>0</b></span><a class="hide-s" id="hdrIn" href="kiru.html">Кіру</a><a class="b1" id="hdrReg" href="kiru.html#t">Тіркелу</a><button class="menu-btn" aria-label="Мәзір">≡</button></div></header>
+
+<main class="lab" style="--c:var(--him)">
+  <aside class="l">
+    <div class="ttl"><div class="crumb"><i></i>Химия · 8-сынып · №12</div>
+      <h1>Әсерлі реакциялар: газ бөлінуі</h1>
+      <p>Бір затты екіншісіне қос та, не болатынын бақыла. Бөлінген газ көбік болып атқылайды. Оның көлемі неге тәуелді?</p></div>
+    <div class="sec"><h4>Реакция <span id="dn">0 / 3</span></h4>
+      <div class="rx" id="rx">
+        <button data-r="volcano" class="on"><b>Вулкан</b><small>NaHCO₃ + CH₃COOH</small><span class="ck">—</span></button>
+        <button data-r="elephant"><b>«Піл тіс пастасы»</b><small>H₂O₂ + KI (катализатор)</small><span class="ck">—</span></button>
+        <button data-r="na"><b>Натрий мен су</b><small>Na + H₂O</small><span class="ck">—</span></button>
+      </div></div>
+    <div class="sec" id="opt"></div>
+    <div class="sec"><h4>Қауіпсіздік</h4><p class="mut" style="font-size:13.5px;line-height:1.55" id="safe"></p></div>
+  </aside>
+
+  <div class="stage" id="st">
+    <div class="dock"><div class="stx"><small id="dkS">ДАЙЫН</small><span id="dkT">Заттарды қосуға дайын</span></div>
+      <button class="b1" id="go" style="min-width:140px">Қосу</button>
+      <button class="b2" id="slow">Баяу: өшірулі</button>
+      <button class="b2" id="rs" title="Қайта бастау">↺</button></div>
+  </div>
+
+  <aside class="r">
+    <div class="sec"><h4>Өлшеу <span id="live">—</span></h4>
+      <div class="big"><div><small id="gasN">БӨЛІНГЕН ГАЗ</small><b id="gv">0,00 л</b></div><div class="fm" id="gasF">CO₂</div></div>
+      <div class="kv" id="kv"></div></div>
+    <div class="sec"><h4>Газ көлемі <span>V(t), л</span></h4><canvas class="chart" id="ch" width="600" height="260"></canvas></div>
+    <div class="eq" id="eq"><small>РЕАКЦИЯ ТЕҢДЕУІ</small>—</div>
+    <div class="sec"><h4>Бақылау журналы</h4><div class="log" id="log"><span class="empty">Заттарды қосып, бақыла.</span></div></div>
+    <div class="sec qz" id="qz"><h4>Неге?</h4>
+      <div class="qset" data-r="volcano"><b>Вулкандағы көбіктің ішінде қандай газ бар?</b>
+        <button><u>A</u>Оттегі, O₂</button><button data-ok><u>B</u>Көмірқышқыл газ, CO₂</button><button><u>C</u>Сутегі, H₂</button>
+        <p class="why">Сода (NaHCO₃) қышқылмен әрекеттескенде H₂CO₃ түзіледі. Ол бірден суға және CO₂-ге ыдырайды. Газ сұйықтықтан шығып, көбік түзеді.</p></div>
+      <div class="qset" data-r="elephant"><b>KI не үшін қосылады?</b>
+        <button><u>A</u>Ол реакцияға кіріп, толық жұмсалады</button><button data-ok><u>B</u>Ол катализатор: H₂O₂-нің ыдырауын жылдамдатады, бірақ өзі жұмсалмайды</button><button><u>C</u>Көбікті бояу үшін</button>
+        <p class="why">H₂O₂ өздігінен өте баяу ыдырайды. Катализатор (KI) реакцияны мыңдаған есе жылдамдатады, сондықтан O₂ бірден бөлініп, сабынмен бірге көбік бағанасын түзеді. Катализаторсыз тәжірибені өзің тексеріп көр.</p></div>
+      <div class="qset" data-r="na"><b>Фенолфталеин тамызылған су неге таңқурай түсіне боялды?</b>
+        <button><u>A</u>Натрийдің өзі қызыл түсті</button><button data-ok><u>B</u>Реакцияда NaOH түзілді, ал ол сілті</button><button><u>C</u>Су қатты қызып кетті</button>
+        <p class="why">2Na + 2H₂O → 2NaOH + H₂↑. Түзілген NaOH сілті, сондықтан фенолфталеин таңқурай түсіне боялады (№07 тәжірибені еске түсір). Бөлінген жылу сутегіні тұтандыруы мүмкін.</p></div>
+    </div>
+  </aside>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="assets/fb.js?v=3"></script>
+<script type="module">
+const K = await window.SLkit;
+const { THREE, V, M, makeWorld, table, erlen, fmt, initNav, addPts, toast, quiz, progress } = K;
+initNav();
+const $ = (id) => document.getElementById(id);
+const Vm = 24; // газдың молярлық көлемі, бөлме температурасында ~24 л/моль
+
+/* ---------- реакциялар ---------- */
+const RX = {
+  volcano: {
+    n: "Вулкан", gas: "CO₂", gasN: "КӨМІРҚЫШҚЫЛ ГАЗ",
+    eq: "NaHCO₃ + CH₃COOH → CH₃COONa + H₂O + CO₂↑",
+    safe: "Қауіпсіз тәжірибе: үйде де жасауға болады. Сірке суы көзге тиіп кетпесін.",
+    opt: { soda: 10, dye: "қызыл" },
+    calc(o) { const nS = o.soda / 84, nA = 100 * 0.09 / 60; const n = Math.min(nS, nA); return { n, V: n * Vm, k: 1.3, lim: nS < nA ? "сода" : "сірке қышқылы", nS, nA }; },
+  },
+  elephant: {
+    n: "«Піл тіс пастасы»", gas: "O₂", gasN: "ОТТЕГІ",
+    eq: "2H₂O₂ —(KI)→ 2H₂O + O₂↑",
+    safe: "Нағыз тәжірибеде 30% H₂O₂ теріні күйдіреді: тек мұғалім жасайды, көзілдірік пен қолғап міндетті. Реакция жылу бөледі.",
+    opt: { c: 12, kat: true, dye: "көк" },
+    calc(o) { const n2 = 50 * o.c / 100 / 34; const n = n2 / 2; return { n, V: n * Vm, k: o.kat ? 1.6 + o.c / 10 : 0.004 }; },
+  },
+  na: {
+    n: "Натрий мен су", gas: "H₂", gasN: "СУТЕГІ",
+    eq: "2Na + 2H₂O → 2NaOH + H₂↑",
+    safe: "Натрий өте белсенді металл: оны тек керосинде сақтайды және қолмен ұстамайды. Үлкен кесек жарылуы мүмкін, сондықтан мектепте тек ұсақ кесекпен, қорғаныс экраны артында жасалады.",
+    opt: { m: 0.2, pp: true },
+    calc(o) { const nNa = o.m / 23; const n = nNa / 2; return { n, V: n * Vm, k: 0.35 + o.m * 0.5, nNa }; },
+  },
+};
+let cur = "volcano";
+const opt = { volcano: { ...RX.volcano.opt }, elephant: { ...RX.elephant.opt }, na: { ...RX.na.opt } };
+const done = {};
+const DYES = { "қызыл": 0xb8322a, "көк": 0x2f63c8, "сары": 0xe0a820, "жасыл": 0x2f9a4a, "ақ": 0xf3ead8 };
+
+function optUI() {
+  const o = opt[cur]; let h = "";
+  if (cur === "volcano") h = `<h4>Параметрлер</h4>
+    <div class="sl"><div class="tt"><span>Сода, m(NaHCO₃)</span><b id="v1">${o.soda} г</b></div><input type="range" id="i1" min="2" max="30" step="1" value="${o.soda}"></div>
+    <div class="kv"><span>Сірке суы (9%)</span><b>100 мл</b></div>
+    <div class="sl"><div class="tt"><span>Бояу</span></div><div class="seg" id="dye">${["қызыл", "сары", "ақ"].map(d => `<button class="${o.dye === d ? "on" : ""}" data-d="${d}">${d}</button>`).join("")}</div></div>`;
+  if (cur === "elephant") h = `<h4>Параметрлер</h4>
+    <div class="sl"><div class="tt"><span>H₂O₂ концентрациясы</span><b id="v1">${o.c}%</b></div><div class="seg" id="cc">${[3, 6, 12, 30].map(c => `<button class="${o.c === c ? "on" : ""}" data-c="${c}">${c}%</button>`).join("")}</div></div>
+    <div class="kv"><span>H₂O₂ көлемі</span><b>50 мл</b><span>Сұйық сабын</span><b>10 мл</b></div>
+    <label class="chk"><input type="checkbox" id="kat" ${o.kat ? "checked" : ""}> Катализатор KI қосу</label>
+    <div class="sl"><div class="tt"><span>Бояу</span></div><div class="seg" id="dye">${["көк", "жасыл", "сары"].map(d => `<button class="${o.dye === d ? "on" : ""}" data-d="${d}">${d}</button>`).join("")}</div></div>`;
+  if (cur === "na") h = `<h4>Параметрлер</h4>
+    <div class="sl"><div class="tt"><span>Натрий кесегі, m</span><b id="v1">${fmt(o.m, 1)} г</b></div><input type="range" id="i1" min="0.1" max="1.5" step="0.1" value="${o.m}"></div>
+    <label class="chk"><input type="checkbox" id="pp" ${o.pp ? "checked" : ""}> Суға фенолфталеин тамызу</label>
+    <p class="mut" style="font-size:13px">0,5 г-нан ауыр кесекте сутегі тұтанады, ал 1 г-нан ауырында жарылыс болады.</p>`;
+  $("opt").innerHTML = h;
+  const i1 = $("i1"); if (i1) { K.rangeFill(i1); i1.oninput = () => { if (cur === "volcano") { o.soda = +i1.value; $("v1").textContent = o.soda + " г"; } else { o.m = +i1.value; $("v1").textContent = fmt(o.m, 1) + " г"; } info(); }; }
+  document.querySelectorAll("#dye button").forEach(b => b.onclick = () => { o.dye = b.dataset.d; optUI(); });
+  document.querySelectorAll("#cc button").forEach(b => b.onclick = () => { o.c = +b.dataset.c; optUI(); });
+  if ($("kat")) $("kat").onchange = () => { o.kat = $("kat").checked; info(); };
+  if ($("pp")) $("pp").onchange = () => { o.pp = $("pp").checked; };
+  $("safe").textContent = RX[cur].safe;
+  info();
+}
+
+/* ---------- 3D ---------- */
+const st = $("st");
+const W = makeWorld(st, {
+  fov: 26, hfov: 40, maxV: 56, cam: V(0, 4.6, 12.5), look: V(0, 1.6, 0),
+  controls: { minDistance: 7, maxDistance: 20, minPolarAngle: 0.6, maxPolarAngle: 1.45, minAzimuthAngle: -1.0, maxAzimuthAngle: 1.0, rotateSpeed: 0.5 },
+});
+const sc = W.scene;
+table(W, 12, 7).position.set(0, -0.15, -0.3);
+
+// ыдыстар
+const vol = erlen(1.1); vol.userData.setLevel(0.18); vol.userData.mat.color.set(0xe9d8c0); vol.userData.mat.emissive.set(0x3a2a18);
+const cyl = new THREE.Group();
+{ const pts = [[0, 0.1], [0.42, 0.1], [0.42, 3.4], [0.5, 3.48]].map(p => new THREE.Vector2(p[0], p[1]));
+  cyl.add(new THREE.Mesh(new THREE.LatheGeometry(pts, 64), M.glass()));
+  const b = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.85, 0.12, 6), M.matte(0xe9e7e2, 0.4)); b.position.y = 0.06; cyl.add(b);
+  const l = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.7, 48), M.liquid(0xdfe7ef)); l.position.y = 0.45; l.name = "lq"; cyl.add(l);
+  const tk = new THREE.MeshBasicMaterial({ color: 0xcfcfcf });
+  for (let i = 0; i < 14; i++) { const t = new THREE.Mesh(new THREE.BoxGeometry(i % 2 ? 0.12 : 0.22, 0.012, 0.01), tk); t.position.set(-0.15, 0.5 + i * 0.2, 0.42); cyl.add(t); } }
+const dish = new THREE.Group();
+{ const pts = [[0, 0], [1.75, 0], [1.8, 0.05], [1.8, 0.8], [1.86, 0.84]].map(p => new THREE.Vector2(p[0], p[1]));
+  dish.add(new THREE.Mesh(new THREE.LatheGeometry(pts, 96), M.glass()));
+  const w = new THREE.Mesh(new THREE.CylinderGeometry(1.76, 1.76, 0.5, 96), new THREE.MeshPhysicalMaterial({ color: 0xcfe3ee, roughness: 0.05, transmission: 0.6, thickness: 0.5, transparent: true, opacity: 0.85, clearcoat: 1 }));
+  w.position.y = 0.28; w.name = "water"; dish.add(w); }
+const naPiece = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), new THREE.MeshStandardMaterial({ color: 0xd8dade, metalness: 0.9, roughness: 0.25 }));
+const flame = new THREE.Mesh(new THREE.ConeGeometry(0.16, 0.6, 24, 1, true), new THREE.MeshBasicMaterial({ color: 0xff9a3c, transparent: true, opacity: 0.0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
+const fLight = new THREE.PointLight(0xff8a30, 0, 6, 1.6);
+dish.add(naPiece, flame, fLight);
+// қосатын ыдыс (стакан/шыны таяқша)
+const pourer = new THREE.Group();
+{ const pts = [[0, 0], [0.34, 0], [0.36, 0.03], [0.36, 0.9], [0.4, 0.95]].map(p => new THREE.Vector2(p[0], p[1]));
+  pourer.add(new THREE.Mesh(new THREE.LatheGeometry(pts, 48), M.glass()));
+  const l = new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.33, 0.5, 32), M.liquid(0xe8e2d0)); l.position.y = 0.28; l.name = "pl"; pourer.add(l); }
+[vol, cyl, dish, pourer].forEach(o => { sc.add(o); W.shadows(o); });
+const Lv = W.label(() => mouth().clone().add(V(0.3, 0.2, 0)), "", 110, -120);
+
+/* ---------- бөлшектер (көбік, көпіршік, шашырау) ---------- */
+const NP = 1600;
+const pGeo = new THREE.SphereGeometry(1, 10, 8);
+const pMat = new THREE.MeshStandardMaterial({ roughness: 0.55, metalness: 0 });
+const parts = new THREE.InstancedMesh(pGeo, pMat, NP); parts.instanceMatrix.setUsage(THREE.DynamicDrawUsage); parts.castShadow = true; parts.receiveShadow = true; parts.frustumCulled = false; sc.add(parts);
+const P = Array.from({ length: NP }, () => ({ on: false, p: V(0, 0, 0), v: V(0, 0, 0), r: 0.1, st: false, life: 0, kind: 0 }));
+const col = new THREE.Color(), dm = new THREE.Object3D();
+for (let i = 0; i < NP; i++) parts.setColorAt(i, col.set(0xffffff));
+let pIdx = 0;
+// жиналған көбіктің биіктік торы
+const GX = 100, GZ = 60, CS = 0.12, OX = -6, OZ = -3.6;
+const heap = new Float32Array(GX * GZ), base = new Float32Array(GX * GZ);
+const cell = (x, z) => { const i = Math.floor((x - OX) / CS), j = Math.floor((z - OZ) / CS); return i < 0 || j < 0 || i >= GX || j >= GZ ? -1 : j * GX + i; };
+function spawn(pos, vel, r, c, kind, life) {
+  const i = pIdx, q = P[i]; pIdx = (pIdx + 1) % NP;
+  q.on = true; q.st = false; q.p.copy(pos); q.v.copy(vel); q.r = r; q.kind = kind; q.life = life || 99;
+  parts.setColorAt(i, col.set(c)); parts.instanceColor.needsUpdate = true;
+}
+function clearParts() { P.forEach(q => q.on = false); heap.fill(0); }
+
+/* ---------- сахнаны таңдау ---------- */
+let mouthY = 0;
+const mouth = () => cur === "volcano" ? V(0, 2.25, 0.2) : cur === "elephant" ? V(0, 3.45, 0.2) : V(0, 0.55, 0.3);
+function layout() {
+  vol.visible = cur === "volcano"; cyl.visible = cur === "elephant"; dish.visible = cur === "na";
+  vol.position.set(0, 0, 0.2); cyl.position.set(0, 0, 0.2); dish.position.set(0, 0, 0.3);
+  pourer.visible = cur !== "na"; pourer.position.set(1.6, 0, 0.9); pourer.rotation.set(0, 0, 0);
+  pourer.getObjectByName("pl").material.color.set(cur === "volcano" ? 0xece6d4 : 0xe9e1b8);
+  pourer.getObjectByName("pl").visible = true;
+  naPiece.visible = false; flame.material.opacity = 0; fLight.intensity = 0;
+  dish.getObjectByName("water").material.color.set(0xcfe3ee);
+  mouthY = mouth().y;
+  // ыдыс аузы — көбік отыратын «еден»
+  base.fill(0); const m = mouth(), R = cur === "volcano" ? 0.42 : cur === "elephant" ? 0.45 : 0;
+  if (R) for (let j = 0; j < GZ; j++) for (let i = 0; i < GX; i++) { const x = OX + (i + .5) * CS, z = OZ + (j + .5) * CS; if (Math.hypot(x - m.x, z - m.z) < R) base[j * GX + i] = m.y - 0.15; }
+  W.ctl.target.copy(cur === "na" ? V(0, 0.6, 0.3) : V(0, 1.6, 0.2));
+  clearParts();
+}
+
+/* ---------- реакция күйі ---------- */
+let R = null; // { t, n, V, k, made, hist:[], phase }
+let slow = false;
+function info() {
+  const c = RX[cur].calc(opt[cur]);
+  $("gasN").textContent = "БӨЛІНЕТІН " + RX[cur].gasN; $("gasF").textContent = RX[cur].gas;
+  $("eq").innerHTML = `<small>РЕАКЦИЯ ТЕҢДЕУІ</small>${RX[cur].eq}`;
+  let kv = "";
+  if (cur === "volcano") kv = `<span>n(NaHCO₃)</span><b>${fmt(c.nS, 3)} моль</b><span>n(CH₃COOH)</span><b>${fmt(c.nA, 3)} моль</b><span>Жетпей қалатын зат</span><b>${c.lim}</b>`;
+  if (cur === "elephant") kv = `<span>n(H₂O₂)</span><b>${fmt(c.n * 2, 3)} моль</b><span>Катализатор</span><b>${opt.elephant.kat ? "KI бар" : "жоқ"}</b>`;
+  if (cur === "na") kv = `<span>n(Na)</span><b>${fmt(c.nNa, 3)} моль</b><span>Күтілетін нәтиже</span><b>${opt.na.m >= 1 ? "жарылыс" : opt.na.m >= 0.5 ? "жалын" : "шыжылдау"}</b>`;
+  kv += `<span>Теория: V(${RX[cur].gas})</span><b>${fmt(c.V, 2)} л</b>`;
+  $("kv").innerHTML = kv;
+  if (!R) $("gv").textContent = "0,00 л";
+  Lv.el.innerHTML = `<u>${RX[cur].gas}</u>${R ? fmt(R.made, 2) + " л бөлінді" : "реакцияға дайын"}<small>${RX[cur].n}</small>`;
+}
+function select(r) {
+  if (R && R.phase === "run") return;
+  cur = r; R = null;
+  document.querySelectorAll("#rx button").forEach(b => b.classList.toggle("on", b.dataset.r === r));
+  document.querySelectorAll(".qset").forEach(q => q.classList.toggle("on", q.dataset.r === r));
+  $("dkS").textContent = "ДАЙЫН"; $("dkT").textContent = r === "na" ? "Натрий кесегін суға таста" : "Екінші затты ыдысқа құй";
+  $("go").textContent = r === "na" ? "Суға тастау" : "Қосу"; $("go").disabled = false;
+  layout(); optUI(); drawChart();
+}
+document.querySelectorAll("#rx button").forEach(b => b.onclick = () => select(b.dataset.r));
+
+const logA = [];
+function log(t) { logA.push(t); $("log").innerHTML = logA.map((l, i) => `<div><i>${String(i + 1).padStart(2, "0")}</i><span>${l}</span></div>`).join(""); $("log").scrollTop = 1e6; }
+
+function start() {
+  if (R && R.phase === "run") return;
+  layout();
+  const c = RX[cur].calc(opt[cur]);
+  R = { t: 0, n: c.n, V: c.V, k: c.k, made: 0, hist: [[0, 0]], phase: "pour", pour: 0, flash: 0, exploded: false };
+  $("go").disabled = true; $("live").textContent = "жүріп жатыр";
+  $("dkS").textContent = "РЕАКЦИЯ"; $("dkT").textContent = cur === "na" ? "Натрий суға түсті" : "Құйылып жатыр…";
+  const o = opt[cur];
+  if (cur === "volcano") log(`Колбадағы <b>100 мл сірке суына</b> ${o.dye} бояу қосылған <b>${o.soda} г сода</b> салдың.`);
+  if (cur === "elephant") log(`<b>50 мл ${o.c}% H₂O₂</b> мен сабынға ${o.kat ? "<b>KI катализаторын</b>" : "катализаторсыз <b>тек су</b>"} құйдың.`);
+  if (cur === "na") { log(`<b>${fmt(o.m, 1)} г натрий</b> кесегін ${o.pp ? "фенолфталеин тамызылған " : ""}суға тастадың.`); naPiece.visible = true; naPiece.scale.setScalar(0.07 + Math.cbrt(o.m) * 0.09); naPiece.position.set(0, 0.56, 0); R.phase = "run"; }
+}
+$("go").onclick = start;
+$("slow").onclick = () => { slow = !slow; $("slow").textContent = "Баяу: " + (slow ? "қосулы" : "өшірулі"); };
+$("rs").onclick = () => { R = null; select(cur); };
+
+function finish() {
+  R.phase = "end"; $("live").textContent = "аяқталды"; $("go").disabled = false; $("go").textContent = "Қайталау";
+  $("dkS").textContent = "АЯҚТАЛДЫ";
+  const o = opt[cur], Vt = RX[cur].calc(o).V;
+  if (cur === "volcano") log(`Көбік ақтарылып, <b>${fmt(R.made, 2)} л CO₂</b> бөлінді. ${o.soda * 1 > 12.6 ? "Сода артық қалды: сірке қышқылы бітіп қалды." : "Сірке қышқылы артық қалды: сода бітіп қалды."}`);
+  if (cur === "elephant") log(o.kat ? `Көбік бағанасы атқылады: <b>${fmt(R.made, 2)} л O₂</b>. Ыдыс жылып кетті, демек реакция жылу бөледі.` : `Ештеңе болмады: катализаторсыз H₂O₂ өте баяу ыдырайды (бір минутта ${fmt(R.made, 3)} л).`);
+  if (cur === "na") log(`Натрий толық әрекеттесті: <b>${fmt(R.made, 3)} л H₂</b>. ${R.exploded ? "Сутегі жарылды!" : o.m >= 0.5 ? "Сутегі сарғыш жалынмен жанды." : "Кесек суда шыжылдап жүгірді."}${o.pp ? " Су <b>таңқурай түсті</b> болды: NaOH түзілді." : ""}`);
+  $("dkT").textContent = "Нәтижені журналдан оқы";
+  const okRun = cur !== "elephant" || o.kat;
+  if (okRun && !done[cur]) {
+    done[cur] = true; document.querySelector(`#rx button[data-r="${cur}"]`).classList.add("done"); document.querySelector(`#rx button[data-r="${cur}"] .ck`).textContent = "жасалды";
+    $("dn").textContent = `${Object.keys(done).length} / 3`;
+    progress({ [cur]: true, done: Object.keys(done).length });
+    addPts(20, `${RX[cur].n}: реакция бақыланды`, "rx_" + cur);
+  }
+  if (cur === "elephant" && !o.kat) progress({ nokat: true });
+}
+
+/* ---------- цикл ---------- */
+let shake = 0;
+const camBase = V(0, 0, 0);
+W.frames.push((dtRaw) => {
+  const dt = dtRaw * (slow ? 0.3 : 1);
+  if (R) {
+    R.t += dt; const o = opt[cur];
+    if (R.phase === "pour") { // құю анимациясы
+      R.pour += dt / 1.0; const k = Math.min(1, R.pour);
+      pourer.position.set(1.6 - k * 1.0, mouthY + 0.25 * k + (cur === "elephant" ? 0 : 0), 0.2);
+      pourer.rotation.z = k * 1.9;
+      if (k >= 1) { pourer.visible = false; R.phase = "run"; R.t = 0; $("dkT").textContent = "Реакция жүріп жатыр…"; }
+    }
+    if (R.phase === "run") {
+      // газ бөлінуі: V(t) = V·(1 − e^(−kt))
+      const prev = R.made; R.made = R.V * (1 - Math.exp(-R.k * R.t)); const dV = R.made - prev;
+      if (R.hist.length === 0 || R.t - R.hist[R.hist.length - 1][0] > 0.05) R.hist.push([R.t, R.made]);
+      $("gv").textContent = fmt(R.made, cur === "na" ? 3 : 2) + " л";
+      Lv.el.innerHTML = `<u>${RX[cur].gas}</u>${fmt(R.made, 2)} л бөлінді<small>${RX[cur].n}</small>`;
+      const m = mouth();
+      if (cur === "volcano") {
+        const dc = DYES[o.dye]; const nP = Math.min(14, dV * 260 + (Math.random() < dV * 300 ? 1 : 0));
+        for (let i = 0; i < nP; i++) { const a = Math.random() * 6.283, s = 0.6 + Math.random() * 1.6 * (0.4 + R.V / 3);
+          spawn(m.clone().add(V((Math.random() - .5) * 0.3, 0, (Math.random() - .5) * 0.3)), V(Math.cos(a) * s * 0.5, 0.8 + Math.random() * 2.4 * Math.min(1.6, R.V / 2), Math.sin(a) * s * 0.5), 0.08 + Math.random() * 0.08, new THREE.Color(dc).lerp(new THREE.Color(0xf3ead8), 0.15 + Math.random() * 0.35), 0); }
+        vol.userData.setLevel(0.18 + Math.min(0.5, R.made * 0.15) * Math.exp(-R.t * 0.3));
+      }
+      if (cur === "elephant") {
+        const dc = DYES[o.dye]; const nP = Math.min(24, dV * 330 + (Math.random() < dV * 330 ? 1 : 0));
+        for (let i = 0; i < nP; i++) { const s = (2.2 + o.c / 4) * (0.7 + Math.random() * 0.5);
+          spawn(m.clone().add(V((Math.random() - .5) * 0.35, 0, (Math.random() - .5) * 0.35)), V((Math.random() - .5) * 0.9, s, (Math.random() - .5) * 0.9), 0.09 + Math.random() * 0.09, new THREE.Color(dc).lerp(new THREE.Color(0xffffff), 0.05 + Math.random() * 0.3), 0); }
+        const l = cyl.getObjectByName("lq"); l.scale.y = 1 + Math.min(3, R.made * 3) * Math.exp(-R.t * 0.8); l.position.y = 0.1 + 0.35 * l.scale.y;
+      }
+      if (cur === "na") {
+        const f = Math.min(1, R.made / R.V), s0 = 0.07 + Math.cbrt(o.m) * 0.09;
+        naPiece.scale.setScalar(Math.max(0.001, s0 * (1 - f)));
+        // кесек су бетінде жүгіреді
+        R.nv = R.nv || V(0, 0, 0); R.nv.add(V((Math.random() - .5) * 6 * dt, 0, (Math.random() - .5) * 6 * dt)).multiplyScalar(0.97);
+        naPiece.position.add(R.nv.clone().multiplyScalar(dt * (1.5 + o.m))); const rr = Math.hypot(naPiece.position.x, naPiece.position.z); if (rr > 1.45) { naPiece.position.x *= 1.45 / rr; naPiece.position.z *= 1.45 / rr; R.nv.multiplyScalar(-0.6); }
+        naPiece.position.y = 0.56 + Math.sin(R.t * 30) * 0.01;
+        const wp = naPiece.position.clone().add(dish.position);
+        for (let i = 0; i < Math.min(6, dV * 3000); i++) spawn(wp.clone().add(V((Math.random() - .5) * 0.2, 0.02, (Math.random() - .5) * 0.2)), V((Math.random() - .5) * 0.8, 0.15 + Math.random() * 0.3, (Math.random() - .5) * 0.8), 0.015 + Math.random() * 0.025, 0xf2f6f8, 1, 0.15 + Math.random() * 0.2);
+        // жалын
+        const burn = o.m >= 0.5 && f > 0.15 && f < 0.97;
+        flame.material.opacity = burn ? 0.55 + Math.random() * 0.3 : Math.max(0, flame.material.opacity - dt * 2);
+        flame.position.copy(naPiece.position).add(V(0, 0.32, 0)); flame.scale.set(1, 0.8 + Math.random() * 0.5, 1);
+        fLight.position.copy(flame.position); fLight.intensity = burn ? 6 + Math.random() * 6 : Math.max(0, fLight.intensity - dt * 20);
+        const w = dish.getObjectByName("water"); if (o.pp) w.material.color.copy(new THREE.Color(0xcfe3ee).lerp(new THREE.Color(0xc0306a), f * 0.85));
+        if (o.m >= 1 && f > 0.85 && !R.exploded) { // жарылыс
+          R.exploded = true; shake = 0.5; fLight.intensity = 60; flame.material.opacity = 1; flame.scale.set(4, 3, 4);
+          for (let i = 0; i < 160; i++) { const a = Math.random() * 6.283, s = 2 + Math.random() * 4; spawn(wp.clone().add(V(0, 0.1, 0)), V(Math.cos(a) * s * 0.6, 3 + Math.random() * 4, Math.sin(a) * s * 0.6), 0.03 + Math.random() * 0.04, opt.na.pp ? 0xd06a90 : 0xcfe3ee, 2); }
+          toast("Сутегі жарылды!", "Үлкен натрий кесегі");
+        }
+      }
+      if (R.t > Math.max(3.5, 4.6 / R.k) || (cur === "elephant" && !o.kat && R.t > 4)) finish();
+      if (R.phase === "end") drawChart();
+    }
+    if (R.phase !== "end" && Math.random() < 0.3) drawChart();
+  }
+  // бөлшектер физикасы
+  for (let i = 0; i < NP; i++) {
+    const q = P[i];
+    if (!q.on) { dm.position.set(0, -50, 0); dm.scale.setScalar(0.0001); dm.updateMatrix(); parts.setMatrixAt(i, dm.matrix); continue; }
+    if (q.kind === 1) { // су ішіндегі көпіршік
+      q.life -= dt; q.p.addScaledVector(q.v, dt); if (q.life <= 0) q.on = false;
+    } else if (!q.st) {
+      q.v.y -= 9.8 * 0.55 * dt; q.v.multiplyScalar(1 - 0.6 * dt); q.p.addScaledVector(q.v, dt);
+      const c = cell(q.p.x, q.p.z), h = c < 0 ? 0 : Math.max(heap[c], base[c]);
+      if (q.v.y < 0 && q.p.y - q.r * 0.6 <= h && q.kind === 2) { q.on = false; continue; }
+      if (q.v.y < 0 && q.p.y - q.r * 0.6 <= h) {
+        // көбік үйіліп, ағып жайылады
+        if (c >= 0) {
+          let bi = c, bh = h; const ci = c % GX, cj = (c - ci) / GX;
+          for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) { const ni = ci + di, nj = cj + dj; if (ni < 0 || nj < 0 || ni >= GX || nj >= GZ) continue; const k = nj * GX + ni, hh = Math.max(heap[k], base[k]); if (hh < bh - 0.06) { bh = hh; bi = k; } }
+          if (bi !== c) { q.p.x = OX + (bi % GX + .5) * CS + (Math.random() - .5) * 0.06; q.p.z = OZ + (Math.floor(bi / GX) + .5) * CS + (Math.random() - .5) * 0.06; q.v.set(0, -0.5, 0); continue; }
+          q.p.y = h + q.r * 0.6; heap[c] = Math.max(heap[c], base[c]) + q.r * 0.75;
+        } else q.p.y = q.r;
+        q.st = true;
+      }
+    }
+    dm.position.copy(q.p); dm.scale.setScalar(q.r); dm.updateMatrix(); parts.setMatrixAt(i, dm.matrix);
+  }
+  parts.instanceMatrix.needsUpdate = true;
+  if (shake > 0) { shake -= dtRaw; W.cam.position.x += (Math.random() - .5) * shake * 0.3; W.cam.position.y += (Math.random() - .5) * shake * 0.3; }
+});
+
+/* ---------- график ---------- */
+const cv = $("ch"), cx = cv.getContext("2d");
+function drawChart() {
+  const w = cv.width, h = cv.height; cx.clearRect(0, 0, w, h);
+  cx.strokeStyle = "rgba(236,233,227,.12)"; cx.lineWidth = 1;
+  for (let i = 1; i < 4; i++) { cx.beginPath(); cx.moveTo(0, h * i / 4); cx.lineTo(w, h * i / 4); cx.stroke(); }
+  const c = RX[cur].calc(opt[cur]), Vmax = Math.max(0.01, c.V) * 1.15, T = 6;
+  cx.setLineDash([6, 6]); cx.strokeStyle = "rgba(212,162,76,.5)"; const yT = h - c.V / Vmax * h * 0.9;
+  cx.beginPath(); cx.moveTo(0, yT); cx.lineTo(w, yT); cx.stroke(); cx.setLineDash([]);
+  cx.fillStyle = "#d4a24c"; cx.font = "20px IBM Plex Mono"; cx.fillText(`теория ${fmt(c.V, 2)} л`, 10, yT - 8);
+  if (!R || !R.hist) return;
+  cx.strokeStyle = "#c07f8c"; cx.lineWidth = 3; cx.beginPath();
+  R.hist.forEach((q, i) => { const x = q[0] / T * w, y = h - q[1] / Vmax * h * 0.9; i ? cx.lineTo(x, y) : cx.moveTo(x, y); }); cx.stroke();
+  cx.fillStyle = "#8a8b88"; cx.fillText("t, с →", w - 90, h - 10);
+}
+
+quiz(document.querySelector('.qset[data-r="volcano"]'), () => addPts(20, "«Неге?»: вулкан", "rx_qz_volcano"));
+quiz(document.querySelector('.qset[data-r="elephant"]'), () => addPts(20, "«Неге?»: катализатор", "rx_qz_elephant"));
+quiz(document.querySelector('.qset[data-r="na"]'), () => addPts(20, "«Неге?»: натрий", "rx_qz_na"));
+// бұрын жасалған реакцияларды белгілеу
+if (window.SLsync) window.SLsync.onReady(() => { const d = window.SLsync.data && window.SLsync.data.tajiribe.reaksiya; if (d) ["volcano", "elephant", "na"].forEach(r => { if (d[r]) { done[r] = true; document.querySelector(`#rx button[data-r="${r}"]`).classList.add("done"); document.querySelector(`#rx button[data-r="${r}"] .ck`).textContent = "жасалды"; } }); $("dn").textContent = `${Object.keys(done).length} / 3`; });
+// ?r=elephant&auto — көрсету/скриншот үшін
+const qp = new URLSearchParams(location.search);
+select(RX[qp.get("r")] ? qp.get("r") : "volcano");
+if (qp.has("m")) { opt.na.m = +qp.get("m"); optUI(); }
+if (qp.has("auto")) setTimeout(start, 600);
+</script>
+</body>
+</html>
