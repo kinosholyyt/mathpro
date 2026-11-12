@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Биология · Жануар жасушасы · ScienceLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=2">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+<script src="assets/kit.js?v=2"></script>
+</head>
+<body>
+<header class="top"><a class="logo" href="index.html"><i></i>ScienceLab</a>
+  <nav class="nv"><a href="index.html">Тәжірибелер</a><a href="fizika.html">Физика</a><a href="himiya.html">Химия</a><a href="biologiya.html" class="on">Биология</a><a href="index.html#mugalim">Мұғалімге</a></nav>
+  <div class="r"><span class="pts">Ұпай <b>0</b></span><a class="hide-s" href="#">Кіру</a><a class="b1" href="#">Тіркелу</a><button class="menu-btn" aria-label="Мәзір">≡</button></div></header>
+
+<main class="lab" style="--c:var(--bio)">
+  <aside class="l">
+    <div class="ttl"><div class="crumb"><i></i>Биология · 7-сынып · №02</div>
+      <h1>Жануар жасушасының құрылысы</h1>
+      <p>Жасушаны сүйреп айналдыр, дөңгелекшемен жақындат. Органоидты 3D-да тауып, үстінен бас.</p></div>
+    <div class="sec"><h4>Органоидтар <span id="fc">0 / 7 табылды</span></h4><div class="org" id="org"></div></div>
+    <div class="sec"><h4>Көрініс</h4>
+      <div class="seg" id="mode"><button data-m="cut" class="on">Кесілген</button><button data-m="whole">Тұтас</button></div></div>
+  </aside>
+
+  <div class="stage" id="st">
+    <div class="dock"><div class="stx"><small>ТАПСЫРМА</small><span id="task">Ядроны 3D-да тауып, бас</span></div>
+      <button class="b2" id="auto">Айналдыру: қосулы</button></div>
+  </div>
+
+  <aside class="r">
+    <div class="sec info" id="info"></div>
+    <div class="sec qz" id="qz"><h4>Неге?</h4><b>Бұлшықет жасушасында митохондрия неге басқа жасушалардан көп болады?</b>
+      <button><u>A</u>Бұлшықет жасушасы үлкен болғандықтан</button>
+      <button data-ok><u>B</u>Бұлшықет көп энергия (АТФ) жұмсайды, ал оны митохондрия өндіреді</button>
+      <button><u>C</u>Митохондрия бұлшықетті қатайтады</button>
+      <p class="why">Бұлшықет жиырылу үшін көп АТФ қажет. Митохондрия глюкозаны оттегімен тотықтырып, АТФ түзеді. Сондықтан энергияны көп жұмсайтын жасушада митохондрия да көп болады.</p></div>
+  </aside>
+</main>
+
+<script type="module">
+const K = await window.SLkit;
+const { THREE, V, M, makeWorld, fmt, initNav, addPts, toast, quiz } = K;
+initNav();
+const $ = (id) => document.getElementById(id);
+
+const ORG = {
+  nuc: { n: "Ядро", s: "жасушаның басқару орталығы", c: "#7b6aa8", d: "ДНҚ-ны сақтайды және жасушада қандай ақуыз түзілетінін басқарады. Ішіндегі ядрошықта рибосомалар жиналады.", f: [["Диаметрі", "~ 6 мкм"], ["ДНҚ ұзындығы", "~ 2 м"], ["Қабығы", "екі қабат"]] },
+  mito: { n: "Митохондрия", s: "жасушаның энергия станциясы", c: "#c98a4f", d: "Глюкозаны оттегімен тотықтырып, энергияны АТФ түрінде өндіреді. Ішкі қабығы қатпарланып, кристалар түзеді.", f: [["Ұзындығы", "1–10 мкм"], ["Бір жасушада", "2 000-ға дейін"], ["Өз ДНҚ-сы", "бар"]] },
+  golgi: { n: "Гольджи аппараты", s: "жасушаның «поштасы»", c: "#c9b04f", d: "ЭПТ-дан келген ақуыздарды өңдеп, көпіршіктерге салады да, жасушаның керек жеріне немесе сыртқа жібереді.", f: [["Құрылысы", "4–8 цистерна"], ["Ашқан", "К. Гольджи, 1898"]] },
+  er: { n: "Эндоплазмалық тор", s: "ЭПТ · тасымал жолы", c: "#6f9fbf", d: "Ядроны қоршаған түтікшелер мен қапшықтар жүйесі. Ақуыздар мен майларды түзіп, жасуша ішінде тасымалдайды.", f: [["Түрлері", "түйіршікті, тегіс"], ["Үлесі", "мембрананың ~ 50%"]] },
+  ribo: { n: "Рибосома", s: "ақуыз фабрикасы", c: "#8b9bd0", d: "ДНҚ-дағы нұсқау бойынша амин қышқылдарынан ақуыз құрастырады. ЭПТ бетінде де, цитоплазмада да болады.", f: [["Өлшемі", "20–30 нм"], ["Саны", "миллиондаған"]] },
+  lyso: { n: "Лизосома", s: "жасушаның тазалаушысы", c: "#7fb08f", d: "Ішіндегі ферменттер ескірген органоидтарды, бөгде заттар мен бактерияларды ыдыратады.", f: [["Өлшемі", "0,1–1 мкм"], ["Ортасы", "қышқыл, pH ≈ 5"]] },
+  mem: { n: "Жасуша мембранасы", s: "жасушаның шекарасы", c: "#c98a8f", d: "Жасушаны сыртқы ортадан бөледі және қандай заттың кіріп, қайсысы шығатынын реттейді. Екі қабат липид пен ақуыздан тұрады.", f: [["Қалыңдығы", "7–10 нм"], ["Құрамы", "липид, ақуыз"]] },
+};
+const ORDER = ["nuc", "mito", "golgi", "er", "ribo", "lyso", "mem"];
+const found = new Set(); let selId = "nuc";
+$("org").innerHTML = ORDER.map(id => `<button data-id="${id}" style="--c:${ORG[id].c}"><i></i>${ORG[id].n}<span class="ck">—</span></button>`).join("");
+
+/* ---------- 3D жасуша ---------- */
+const st = $("st");
+const W = makeWorld(st, {
+  fov: 30, hfov: 36, maxV: 52, cam: V(6.6, 4.4, 11.6), look: V(0, 0, 0), exposure: 1.0,
+  controls: { minDistance: 6, maxDistance: 20, rotateSpeed: 0.6, autoRotate: true, autoRotateSpeed: 0.6 },
+});
+const sc = W.scene, cell = new THREE.Group(); sc.add(cell);
+const pick = []; // басуға болатын меш
+const reg = (m, id) => { m.userData.org = id; pick.push(m); return m; };
+const mat = (c, r) => new THREE.MeshPhysicalMaterial({ color: c, roughness: r ?? 0.42, clearcoat: 0.5, clearcoatRoughness: 0.35 });
+const R = 2.5, p0 = 72 * Math.PI / 180, p1 = 162 * Math.PI / 180;
+const dir = (phi) => V(-Math.cos(phi), 0, Math.sin(phi));
+const memM = mat(0xc98a8f, 0.5);
+const mem = reg(new THREE.Mesh(new THREE.SphereGeometry(R, 128, 96, p1, Math.PI * 2 - (p1 - p0)), memM), "mem"); cell.add(mem);
+const wedge = reg(new THREE.Mesh(new THREE.SphereGeometry(R, 64, 48, p0, p1 - p0), memM), "mem"); wedge.visible = false; cell.add(wedge);
+cell.add(new THREE.Mesh(new THREE.SphereGeometry(R - 0.1, 128, 96, p1, Math.PI * 2 - (p1 - p0)), new THREE.MeshStandardMaterial({ color: 0xe8dcd2, roughness: 0.85, side: THREE.BackSide })));
+const cyto = new THREE.MeshStandardMaterial({ color: 0xe9ded3, roughness: 0.75, side: THREE.DoubleSide });
+const rimM = new THREE.MeshStandardMaterial({ color: 0xb57a80, roughness: 0.5, side: THREE.DoubleSide });
+const cuts = new THREE.Group(); cell.add(cuts);
+[p0, p1].forEach(phi => {
+  const d = new THREE.Mesh(new THREE.CircleGeometry(R - 0.1, 128, -Math.PI / 2, Math.PI), cyto); d.rotation.y = Math.PI + phi; cuts.add(d);
+  const rr = reg(new THREE.Mesh(new THREE.RingGeometry(R - 0.1, R, 128, 1, -Math.PI / 2, Math.PI), rimM), "mem"); rr.rotation.y = Math.PI + phi; cuts.add(rr);
+});
+// ядро
+const nR = 1.0, nucM = mat(0x7b6aa8, 0.38);
+cuts.add(reg(new THREE.Mesh(new THREE.SphereGeometry(nR, 96, 72, p1, Math.PI * 2 - (p1 - p0)), nucM), "nuc"));
+const nucIn = new THREE.MeshStandardMaterial({ color: 0xb3a8cf, roughness: 0.7, side: THREE.DoubleSide });
+[p0, p1].forEach(phi => { const d = reg(new THREE.Mesh(new THREE.CircleGeometry(nR - 0.02, 96, -Math.PI / 2, Math.PI), nucIn), "nuc"); d.rotation.y = Math.PI + phi; cuts.add(d); });
+const nl = reg(new THREE.Mesh(new THREE.SphereGeometry(0.34, 48, 32), mat(0x4e3f7a)), "nuc"); nl.position.copy(dir((p0 + p1) / 2).multiplyScalar(0.2)).add(V(0, 0.12, 0)); cuts.add(nl);
+const chM = mat(0x5d4d8c);
+for (let k = 0; k < 6; k++) {
+  const pts = []; for (let i = 0; i < 10; i++) { const ph = p0 + 0.15 + (i / 9) * (p1 - p0 - 0.3); const rr = 0.5 + 0.35 * Math.sin(i * 1.3 + k); pts.push(dir(ph).multiplyScalar(rr).add(V(0, -0.7 + k * 0.27 + 0.12 * Math.sin(i + k), 0))); }
+  cuts.add(reg(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 60, 0.026, 8), chM), "nuc"));
+}
+function normalOf(phi) { const mid = dir((p0 + p1) / 2), d = dir(phi), n = V(d.z, 0, -d.x); return n.dot(mid) > 0 ? n : n.multiplyScalar(-1); }
+const onPlane = (phi, r, y, off) => dir(phi).multiplyScalar(r).add(V(0, y, 0)).add(normalOf(phi).multiplyScalar(off || 0));
+// митохондриялар
+const mitoA = [];
+function mito(pos, rot, s) {
+  const g = new THREE.Group();
+  g.add(reg(new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 0.62, 16, 32), mat(0xc98a4f)), "mito"));
+  for (let i = 0; i < 5; i++) { const cr = reg(new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.028, 8, 24, Math.PI), mat(0xe7c99a)), "mito"); cr.position.set(0, -0.3 + i * 0.15, 0.12); cr.rotation.set(0, Math.PI / 2, 0); g.add(cr); }
+  g.position.copy(pos); g.rotation.set(...rot); g.scale.setScalar(s); cuts.add(g); mitoA.push(g); return g;
+}
+mito(onPlane(p0, 1.65, 0.85, 0.1), [0.4, 0.3, 1.1], 1.05);
+mito(onPlane(p1, 1.75, -0.5, 0.12), [1.2, 0.5, 0.3], 1.0);
+mito(onPlane(p0, 1.45, -1.25, 0.1), [0.2, 1.2, 0.6], 0.9);
+mito(onPlane(p1, 1.35, 1.35, 0.1), [0.9, 0.2, 1.4], 0.85);
+// Гольджи
+const gol = new THREE.Group();
+for (let i = 0; i < 5; i++) { const t = reg(new THREE.Mesh(new THREE.TorusGeometry(0.42 - i * 0.03, 0.055, 12, 48, Math.PI * 0.9), mat(0xc9b04f)), "golgi"); t.position.y = i * 0.13; t.rotation.x = Math.PI / 2; gol.add(t); }
+for (let i = 0; i < 6; i++) { const v = reg(new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 12), mat(0xd9c46a)), "golgi"); v.position.set(0.55 + (i % 3) * 0.1, 0.1 + i * 0.08, 0.1 * (i % 2)); gol.add(v); }
+gol.position.copy(onPlane(p1, 1.55, 0.35, 0.15)); gol.rotation.set(0.3, -0.6, 0.5); cuts.add(gol);
+// ЭПТ
+for (let k = 0; k < 3; k++) {
+  const pts = []; for (let i = 0; i < 14; i++) { const ph = p0 + 0.12 + (i / 13) * (p1 - p0 - 0.24); const rr = 1.15 + k * 0.13 + 0.06 * Math.sin(i * 2.2); pts.push(dir(ph).multiplyScalar(rr).add(V(0, -0.15 + 0.22 * Math.sin(i * 1.4 + k), 0))); }
+  cuts.add(reg(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 90, 0.05, 10), mat(0x6f9fbf)), "er"));
+}
+// рибосомалар (бір InstancedMesh)
+let sd = 21; const rnd = () => { sd = (sd * 9301 + 49297) % 233280; return sd / 233280; };
+const ribo = new THREE.InstancedMesh(new THREE.SphereGeometry(0.04, 10, 8), mat(0x3e4f80), 160); const dm = new THREE.Object3D();
+for (let i = 0; i < 160; i++) { const phi = rnd() < 0.5 ? p0 : p1, r = 0.9 + rnd() * 1.4, y = (rnd() - 0.5) * 2 * Math.sqrt(Math.max(0, (R - 0.2) ** 2 - r * r)); dm.position.copy(onPlane(phi, r, y, 0.03)); dm.updateMatrix(); ribo.setMatrixAt(i, dm.matrix); }
+reg(ribo, "ribo"); cuts.add(ribo);
+// лизосомалар
+[[p0, 1.9, 0.2], [p1, 1.0, -1.45], [p0, 1.0, 1.6], [p1, 2.0, 0.9]].forEach(q => { const l = reg(new THREE.Mesh(new THREE.SphereGeometry(0.17, 32, 24), mat(0x7fb08f)), "lyso"); l.position.copy(onPlane(q[0], q[1], q[2], 0.1)); cuts.add(l); });
+W.shadows(cell);
+
+// белгі нүктелері
+const anchor = {
+  nuc: () => nl.position.clone(), mito: () => mitoA[0].position.clone(), golgi: () => gol.position.clone().add(V(0, 0.3, 0)),
+  er: () => onPlane((p0 + p1) / 2, 1.3, 0, 0), ribo: () => onPlane(p1, 2.05, -1.0, 0.03), lyso: () => onPlane(p0, 1.9, 0.2, 0.1),
+  mem: () => dir(p1 + 0.9).multiplyScalar(R * 0.62).add(V(0, R * 0.74, 0)),
+};
+const Ls = W.label(() => cell.localToWorld(anchor[selId]()), "", 90, -110);
+
+/* ---------- таңдау, жарықтандыру ---------- */
+const allMats = new Map(); pick.forEach(m => { if (!allMats.has(m.material)) allMats.set(m.material, m.userData.org); });
+let hover = null, t0 = 0;
+W.frames.push((dt, t) => {
+  allMats.forEach((id, m) => {
+    const on = id === selId, hv = id === hover && !on;
+    m.emissive.set(on || hv ? 0xffffff : 0x000000);
+    m.emissiveIntensity = on ? 0.1 + 0.07 * Math.sin(t * 4) : hv ? 0.06 : 0;
+  });
+});
+function select(id, byClick) {
+  selId = id; const o = ORG[id];
+  document.querySelectorAll("#org button").forEach(b => b.classList.toggle("on", b.dataset.id === id));
+  $("info").innerHTML = `<h4 style="font:500 11.5px var(--mono);letter-spacing:.14em;color:var(--mut);padding-bottom:8px;border-bottom:1px solid var(--line);text-transform:uppercase">Таңдалған органоид</h4>
+    <h2>${o.n}</h2><div class="sub">${o.s}</div><p>${o.d}</p>
+    <div class="kv" style="margin-top:10px">${o.f.map(x => `<span>${x[0]}</span><b>${x[1]}</b>`).join("")}</div>`;
+  Ls.el.innerHTML = `<u>●</u>${o.n}<small>${o.s}</small>`;
+  if (byClick && !found.has(id)) {
+    found.add(id);
+    document.querySelector(`#org button[data-id="${id}"]`).classList.add("found");
+    document.querySelector(`#org button[data-id="${id}"] .ck`).textContent = "табылды";
+    $("fc").textContent = `${found.size} / 7 табылды`;
+    if (found.size === ORDER.length) addPts(40, "Барлық органоидты таптың"); else toast(`${o.n} табылды`, `${found.size} / 7`);
+  }
+  const next = ORDER.find(x => !found.has(x));
+  $("task").textContent = next ? `${ORG[next].n} 3D-да тауып, бас` : "Бәрі табылды. «Неге?» сұрағына жауап бер";
+}
+document.querySelectorAll("#org button").forEach(b => b.addEventListener("click", () => select(b.dataset.id, false)));
+// 3D-да басу
+const ray = new THREE.Raycaster(), mp = new THREE.Vector2();
+function hit(e) {
+  const r = W.canvas.getBoundingClientRect();
+  mp.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(mp, W.cam);
+  const h = ray.intersectObjects(pick.filter(m => m.visible && (m.parent.visible !== false)), false)[0];
+  return h ? h.object.userData.org : null;
+}
+let down = null;
+W.canvas.addEventListener("pointerdown", e => down = [e.clientX, e.clientY]);
+W.canvas.addEventListener("pointerup", e => { if (down && Math.hypot(e.clientX - down[0], e.clientY - down[1]) < 6) { const id = hit(e); if (id) select(id, true); } down = null; });
+W.canvas.addEventListener("pointermove", e => { if (e.buttons) return; hover = hit(e); W.canvas.style.cursor = hover ? "pointer" : "grab"; });
+// режимдер
+document.querySelectorAll("#mode button").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("#mode button").forEach(x => x.classList.toggle("on", x === b));
+  wedge.visible = b.dataset.m === "whole";
+}));
+$("auto").addEventListener("click", () => { W.ctl.autoRotate = !W.ctl.autoRotate; $("auto").textContent = "Айналдыру: " + (W.ctl.autoRotate ? "қосулы" : "өшірулі"); });
+quiz($("qz"), () => addPts(20, "«Неге?» сұрағына дұрыс жауап"));
+select("nuc", false);
+if (/snap/.test(location.search)) { select("mito", true); select("nuc", true); select("golgi", true); select("mito", false); }
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScienceLab · виртуалды зертхана</title>
+<meta name="description" content="Физика, химия және биология тәжірибелерін 3D-да жасайтын тегін виртуалды зертхана.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=2">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+<script src="assets/kit.js?v=2"></script>
+</head>
+<body>
+<header class="top"><a class="logo" href="index.html"><i></i>ScienceLab</a>
+  <nav class="nv"><a href="index.html" class="on">Тәжірибелер</a><a href="fizika.html">Физика</a><a href="himiya.html">Химия</a><a href="biologiya.html">Биология</a><a href="#mugalim">Мұғалімге</a></nav>
+  <div class="r"><span class="pts">Ұпай <b>0</b></span><a class="hide-s" href="#">Кіру</a><a class="b1" href="#">Тіркелу</a><button class="menu-btn" aria-label="Мәзір">≡</button></div></header>
+
+<main class="home">
+  <div class="hero">
+    <div class="kick">Виртуалды зертхана · 7–11 сынып</div>
+    <h1>Ғылымды<br><em>өз қолыңмен</em><br>тексеріп көр</h1>
+    <p class="lead">Физика, химия және биология тәжірибелерін нағыз зертханадағыдай жаса: <b>реактив құй, маятникті тербет, жасушаны зертте.</b> Әр нәтиже журналға, графикке және формулаға түседі.</p>
+    <div class="act"><a class="b1" href="himiya.html">Зертханаға кіру &nbsp;→</a><a class="b0" href="#mugalim">Мұғалімдерге арналған</a></div>
+  </div>
+  <div class="stage" id="st"><div class="cap"><b>Сурет 1.</b> Қышқыл мен сілтіні индикатормен ажырату · химия, 8-сынып <span style="color:var(--dim)">· сүйреп айналдыр</span></div></div>
+</main>
+
+<section class="subj">
+  <a href="fizika.html" style="--c:var(--fiz)"><div class="n"><i></i>01 · ФИЗИКА</div><span class="cn">24 тәжірибе</span><h3>Механика мен электр</h3><p>Маятник, электр тізбегі, оптика, жылу. Параметрді өзгертіп, нәтижені графиктен бақыла.</p><span class="go">→</span></a>
+  <a href="himiya.html" style="--c:var(--him)"><div class="n"><i></i>02 · ХИМИЯ</div><span class="cn">30 тәжірибе</span><h3>Реакциялар мен pH</h3><p>Индикаторлар, pH, бейтараптану, газ бөлінуі. Қауіпсіз ортада реактивтерді араластыр.</p><span class="go">→</span></a>
+  <a href="biologiya.html" style="--c:var(--bio)"><div class="n"><i></i>03 · БИОЛОГИЯ</div><span class="cn">18 тәжірибе</span><h3>Жасуша мен тірі ағза</h3><p>Микроскоп, жасуша құрылысы, ДНҚ, фотосинтез. Органоидтарды 3D-да бөлшекте.</p><span class="go">→</span></a>
+</section>
+
+<section class="subj" id="mugalim" style="margin-top:0">
+  <div style="padding:26px 30px 34px 0"><div class="n" style="font:500 12.5px var(--mono);color:var(--mut);letter-spacing:.1em">ҚАЛАЙ ЖҰМЫС ІСТЕЙДІ</div><h3 class="serif" style="font:400 26px var(--serif);margin:12px 0 8px">1. Жаса</h3><p class="mut" style="font-size:14.5px">Реактивті таңда, жүгірткіні жылжыт, нысанды бас. Бәрі 3D-да, нақты уақытта.</p></div>
+  <div style="padding:26px 30px 34px;border-left:1px solid var(--line)"><div class="n" style="font:500 12.5px var(--mono);color:var(--mut);letter-spacing:.1em">&nbsp;</div><h3 class="serif" style="font:400 26px var(--serif);margin:12px 0 8px">2. Бақыла</h3><p class="mut" style="font-size:14.5px">Нәтиже журналға, графикке және формулаға өздігінен түседі.</p></div>
+  <div style="padding:26px 0 34px 30px;border-left:1px solid var(--line)"><div class="n" style="font:500 12.5px var(--mono);color:var(--mut);letter-spacing:.1em">&nbsp;</div><h3 class="serif" style="font:400 26px var(--serif);margin:12px 0 8px">3. Түсіндір</h3><p class="mut" style="font-size:14.5px">Соңында «Неге?» сұрағына жауап бер, ұпай жина. Сайт тегін, кез келген құрылғыда ашылады.</p></div>
+</section>
+
+<footer class="foot"><span>ScienceLab · АКТ жобасы · 2026</span><span>Тегін · тіркелусіз · кез келген құрылғыда</span></footer>
+
+<script type="module">
+const { THREE, V, M, makeWorld, table, erlen, beaker, gradCyl, rack, initNav } = await window.SLkit;
+initNav();
+const st = document.getElementById("st");
+const W = makeWorld(st, {
+  fov: 26, cam: V(0.6, 4.2, 15.5), look: V(0.4, 1.35, 0),
+  controls: { enableZoom: false, minPolarAngle: 0.9, maxPolarAngle: 1.45, minAzimuthAngle: -0.7, maxAzimuthAngle: 0.7, rotateSpeed: 0.5 },
+  fit: (W) => { W.cam.fov = W.w / W.h < 1.1 ? 38 : 26; }
+});
+const sc = W.scene;
+table(W, 10.4, 5.2).position.set(0.1, -0.15, -0.3);
+const fl = erlen(1.35); fl.position.set(0.5, 0, 0.3); fl.userData.setLevel(0.47); fl.userData.mat.color.set(0xb8325f); fl.userData.mat.emissive.set(0xb8325f); sc.add(fl);
+const bk = beaker(1.05, 0xd5e6ec); bk.userData.setLevel(0.55); bk.position.set(-2.1, 0, 0.8); sc.add(bk);
+const cy = gradCyl(0xe0b64a, 0.58); cy.position.set(-3.7, 0, -0.9); sc.add(cy);
+const rk = rack([[0xe3e7ea, 1.0], [0x5f87c4, 0.8], [0xd9a53a, 1.15], [0x8bb37c, 0.7]]); rk.position.set(3.4, 0, -0.6); rk.rotation.y = -0.25; sc.add(rk);
+const pip = new THREE.Group();
+pip.add(new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.6, 24), M.glass()));
+const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.16, 24, 16), M.matte(0x3a3a3a, 0.6)); bulb.scale.y = 1.5; bulb.position.y = 0.9; pip.add(bulb);
+pip.rotation.set(0, 0.5, Math.PI / 2 - 0.12); pip.position.set(2.1, 0.12, 1.6); sc.add(pip);
+W.shadows(sc);
+W.label(V(0.9, 1.0, 0.6), `<u>А</u>Эрленмейер колбасы<small>NaOH + фенолфталеин · pH 12</small>`, 70, -150);
+W.label(V(-2.1, 0.55, 1.2), `<u>Б</u>Химиялық стакан<small>HCl · 0,1 М</small>`, -40, 120);
+W.label(V(-3.7, 2.6, -0.9), `<u>В</u>Өлшеуіш цилиндр<small>100 мл</small>`, -30, -70);
+W.label(V(3.0, 0.5, -0.4), `<u>Г</u>Пробиркалар<small>индикаторлар жиыны</small>`, -40, 125);
+// баяу «тыныс»: колбадағы сұйықтық түсі сәл құбылады
+W.frames.push((dt, t) => { fl.userData.mat.emissiveIntensity = 0.16 + Math.sin(t * 1.4) * 0.04; });
+</script>
+</body>
+</html>

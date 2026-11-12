@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Физика · Математикалық маятник · ScienceLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=2">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+<script src="assets/kit.js?v=2"></script>
+</head>
+<body>
+<header class="top"><a class="logo" href="index.html"><i></i>ScienceLab</a>
+  <nav class="nv"><a href="index.html">Тәжірибелер</a><a href="fizika.html" class="on">Физика</a><a href="himiya.html">Химия</a><a href="biologiya.html">Биология</a><a href="index.html#mugalim">Мұғалімге</a></nav>
+  <div class="r"><span class="pts">Ұпай <b>0</b></span><a class="hide-s" href="#">Кіру</a><a class="b1" href="#">Тіркелу</a><button class="menu-btn" aria-label="Мәзір">≡</button></div></header>
+
+<main class="lab" style="--c:var(--fiz)">
+  <aside class="l">
+    <div class="ttl"><div class="crumb"><i></i>Физика · 9-сынып · №03</div>
+      <h1>Математикалық маятник</h1>
+      <p>Жіптің ұзындығын, шардың массасын және бастапқы бұрышты өзгерт. Тербеліс периоды неге тәуелді екенін анықта.</p></div>
+    <div class="sec"><h4>Параметрлер</h4>
+      <div class="sl"><div class="tt"><span>Жіп ұзындығы, L</span><b id="vL">1,00 м</b></div><input type="range" id="L" min="0.2" max="2" step="0.05" value="1"></div>
+      <div class="sl"><div class="tt"><span>Шар массасы, m</span><b id="vm">0,50 кг</b></div><input type="range" id="m" min="0.1" max="2" step="0.05" value="0.5"></div>
+      <div class="sl"><div class="tt"><span>Бастапқы бұрыш, θ₀</span><b id="va">30°</b></div><input type="range" id="a" min="5" max="80" step="1" value="30"></div>
+      <div class="sl"><div class="tt"><span>Ауа кедергісі, b</span><b id="vb">0,02</b></div><input type="range" id="b" min="0" max="0.3" step="0.01" value="0.02"></div></div>
+    <div class="sec"><h4>Планета <span id="vg">g = 9,81 м/с²</span></h4>
+      <div class="seg" id="pl"><button data-g="9.81" class="on">Жер</button><button data-g="1.62">Ай</button><button data-g="3.71">Марс</button><button data-g="24.79">Юпитер</button></div></div>
+    <div class="sec"><h4>Тапсырма</h4>
+      <p class="mut" style="font-size:13.5px;line-height:1.55">L-дің үш түрлі мәні үшін периодты өлшеп, «Нәтижені жаз» батырмасымен кестеге енгіз. Массаны өзгерткенде период өзгере ме?</p></div>
+  </aside>
+
+  <div class="stage" id="st">
+    <div class="dock">
+      <button class="b1" id="run" style="min-width:118px">Тоқтату</button>
+      <button class="b2" id="rs" title="Қайта бастау">↺</button>
+      <div class="seg" id="sp" style="width:96px"><button data-s="0.5">½×</button><button data-s="1" class="on">1×</button></div>
+      <div class="stx"><small>УАҚЫТ · ТЕРБЕЛІС</small><span class="mono" id="tm">0,00 с · 0</span></div>
+      <button class="b2" id="rec">Нәтижені жаз</button></div>
+  </div>
+
+  <aside class="r">
+    <div class="sec"><h4>Нәтиже <span>тікелей</span></h4>
+      <div class="big"><div><small>ПЕРИОД (ӨЛШЕНГЕН)</small><b id="Tm">—</b></div><div class="fm">T = 2π√(L/g)</div></div>
+      <div class="kv"><span>Теория бойынша</span><b id="Tt">2,01 с</b><span>Бұрыш, θ</span><b id="th">30,0°</b><span>Жылдамдық, v</span><b id="v">0,00 м/с</b></div></div>
+    <div class="sec"><h4>θ(t) графигі <span>соңғы 10 с</span></h4><canvas class="chart" id="ch" width="600" height="260"></canvas></div>
+    <div class="sec"><h4>Энергия</h4>
+      <div class="bar" style="--c:var(--acc)"><span>Eк</span><i id="ek"></i><b id="ekv">0 Дж</b></div>
+      <div class="bar" style="--c:var(--fiz)"><span>Eп</span><i id="ep"></i><b id="epv">0 Дж</b></div></div>
+    <div class="sec"><h4>Өлшеулер кестесі <span id="nrow">0 / 3</span></h4>
+      <table class="res"><thead><tr><th>L, м</th><th>m, кг</th><th>T өлш., с</th><th>T теор., с</th></tr></thead><tbody id="tb"><tr><td colspan="4" style="text-align:left;color:var(--dim)">Әзірге өлшеу жоқ</td></tr></tbody></table></div>
+    <div class="sec qz" id="qz"><h4>Неге?</h4><b>Жіпті 4 есе ұзартсаң, тербеліс периоды қалай өзгереді?</b>
+      <button><u>A</u>4 есе артады</button>
+      <button data-ok><u>B</u>2 есе артады, өйткені T ~ √L</button>
+      <button><u>C</u>Өзгермейді, период тек массаға тәуелді</button>
+      <p class="why">T = 2π√(L/g). L 4 есе артса, √L 2 есе артады. Масса формулаға кірмейді, сондықтан ауыр шар да, жеңіл шар да бірдей тербеледі.</p></div>
+  </aside>
+</main>
+
+<script type="module">
+const K = await window.SLkit;
+const { THREE, V, M, makeWorld, table, RoundedBoxGeometry, fmt, initNav, addPts, toast, quiz, rangeFill } = K;
+initNav();
+const $ = (id) => document.getElementById(id);
+
+/* ---------- физика ---------- */
+const P = { L: 1, m: 0.5, a0: 30, b: 0.02, g: 9.81, speed: 1 };
+let th, w, t, run = true, hist = [], lastCross = null, periods = [], nOsc = 0, prevTh;
+function reset() { th = P.a0 * Math.PI / 180; w = 0; t = 0; hist = []; lastCross = null; periods = []; nOsc = 0; prevTh = th; }
+reset();
+const acc = (a, ww) => -(P.g / P.L) * Math.sin(a) - P.b * ww;
+function step(h) { // RK4
+  const k1a = w, k1w = acc(th, w);
+  const k2a = w + k1w * h / 2, k2w = acc(th + k1a * h / 2, w + k1w * h / 2);
+  const k3a = w + k2w * h / 2, k3w = acc(th + k2a * h / 2, w + k2w * h / 2);
+  const k4a = w + k3w * h, k4w = acc(th + k3a * h, w + k3w * h);
+  th += h / 6 * (k1a + 2 * k2a + 2 * k3a + k4a); w += h / 6 * (k1w + 2 * k2w + 2 * k3w + k4w); t += h;
+  // период: θ оң жақтан теріске өткен сәттер арасы
+  if (prevTh > 0 && th <= 0) { const tc = t - h * th / (th - prevTh); if (lastCross !== null) { periods.push(tc - lastCross); nOsc++; } lastCross = tc; }
+  prevTh = th;
+}
+const Tth = () => 2 * Math.PI * Math.sqrt(P.L / P.g);
+
+/* ---------- 3D ---------- */
+const st = $("st");
+const W = makeWorld(st, {
+  fov: 26, hfov: 34, maxV: 54, cam: V(0.4, 3.6, 15), look: V(0.2, 2.6, 0),
+  controls: { minDistance: 10, maxDistance: 22, minPolarAngle: 0.8, maxPolarAngle: 1.5, minAzimuthAngle: -0.8, maxAzimuthAngle: 0.8, rotateSpeed: 0.5 },
+});
+const sc = W.scene;
+table(W, 10, 5).position.set(0.2, -0.15, -0.3);
+const dark = M.matte(0x2a2d31, 0.45);
+const base = new THREE.Mesh(new RoundedBoxGeometry(4.2, 0.24, 1.8, 4, 0.06), dark); base.position.set(0.2, 0.12, -0.3); sc.add(base);
+const rodX = -1.6, PV = V(0.3, 5.6, -0.3);
+const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 5.9, 32), M.chrome()); rod.position.set(rodX, 3.1, -0.3); sc.add(rod);
+const clamp = new THREE.Mesh(new RoundedBoxGeometry(0.32, 0.32, 0.32, 3, 0.05), dark); clamp.position.set(rodX, PV.y + 0.07, -0.3); sc.add(clamp);
+const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 2.2, 32), M.chrome()); arm.rotation.z = Math.PI / 2; arm.position.set(rodX + 1.1, PV.y + 0.07, -0.3); sc.add(arm);
+const piv = new THREE.Mesh(new RoundedBoxGeometry(0.22, 0.2, 0.22, 3, 0.04), dark); piv.position.set(PV.x, PV.y + 0.07, PV.z); sc.add(piv);
+// транспортир
+const prM = new THREE.MeshBasicMaterial({ color: 0xe9e6df, transparent: true, opacity: 0.08, side: THREE.DoubleSide, depthWrite: false });
+const pr = new THREE.Mesh(new THREE.RingGeometry(1.0, 1.35, 96, 1, Math.PI, Math.PI), prM); pr.position.copy(PV).add(V(0, 0, -0.05)); sc.add(pr);
+const tkM = new THREE.MeshBasicMaterial({ color: 0xbdbab3 });
+for (let a = 0; a <= 180; a += 10) {
+  const r = a % 30 === 0 ? 0.2 : 0.1, ang = Math.PI + a / 180 * Math.PI;
+  const tk = new THREE.Mesh(new THREE.BoxGeometry(0.015, r, 0.01), tkM);
+  tk.position.set(PV.x + Math.cos(ang) * (1.35 - r / 2), PV.y + Math.sin(ang) * (1.35 - r / 2), PV.z - 0.04); tk.rotation.z = ang - Math.PI / 2; sc.add(tk);
+}
+// тік сызық (пунктир)
+for (let i = 0; i < 14; i++) { const ds = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.13, 0.012), M.matte(0x6f716f)); ds.position.set(PV.x, PV.y - 0.2 - i * 0.26, PV.z - 0.02); sc.add(ds); }
+// жіп пен шар
+const str = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 1, 8), M.matte(0xd8d4cb, 0.6)); sc.add(str);
+const ballM = new THREE.MeshStandardMaterial({ color: 0x9aa7b8, roughness: 0.18, metalness: 0.9, envMapIntensity: 1.3 });
+const ball = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 48), ballM); sc.add(ball);
+// із
+const TR = 60, trailG = new THREE.BufferGeometry().setFromPoints(Array.from({ length: TR }, () => PV.clone()));
+const trail = new THREE.Line(trailG, new THREE.LineBasicMaterial({ color: 0x7f9cc0, transparent: true, opacity: 0.55 })); sc.add(trail);
+const trailPts = [];
+// бұрыш доғасы
+const arcG = new THREE.BufferGeometry(), arc = new THREE.Line(arcG, new THREE.LineBasicMaterial({ color: 0xd4a24c })); sc.add(arc);
+// күш векторлары
+function arrow(color) {
+  const g = new THREE.Group(), m = new THREE.MeshBasicMaterial({ color });
+  const sh = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1, 12), m); sh.position.y = 0.5; g.add(sh);
+  const hd = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.2, 16), m); hd.position.y = 1; g.add(hd);
+  sc.add(g); return { g, sh, hd };
+}
+const aG = arrow(0xc07f7f), aV = arrow(0xd4a24c);
+function setArrow(A, from, dir, len) {
+  A.g.visible = len > 0.05; if (!A.g.visible) return;
+  A.g.position.copy(from); A.g.quaternion.setFromUnitVectors(V(0, 1, 0), dir.clone().normalize());
+  A.sh.scale.y = Math.max(0.01, len - 0.2); A.sh.position.y = (len - 0.2) / 2; A.hd.position.y = len - 0.1;
+}
+// секундомер
+const sw = new THREE.Group();
+const sb = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.12, 64), M.matte(0x2f3236, 0.4)); sb.rotation.x = Math.PI / 2; sw.add(sb);
+const face = new THREE.Mesh(new THREE.CircleGeometry(0.35, 64), M.matte(0xe9e6df, 0.5)); face.position.z = 0.062; sw.add(face);
+const hand = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.3, 0.01), new THREE.MeshBasicMaterial({ color: 0xb04a3a })); hand.geometry.translate(0, 0.15, 0); hand.position.z = 0.07; sw.add(hand);
+const btn = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.12, 24), M.chrome()); btn.position.y = 0.48; sw.add(btn);
+sw.position.set(2.9, 0.42, 1.0); sw.rotation.set(-0.45, -0.4, 0); sc.add(sw);
+W.shadows(sc); trail.castShadow = false;
+
+const Lv = () => 1.0 + P.L * 1.7;          // 3D-дегі ұзындық
+const rB = () => 0.16 + 0.16 * Math.cbrt(P.m);
+const bpos = (a) => V(PV.x + Lv() * Math.sin(a), PV.y - Lv() * Math.cos(a), PV.z);
+const Lth = W.label(() => PV.clone().add(V(0.35, -0.9, 0)), "", 150, -40);
+const Lm = W.label(() => bpos(th).add(V(rB() * 0.7, rB() * 0.7, 0)), "", 90, -60);
+const Lg = W.label(() => bpos(th).add(V(0, -rB() - 0.9, 0)), `<u>mg</u>ауырлық күші`, -110, 30);
+
+/* ---------- цикл ---------- */
+const cv = $("ch"), cx = cv.getContext("2d");
+let uiT = 0;
+W.frames.push((dt) => {
+  if (run) { const n = 8, h = dt * P.speed / n; for (let i = 0; i < n; i++) step(h); hist.push([t, th]); while (hist.length && hist[0][0] < t - 10) hist.shift(); }
+  const B = bpos(th), r = rB();
+  ball.scale.setScalar(r); ball.position.copy(B);
+  const dir = B.clone().sub(PV), len = dir.length();
+  str.scale.y = len - r; str.position.copy(PV).add(dir.clone().multiplyScalar((len - r) / 2 / len)); str.quaternion.setFromUnitVectors(V(0, -1, 0), dir.clone().normalize());
+  // із
+  trailPts.push(B.clone()); while (trailPts.length > TR) trailPts.shift();
+  const pa = trailG.attributes.position; for (let i = 0; i < TR; i++) { const p = trailPts[Math.max(0, trailPts.length - TR + i)] || B; pa.setXYZ(i, p.x, p.y, p.z); } pa.needsUpdate = true;
+  // доға
+  const ap = [], R = 0.8; for (let i = 0; i <= 24; i++) { const a = th * i / 24; ap.push(V(PV.x + R * Math.sin(a), PV.y - R * Math.cos(a), PV.z + 0.02)); } arcG.setFromPoints(ap);
+  // векторлар
+  setArrow(aG, B.clone().add(V(0, -r, 0)), V(0, -1, 0), 0.5 + P.m * 0.35);
+  const tang = V(Math.cos(th), Math.sin(th), 0).multiplyScalar(Math.sign(w) || 1), sp = Math.abs(w) * P.L;
+  setArrow(aV, B.clone().add(tang.clone().multiplyScalar(r)), tang, Math.min(1.6, sp * 0.6));
+  hand.rotation.z = -(t % 60) / 60 * Math.PI * 2;
+  uiT += dt; if (uiT > 0.08) { uiT = 0; ui(); }
+  drawChart();
+});
+function ui() {
+  const T = periods.length ? periods.slice(-3).reduce((a, b) => a + b, 0) / Math.min(3, periods.length) : null;
+  $("Tm").textContent = T ? fmt(T, 2) + " с" : "—";
+  $("Tt").textContent = fmt(Tth(), 2) + " с";
+  $("th").textContent = fmt(th * 180 / Math.PI, 1) + "°";
+  const v = Math.abs(w) * P.L; $("v").textContent = fmt(v, 2) + " м/с";
+  $("tm").textContent = `${fmt(t, 2)} с · ${nOsc}`;
+  const E0 = P.m * P.g * P.L * (1 - Math.cos(P.a0 * Math.PI / 180)) || 1;
+  const Ek = 0.5 * P.m * v * v, Ep = P.m * P.g * P.L * (1 - Math.cos(th));
+  $("ek").style.setProperty("--w", Math.min(100, Ek / E0 * 100) + "%"); $("ekv").textContent = fmt(Ek, 2) + " Дж";
+  $("ep").style.setProperty("--w", Math.min(100, Ep / E0 * 100) + "%"); $("epv").textContent = fmt(Ep, 2) + " Дж";
+  Lth.el.innerHTML = `<u>θ</u>${fmt(th * 180 / Math.PI, 1)}°`;
+  Lm.el.innerHTML = `<u>m</u>${fmt(P.m, 2)} кг<small>v = ${fmt(v, 2)} м/с</small>`;
+}
+function drawChart() {
+  const w = cv.width, h = cv.height, mid = h / 2, A = Math.max(5, P.a0) * Math.PI / 180 * 1.1;
+  cx.clearRect(0, 0, w, h);
+  cx.strokeStyle = "rgba(236,233,227,.12)"; cx.lineWidth = 1;
+  [0.15, 0.5, 0.85].forEach(f => { cx.beginPath(); cx.moveTo(0, h * f); cx.lineTo(w, h * f); cx.stroke(); });
+  for (let s = 0; s <= 10; s += 2) { const x = s / 10 * w; cx.beginPath(); cx.moveTo(x, 0); cx.lineTo(x, h); cx.stroke(); }
+  if (hist.length < 2) return;
+  const t0 = Math.max(0, t - 10);
+  cx.strokeStyle = "#7f9cc0"; cx.lineWidth = 3; cx.beginPath();
+  hist.forEach((q, i) => { const x = (q[0] - t0) / 10 * w, y = mid - q[1] / A * (h * 0.4); i ? cx.lineTo(x, y) : cx.moveTo(x, y); });
+  cx.stroke();
+  const q = hist[hist.length - 1], x = (q[0] - t0) / 10 * w, y = mid - q[1] / A * (h * 0.4);
+  cx.fillStyle = "#d4a24c"; cx.beginPath(); cx.arc(x, y, 6, 0, 7); cx.fill();
+  cx.fillStyle = "#8a8b88"; cx.font = "20px IBM Plex Mono"; cx.fillText("+θ₀", 8, h * 0.15 - 6); cx.fillText("−θ₀", 8, h * 0.85 + 22);
+}
+
+/* ---------- басқару ---------- */
+const lbl = { L: (v) => fmt(+v, 2) + " м", m: (v) => fmt(+v, 2) + " кг", a: (v) => v + "°", b: (v) => fmt(+v, 2) };
+[["L", "vL"], ["m", "vm"], ["a", "va"], ["b", "vb"]].forEach(([id, out]) => {
+  const inp = $(id); rangeFill(inp);
+  inp.addEventListener("input", () => {
+    $(out).textContent = lbl[id](inp.value);
+    if (id === "L") { P.L = +inp.value; reset(); }
+    if (id === "m") P.m = +inp.value;
+    if (id === "a") { P.a0 = +inp.value; reset(); }
+    if (id === "b") P.b = +inp.value;
+    ui();
+  });
+});
+document.querySelectorAll("#pl button").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("#pl button").forEach(x => x.classList.toggle("on", x === b));
+  P.g = +b.dataset.g; $("vg").textContent = `g = ${fmt(P.g, 2)} м/с²`; reset(); ui();
+}));
+document.querySelectorAll("#sp button").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll("#sp button").forEach(x => x.classList.toggle("on", x === b)); P.speed = +b.dataset.s;
+}));
+$("run").addEventListener("click", () => { run = !run; $("run").textContent = run ? "Тоқтату" : "Бастау"; });
+$("rs").addEventListener("click", () => { reset(); run = true; $("run").textContent = "Тоқтату"; ui(); });
+const rows = [];
+$("rec").addEventListener("click", () => {
+  if (!periods.length) { toast("Алдымен кемінде бір толық тербелісті күт"); return; }
+  const T = periods.slice(-3).reduce((a, b) => a + b, 0) / Math.min(3, periods.length);
+  rows.push([P.L, P.m, T, Tth()]);
+  $("tb").innerHTML = rows.map(r => `<tr><td>${fmt(r[0], 2)}</td><td>${fmt(r[1], 2)}</td><td>${fmt(r[2], 2)}</td><td>${fmt(r[3], 2)}</td></tr>`).join("");
+  const nL = new Set(rows.map(r => r[0])).size;
+  $("nrow").textContent = `${Math.min(nL, 3)} / 3`;
+  if (nL === 3 && !rows.done) { rows.done = true; addPts(30, "Зерттеуші: үш түрлі L үшін период өлшедің"); }
+  else toast(`T = ${fmt(T, 2)} с жазылды`);
+});
+quiz($("qz"), () => addPts(20, "«Неге?» сұрағына дұрыс жауап"));
+if (/snap/.test(location.search)) { for (let i = 0; i < 7.3 * 480; i++) { step(1 / 480); if (i % 8 === 0) hist.push([t, th]); } }
+ui();
+</script>
+</body>
+</html>

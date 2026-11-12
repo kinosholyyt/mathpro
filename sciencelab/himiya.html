@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Химия · Қышқыл мен сілтіні ажырату · ScienceLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=2">
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+<script src="assets/kit.js?v=2"></script>
+</head>
+<body>
+<header class="top"><a class="logo" href="index.html"><i></i>ScienceLab</a>
+  <nav class="nv"><a href="index.html">Тәжірибелер</a><a href="fizika.html">Физика</a><a href="himiya.html" class="on">Химия</a><a href="biologiya.html">Биология</a><a href="index.html#mugalim">Мұғалімге</a></nav>
+  <div class="r"><span class="pts">Ұпай <b>0</b></span><a class="hide-s" href="#">Кіру</a><a class="b1" href="#">Тіркелу</a><button class="menu-btn" aria-label="Мәзір">≡</button></div></header>
+
+<main class="lab" style="--c:var(--him)">
+  <aside class="l">
+    <div class="ttl"><div class="crumb"><i></i>Химия · 8-сынып · №07</div>
+      <h1>Қышқыл мен сілтіні индикатормен ажырату</h1>
+      <p>Колбаға сілті құй, индикатор тамыз, сосын қышқылды аз-аздап қос. Ерітіндінің түсі мен pH-ы қалай өзгеретінін бақыла.</p></div>
+    <div class="sec"><h4>Реактивтер <span>таңда</span></h4>
+      <div id="rg" style="display:flex;flex-direction:column;gap:6px"></div></div>
+    <div class="sec"><h4>Қауіпсіздік</h4>
+      <p class="mut" style="font-size:13.5px;line-height:1.55">Нағыз зертханада NaOH пен HCl теріні күйдіреді. Көзілдірік пен қолғап кию міндетті, реактивтерді тек мұғалімнің рұқсатымен араластыр.</p></div>
+  </aside>
+
+  <div class="stage" id="st">
+    <div class="dock"><div class="stx"><small id="dkS">ҚАДАМ 1 / 4</small><span id="dkT">NaOH таңдап, колбаға құй</span></div>
+      <div class="cnt"><button id="mn" aria-label="азайту">−</button><b id="amt">50 мл</b><button id="pl" aria-label="көбейту">+</button></div>
+      <button class="b1" id="go">Құю</button>
+      <button class="b2" id="rs" title="Қайта бастау">↺</button></div>
+  </div>
+
+  <aside class="r">
+    <div class="sec"><h4>Өлшеу <span id="live">тікелей</span></h4>
+      <div class="big"><div><small>pH МӘНІ</small><b id="ph">—</b></div><div class="fm" id="phw">колба бос</div></div>
+      <div class="kv"><span>Колбадағы көлем</span><b id="vol">0 мл</b><span>Қосылған HCl</span><b id="vh">0 мл</b><span>Индикатор</span><b id="ind">жоқ</b></div></div>
+    <div class="sec"><h4>Титрлеу қисығы <span>pH · V(HCl)</span></h4>
+      <svg class="chart" id="ch" viewBox="0 0 300 130" preserveAspectRatio="none"></svg></div>
+    <div class="sec"><h4>Бақылау журналы <span id="clk"></span></h4><div class="log" id="log"><span class="empty">Әзірге жазба жоқ. Алғашқы әрекетті жаса.</span></div></div>
+    <div class="eq" id="eq"><small>НЕ БОЛЫП ЖАТЫР?</small>—</div>
+    <div class="sec qz" id="qz"><h4>Неге?</h4><b>Фенолфталеин қосылған қызғылт ерітіндіге HCl құйғанда, ол неге түссізденеді?</b>
+      <button><u>A</u>HCl индикаторды жойып жібереді</button>
+      <button data-ok><u>B</u>OH⁻ иондары H⁺-пен бейтараптанып, pH 8-ден төмендейді</button>
+      <button><u>C</u>Ерітінді суып қалады</button>
+      <p class="why">Фенолфталеин тек сілтілі ортада (pH &gt; 8,2) қызғылт болады. HCl қосылғанда H⁺ + OH⁻ → H₂O реакциясы жүреді, OH⁻ азаяды, сондықтан түс жоғалады.</p></div>
+  </aside>
+</main>
+
+<script type="module">
+const K = await window.SLkit;
+const { THREE, V, M, makeWorld, table, erlen, beaker, fmt, initNav, addPts, toast, quiz } = K;
+initNav();
+const $ = (id) => document.getElementById(id);
+
+/* ---------- реактивтер ---------- */
+const R = [
+  { id: "naoh", f: "NaOH", n: "Натрий гидроксиді", s: "сілті · 0,1 М", c: "#dfe7ef", unit: "мл", step: 10, def: 50, max: 150 },
+  { id: "hcl", f: "HCl", n: "Тұз қышқылы", s: "қышқыл · 0,1 М", c: "#cfe0f0", unit: "мл", step: 5, def: 10, max: 150 },
+  { id: "pp", f: "Ф-фт", n: "Фенолфталеин", s: "индикатор", c: "#e7b3c8", unit: "тамшы", step: 1, def: 3, max: 10 },
+  { id: "mo", f: "М-о", n: "Метилоранж", s: "индикатор", c: "#e6a24a", unit: "тамшы", step: 1, def: 3, max: 10 },
+  { id: "lt", f: "Лкм", n: "Лакмус", s: "индикатор", c: "#8a6fb2", unit: "тамшы", step: 1, def: 3, max: 10 },
+  { id: "w", f: "H₂O", n: "Тазартылған су", s: "бейтарап · pH 7", c: "#e8eef2", unit: "мл", step: 10, def: 20, max: 150 },
+];
+let sel = R[0], amt = sel.def;
+$("rg").innerHTML = R.map(r => `<button class="rg" data-id="${r.id}" style="--c:${r.c}"><span class="sw"></span><div><b>${r.n}</b><small>${r.s}</small></div><span class="f">${r.f}</span></button>`).join("");
+const rgBtns = [...document.querySelectorAll(".rg")];
+function pick(id) { sel = R.find(r => r.id === id); amt = sel.def; rgBtns.forEach(b => b.classList.toggle("on", b.dataset.id === id)); ui(); }
+rgBtns.forEach(b => b.addEventListener("click", () => pick(b.dataset.id)));
+
+/* ---------- күй ---------- */
+let S;
+function reset() { S = { naoh: 0, hcl: 0, w: 0, ind: null, drops: 0, pts: [], step: 1, log: [], seenPink: false, neut: false, first: false }; }
+reset();
+const vol = () => S.naoh + S.hcl + S.w;
+function pH() {
+  const v = vol(); if (v <= 0) return null;
+  const d = (S.naoh - S.hcl) * 0.1 / v; // моль/л артық OH⁻ (+) немесе H⁺ (−)
+  if (Math.abs(d) < 1e-7) return 7;
+  return d > 0 ? Math.min(14, 14 + Math.log10(d)) : Math.max(0, -Math.log10(-d));
+}
+// индикатор түсі
+const C = (h) => new THREE.Color(h);
+const CLEAR = C(0xdfe9ee);
+function mix(a, b, t) { return a.clone().lerp(b, Math.max(0, Math.min(1, t))); }
+function colorOf(p) {
+  if (p === null) return { c: CLEAR, n: "колба бос" };
+  const k = Math.min(1, 0.45 + S.drops * 0.18);
+  if (S.ind === "pp") {
+    if (p < 8.2) return { c: CLEAR, n: "түссіз" };
+    const c = mix(CLEAR, C(0xb8325f), ((p - 8.2) / 1.8) * k); return { c, n: p < 9.4 ? "ақшыл қызғылт" : "таңқурай түсті" };
+  }
+  if (S.ind === "mo") {
+    if (p < 3.1) return { c: mix(CLEAR, C(0xc0392b), k), n: "қызыл" };
+    if (p < 4.4) return { c: mix(CLEAR, mix(C(0xc0392b), C(0xe08a2a), (p - 3.1) / 1.3), k), n: "қызғылт сары" };
+    return { c: mix(CLEAR, C(0xe2c044), k), n: "сары" };
+  }
+  if (S.ind === "lt") {
+    if (p < 5) return { c: mix(CLEAR, C(0xb0413e), k), n: "қызыл" };
+    if (p < 8) return { c: mix(CLEAR, mix(C(0xb0413e), C(0x7d5a9e), (p - 5) / 1.5), k), n: "күлгін" };
+    return { c: mix(CLEAR, C(0x3f63a8), k), n: "көк" };
+  }
+  return { c: CLEAR, n: "түссіз" };
+}
+const INDN = { pp: "фенолфталеин", mo: "метилоранж", lt: "лакмус" };
+
+/* ---------- 3D ---------- */
+const st = $("st");
+const W = makeWorld(st, {
+  fov: 26, hfov: 38, maxV: 52, cam: V(0, 4.4, 11.5), look: V(-0.3, 1.1, 0),
+  controls: { minDistance: 9, maxDistance: 20, minPolarAngle: 0.7, maxPolarAngle: 1.45, minAzimuthAngle: -0.9, maxAzimuthAngle: 0.9, rotateSpeed: 0.5 },
+});
+const sc = W.scene;
+table(W, 11, 6).position.set(0, -0.15, -0.4);
+const fl = erlen(1.4); fl.position.set(0, 0, 0.3); sc.add(fl);
+const bN = beaker(0.95, 0xdfe7ef); bN.position.set(-2.5, 0, 0.9); sc.add(bN);
+const bH = beaker(0.95, 0xcfe0f0); bH.position.set(2.5, 0, 0.9); sc.add(bH);
+// индикатор шөлмектері
+const bottles = {};
+[["pp", 0xe7b3c8, 1.9], ["mo", 0xe6a24a, 2.6], ["lt", 0x8a6fb2, 3.3]].forEach(([id, c, x]) => {
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.3, 0.7, 32), M.glass()); body.position.y = 0.35; g.add(body);
+  const lq = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.27, 0.45, 32), M.liquid(c)); lq.position.y = 0.26; g.add(lq);
+  const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 0.32, 24), M.matte(0x2b2b2b, 0.5)); cap.position.y = 0.86; g.add(cap);
+  const lab = new THREE.Mesh(new THREE.CylinderGeometry(0.305, 0.305, 0.26, 32, 1, true, -0.9, 1.8), M.matte(0xe9e6df, 0.8)); lab.position.y = 0.38; g.add(lab);
+  g.position.set(x, 0, -1.9); sc.add(g); bottles[id] = g;
+});
+// пипетка
+const pip = new THREE.Group();
+pip.add(new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.4, 24), M.glass()));
+const tip = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.35, 24, 1, true), M.glass()); tip.rotation.x = Math.PI; tip.position.y = -0.87; pip.add(tip);
+const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.17, 24, 16), M.matte(0x2f2f2f, 0.6)); bulb.scale.y = 1.5; bulb.position.y = 0.9; pip.add(bulb);
+const pipLq = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.6, 16), M.liquid(0xe7b3c8)); pipLq.position.y = -0.3; pip.add(pipLq);
+pip.position.set(0, 4.6, 0.3); pip.visible = false; sc.add(pip);
+// ағын мен тамшылар
+const stream = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.06, 1, 16), M.liquid(0xdfe7ef)); stream.visible = false; sc.add(stream);
+const drops = [];
+W.shadows(sc);
+
+// белгілер
+const Lf = W.label(() => V(-0.55, 1.1, 0.6), "", -90, -150);
+W.label(V(-2.3, 0.9, 1.4), `<u>NaOH</u>0,1 М<small>сілті</small>`, 30, 110);
+W.label(V(2.3, 0.9, 1.4), `<u>HCl</u>0,1 М<small>қышқыл</small>`, -30, 110);
+W.label(V(2.6, 1.0, -1.9), `<u>Инд.</u>индикаторлар<small>фенолфталеин · метилоранж · лакмус</small>`, -20, -150);
+
+/* ---------- анимация ---------- */
+let anim = null; // {kind, t, dur, from, to}
+let showLvl = 0, showCol = CLEAR.clone(), nLeft = 150, hLeft = 150;
+W.frames.push((dt) => {
+  const target = vol() / 260;
+  showLvl += (target - showLvl) * Math.min(1, dt * 3);
+  fl.userData.setLevel(showLvl);
+  const tc = colorOf(pH()).c;
+  showCol.lerp(tc, Math.min(1, dt * 1.8));
+  fl.userData.mat.color.copy(showCol); fl.userData.mat.emissive.copy(showCol);
+  bN.userData.setLevel(nLeft / 160); bH.userData.setLevel(hLeft / 160);
+  if (anim) {
+    anim.t += dt; const k = anim.t / anim.dur;
+    if (anim.kind === "pour") {
+      const src = anim.src; src.rotation.z = Math.sin(Math.min(1, k) * Math.PI) * (src === bN ? -0.5 : 0.5);
+      stream.visible = k > 0.2 && k < 0.85; stream.position.set(0, 2.4, 0.3); stream.scale.y = 2.4;
+    } else {
+      pip.visible = true; pip.position.y = 4.6 - Math.min(1, k * 3) * 0.6;
+      if (anim.left > 0 && anim.t > anim.next) { anim.left--; anim.next += 0.35; const d = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 12), M.liquid(anim.col)); d.scale.y = 1.4; d.position.set(0, 3.0, 0.3); d.userData.v = 0; sc.add(d); drops.push(d); }
+    }
+    if (k >= 1) { if (anim.kind === "pour") { anim.src.rotation.z = 0; stream.visible = false; } else pip.visible = false; anim.done(); anim = null; }
+  }
+  for (let i = drops.length - 1; i >= 0; i--) { const d = drops[i]; d.userData.v += dt * 9; d.position.y -= d.userData.v * dt; if (d.position.y < fl.userData.top() * 1.4 + 0.05) { sc.remove(d); drops.splice(i, 1); } }
+});
+
+/* ---------- әрекет ---------- */
+let instant = false;
+function act() {
+  if (anim) return;
+  const r = sel, a = amt;
+  if (r.unit === "мл" && vol() + a > 250) { toast("Колба толып кетеді: 250 мл-ден аспа"); return; }
+  if (r.id === "naoh" && a > nLeft) { toast("Стаканда NaOH жеткіліксіз"); return; }
+  if (r.id === "hcl" && a > hLeft) { toast("Стаканда HCl жеткіліксіз"); return; }
+  const before = colorOf(pH()).n, wasInd = S.ind;
+  const apply = () => {
+    if (r.id === "naoh") { S.naoh += a; nLeft -= a; }
+    else if (r.id === "hcl") { S.hcl += a; hLeft -= a; }
+    else if (r.id === "w") S.w += a;
+    else { if (S.ind && S.ind !== r.id) toast("Екі индикаторды араластырма: соңғысы ғана есептеледі"); S.ind = r.id; S.drops += a; }
+    const p = pH(), after = colorOf(p).n;
+    let txt = r.unit === "тамшы" ? `<b>${a} тамшы ${INDN[r.id]}</b> тамыздың.` : `Колбаға <b>${a} мл ${r.f}</b> құйдың.`;
+    if (vol() === 0) txt += " Колбада әлі ерітінді жоқ.";
+    else if (after !== before || (r.unit === "тамшы" && !wasInd)) txt += ` Ерітінді <b>${after}</b> болды.`;
+    else txt += ` Түсі өзгерген жоқ (${after}).`;
+    log(txt);
+    if (r.id === "hcl" && S.naoh > 0) S.pts.push([S.hcl, p]);
+    if (S.ind === "pp" && p > 8.2) S.seenPink = true;
+    if (!S.first && S.ind && vol() > 0 && after !== "түссіз") { S.first = true; addPts(20, "Алғашқы бақылау: индикатор түсін өзгертті"); }
+    if (!S.neut && S.naoh > 0 && S.hcl > 0 && p !== null && p >= 6 && p <= 8) { S.neut = true; addPts(40, "Бейтараптану нүктесіне жеттің: pH ≈ 7"); }
+    ui();
+  };
+  if (instant) { apply(); return; }
+  if (r.unit === "тамшы") { pipLq.material.color.set(r.c); anim = { kind: "drip", t: 0, dur: 0.6 + a * 0.35, left: a, next: 0.4, col: new THREE.Color(r.c), done: apply }; }
+  else { stream.material.color.set(r.c); stream.material.emissive.set(r.c); anim = { kind: "pour", t: 0, dur: 1.4, src: r.id === "hcl" ? bH : r.id === "naoh" ? bN : bN, done: apply }; }
+}
+function log(t) { const d = new Date(); S.log.push([t, d]); renderLog(); }
+function renderLog() {
+  const el = $("log");
+  el.innerHTML = S.log.length ? S.log.map((l, i) => `<div><i>${String(i + 1).padStart(2, "0")}</i><span>${l[0]}</span></div>`).join("") : `<span class="empty">Әзірге жазба жоқ. Алғашқы әрекетті жаса.</span>`;
+  el.scrollTop = 1e6;
+  const d = new Date(); $("clk").textContent = d.toTimeString().slice(0, 5);
+}
+$("go").addEventListener("click", act);
+$("mn").addEventListener("click", () => { amt = Math.max(sel.step, amt - sel.step); ui(); });
+$("pl").addEventListener("click", () => { amt = Math.min(sel.max, amt + sel.step); ui(); });
+$("rs").addEventListener("click", () => { reset(); nLeft = 150; hLeft = 150; pick("naoh"); renderLog(); toast("Тәжірибе қайта басталды"); });
+
+/* ---------- интерфейс ---------- */
+function stepInfo() {
+  if (S.naoh === 0) return [1, "NaOH таңдап, колбаға құй"];
+  if (!S.ind) return [2, "Индикатор таңдап, тамыз"];
+  if (S.hcl === 0) return [3, "HCl таңдап, аз-аздан құй"];
+  return [4, S.neut ? "Түсті бақыла, «Неге?» сұрағына жауап бер" : "HCl қоса бер: pH 7-ге жақында"];
+}
+function ui() {
+  const p = pH(), col = colorOf(p);
+  $("amt").textContent = `${amt} ${sel.unit}`;
+  $("go").textContent = sel.unit === "тамшы" ? "Тамызу" : "Құю";
+  const [n, t] = stepInfo(); $("dkS").textContent = `ҚАДАМ ${n} / 4`; $("dkT").textContent = t;
+  $("ph").textContent = p === null ? "—" : fmt(p, 1);
+  $("phw").textContent = p === null ? "колба бос" : p < 6.5 ? "қышқыл орта" : p > 7.5 ? "сілтілі орта" : "бейтарап орта";
+  $("vol").textContent = vol() + " мл"; $("vh").textContent = S.hcl + " мл";
+  $("ind").textContent = S.ind ? `${INDN[S.ind]} · ${S.drops} т.` : "жоқ";
+  Lf.el.innerHTML = `<u>А</u>Колба · ${vol()} мл<small>${p === null ? "бос" : `pH ${fmt(p, 1)} · ${col.n}`}</small>`;
+  $("eq").innerHTML = `<small>НЕ БОЛЫП ЖАТЫР?</small>${S.naoh && S.hcl ? "NaOH + HCl → NaCl + H₂O" : S.naoh ? "NaOH → Na⁺ + OH⁻" : S.hcl ? "HCl → H⁺ + Cl⁻" : "—"}`;
+  chart();
+}
+function chart() {
+  const X = (v) => 8 + v / 150 * 284, Y = (p) => 122 - p / 14 * 114;
+  let g = "";
+  [0, 7, 14].forEach(p => g += `<line x1="8" x2="292" y1="${Y(p)}" y2="${Y(p)}" stroke="rgba(236,233,227,${p === 7 ? .22 : .1})" ${p === 7 ? 'stroke-dasharray="3 3"' : ""}/><text x="294" y="${Y(p) + 3}" font-size="9" fill="#8a8b88" font-family="IBM Plex Mono">${p}</text>`);
+  if (S.naoh > 0) { // теориялық қисық
+    let d = ""; for (let v = 0; v <= 150; v += 1) { const vt = S.naoh + v + S.w, x = (S.naoh - v) * 0.1 / vt; const p = Math.abs(x) < 1e-7 ? 7 : x > 0 ? 14 + Math.log10(x) : -Math.log10(-x); d += (v ? "L" : "M") + X(v).toFixed(1) + " " + Y(Math.max(0, Math.min(14, p))).toFixed(1); }
+    g += `<path d="${d}" fill="none" stroke="rgba(236,233,227,.25)" stroke-width="1"/>`;
+    const eqv = S.naoh; g += `<line x1="${X(eqv)}" x2="${X(eqv)}" y1="6" y2="122" stroke="rgba(212,162,76,.35)" stroke-dasharray="2 3"/><text x="${X(eqv) + 3}" y="14" font-size="9" fill="#d4a24c" font-family="IBM Plex Mono">эквивалент</text>`;
+  }
+  const pts = [[0, S.naoh ? pH0() : null], ...S.pts].filter(q => q[1] !== null);
+  if (pts.length > 1) g += `<polyline points="${pts.map(q => X(q[0]) + "," + Y(q[1])).join(" ")}" fill="none" stroke="#c07f8c" stroke-width="1.6"/>`;
+  pts.forEach(q => g += `<circle cx="${X(q[0])}" cy="${Y(q[1])}" r="2.6" fill="#121416" stroke="#ece9e3" stroke-width="1.2"/>`);
+  if (!S.naoh) g += `<text x="150" y="70" text-anchor="middle" font-size="10" fill="#6f716f" font-family="IBM Plex Mono">NaOH құйғаннан кейін басталады</text>`;
+  $("ch").innerHTML = g;
+}
+function pH0() { const v = S.naoh + S.w; const x = S.naoh * 0.1 / v; return 14 + Math.log10(x); }
+quiz($("qz"), () => addPts(20, "«Неге?» сұрағына дұрыс жауап"));
+pick("naoh"); renderLog();
+// ?demo=1 · тәжірибені автоматты көрсету (мұғалімге)
+if (/snap/.test(location.search)) { // суретке түсіру үшін: күйді бірден қою
+  instant = true; [["naoh", 50], ["pp", 3], ["hcl", 20], ["hcl", 20]].forEach(q => { pick(q[0]); amt = q[1]; act(); }); instant = false;
+  showLvl = vol() / 260; showCol.copy(colorOf(pH()).c);
+} else if (/demo/.test(location.search)) {
+  const seq = [["naoh", 50], ["pp", 3], ["hcl", 20], ["hcl", 20], ["hcl", 5], ["hcl", 5]]; let i = 0;
+  const nx = () => { if (i >= seq.length) return; if (anim) { setTimeout(nx, 200); return; } pick(seq[i][0]); amt = seq[i][1]; ui(); act(); i++; setTimeout(nx, 300); };
+  setTimeout(nx, 500);
+}
+</script>
+</body>
+</html>
