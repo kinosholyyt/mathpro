@@ -156,10 +156,10 @@ const RX = {
     steps: [
       { t: "Ыдысқа су құй", how: "«Су» таңдап, 200 мл құй.", why: "Натрий сумен әрекеттеседі. Су көп болса, бөлінген жылу тарап үлгереді.", ok: (c) => c.water >= 1 },
       { t: "Фенолфталеин тамыз", how: "«Фенолфталеин» таңдап, 3 тамшы тамыз. Су әзірге түссіз қалады.", why: "Бұл индикатор: реакцияда сілті пайда болса, су таңқурай түсіне боялады.", ok: (c) => c.pp > 0, opt: true },
-      { t: "Натрийді пинцетпен ал", how: "«Натрий» таңдап, «Пинцетпен алу» бас.", why: "Натрий керосин астында сақталады, өйткені ауадағы ылғалмен де әрекеттеседі. Қолмен ұстауға болмайды.", ok: (c) => c.prep >= 1 || c.runs >= 1 },
-      { t: "Сүзгі қағазбен кептір", how: "«Кептіру» бас: кесек сүзгі қағазға қойылып, керосині сіңіріледі.", why: "Керосин қалса, натрий суға дұрыс тимейді және керосин тұтануы мүмкін.", ok: (c) => c.prep >= 2 || c.runs >= 1 },
-      { t: "Кішкене кесек кесіп ал", how: "Мөлшерін 0,2 г (бұршақтың жартысындай) қойып, «Кесу» бас.", why: "Кесек үлкен болған сайын жылу көп бөлінеді. 0,5 г-нан бастап сутегі тұтанады, 1 г-нан ауыры жарылады.", ok: (c) => c.prep >= 3 || c.runs >= 1 },
-      { t: "Суға таста да, бақыла", how: "«Суға тастау» бас.", why: "Натрий судан жеңіл, сондықтан бетінде қалқиды. Бөлінген сутегі оны итеріп, су бетінде жүгіртеді.", ok: (c) => c.reacted },
+      { t: "Натрийді пинцетпен ал", how: "Үстелдегі пинцетті немесе натрий банкасын бас: кесек алынып, сүзгі қағазға қойылады. Не болмаса төмендегі «Пинцетпен алу» батырмасын бас.", why: "Натрий керосин астында сақталады, өйткені ауадағы ылғалмен де әрекеттеседі. Қолмен ұстауға болмайды.", ok: (c) => c.prep >= 1 || c.runs >= 1 },
+      { t: "Сүзгі қағазбен кептір", how: "Қағаздағы кесектің өзін бас немесе «Кептіру» батырмасын бас: керосині қағазға сіңіріледі.", why: "Керосин қалса, натрий суға дұрыс тимейді және керосин тұтануы мүмкін.", ok: (c) => c.prep >= 2 || c.runs >= 1 },
+      { t: "Кішкене кесек кесіп ал", how: "Төменде мөлшерін 0,2 г (бұршақтың жартысындай) қой. Сосын кесекті бас немесе тақтайшаға сүйреп апар, не «Кесу» батырмасын бас.", why: "Кесек үлкен болған сайын жылу көп бөлінеді. 0,5 г-нан бастап сутегі тұтанады, 1 г-нан ауыры жарылады.", ok: (c) => c.prep >= 3 || c.runs >= 1 },
+      { t: "Суға таста да, бақыла", how: "Кесекті суы бар ыдысқа сүйреп апар немесе кесекті бас, не «Суға тастау» батырмасын бас.", why: "Натрий судан жеңіл, сондықтан бетінде қалқиды. Бөлінген сутегі оны итеріп, су бетінде жүгіртеді.", ok: (c) => c.reacted },
       { t: "Зертте: үлкенірек кесек", how: "Натрийді қайта алып, 0,6 г, сосын 1,2 г кесіп көр.", why: "Кесектің массасы реакцияның қаншалық қарқынды жүретінін өзгертеді.", ok: (c) => c.big },
     ],
     home: `<summary>Үйде қайталауға бола ма</summary><p><b>Болмайды.</b> Натрий дүкенде сатылмайды, ол қауіпті зат: сумен әрекеттескенде жарылуы мүмкін, ал түзілген сілті теріні күйдіреді. Бұл тәжірибені тек мұғалім зертханада көрсетеді. Сондықтан оны осы виртуалды зертханада қауіпсіз зерттеуге болады.</p>`,
@@ -238,7 +238,8 @@ const tools = new THREE.Group(); sc.add(tools);
 { const paper = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.012, 0.8), M.matte(0xf2f0ea, 0.95)); paper.position.set(2.55, 0.006, 0.9); tools.add(paper);
   const board = new THREE.Mesh(new RoundedBoxGeometry(1.1, 0.06, 0.8, 2, 0.02), M.matte(0x8a6a4a, 0.8)); board.position.set(3.1, 0.03, 2.0); tools.add(board);
   const kn = new THREE.Group(); const bl = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.008, 0.09), M.chrome()); bl.position.x = 0.2; kn.add(bl); const hn = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.04, 0.07), M.matte(0x2b2b2b, 0.6)); hn.position.x = -0.22; kn.add(hn); kn.position.set(3.15, 0.075, 2.25); kn.rotation.y = 0.2; tools.add(kn);
-  const tw = new THREE.Group(); [-1, 1].forEach(s => { const a = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.012, 0.03), M.chrome()); a.position.set(0, 0.02, s * 0.03); a.rotation.y = s * 0.05; tw.add(a); }); tw.position.set(1.75, 0.01, 2.35); tw.rotation.y = -0.3; tools.add(tw);
+  const tw = new THREE.Group(); [-1, 1].forEach(s => { const a = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.012, 0.03), M.chrome()); a.position.set(0, 0.02, s * 0.03); a.rotation.y = s * 0.05; tw.add(a); }); tw.position.set(1.75, 0.01, 2.35); tw.rotation.y = -0.3; tw.add(new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.16, 0.26), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })));   // жіңішке пинцетті басу оңай болуы үшін көрінбейтін аймақ
+  tw.userData.sub = "na"; tw.userData.home = tw.position.clone(); tools.add(tw); tools.userData.tw = tw;
   W.shadows(tools); }
 const naPiece = new THREE.Mesh(new RoundedBoxGeometry(1, 0.8, 0.9, 2, 0.12), new THREE.MeshStandardMaterial({ color: 0x8f9298, metalness: 0.6, roughness: 0.6 })); naPiece.visible = false; naPiece.castShadow = true; sc.add(naPiece);
 
@@ -399,7 +400,8 @@ function naRelease() {
   else if (near(BOARD, 0.7, 0.55)) {
     if (C.prep === 1) { toast("Алдымен кесекті сүзгі қағазда кептір"); moveTo(naPiece, PAPER, 0.5); }
     else { if (C.prep === 2) naCut(amt); moveTo(naPiece, BOARD, 0.2, null, 0); }
-  } else moveTo(naPiece, V(p.x, 0.08, p.z), 0.2, null, 0);
+  } else if (Math.hypot(p.x - OBJ.na.position.x, p.z - OBJ.na.position.z) < 0.9 || p.z < -0.3) moveTo(naPiece, PAPER, 0.5);   // банканың артында көрінбей қалмасын
+  else moveTo(naPiece, V(p.x, 0.08, p.z), 0.2, null, 0);
   ui();
 }
 let mv = null;
@@ -414,14 +416,14 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const RATE = { vinegar: 45, water: 70, h2o2: 30, soap: 8, ki: 6, soda: 6 }; // секундына мл немесе г
 function pRay(x, y) { const r = W.canvas.getBoundingClientRect(); mp.set((x - r.left) / r.width * 2 - 1, -((y - r.top) / r.height) * 2 + 1); ray.setFromCamera(mp, W.cam); return ray; }
 function hitObj(x, y) {
-  pRay(x, y); const list = RX[cur].subs.map(id => OBJ[id]); if (naPiece.visible && !C.piece) list.push(naPiece);
+  pRay(x, y); const list = RX[cur].subs.map(id => OBJ[id]); if (cur === "na") list.push(tools.userData.tw); if (naPiece.visible && !C.piece) list.push(naPiece);
   const h = ray.intersectObjects(list, true)[0]; if (!h) return null;
   let o = h.object; while (o && o !== naPiece && !o.userData.sub) o = o.parent; return o;
 }
 function endPour(d) { if (d.poured > 0) { logPour(d.id, d.poured, d.pre); d.poured = 0; d.pre = null; } stream.visible = false; }
 function dragStep(dt) {
   const d = drag, o = d.o, m = mouth(), R = pRay(lastP.x, lastP.y).ray;
-  if (d.na) { plane.set(V(0, 1, 0), -0.1); if (R.intersectPlane(plane, hitP)) o.position.set(clamp(hitP.x, -5.5, 5.5), 0.5, clamp(hitP.z, -2.4, 2.8)); return; }   // курсор үстелдегі нүктені көрсетеді, кесек соның үстінде қалқиды
+  if (d.na) { plane.set(V(0, 1, 0), -0.1); if (R.intersectPlane(plane, hitP)) o.position.set(clamp(hitP.x, -5.5, 5.5), 0.5, clamp(hitP.z, -2.4, 2.8)); const tw = tools.userData.tw; tw.position.set(o.position.x + 0.36, o.position.y - 0.02, o.position.z + 0.04); tw.rotation.set(0, 0, 0.5); return; }   // курсор үстелдегі нүктені көрсетеді, кесек соның үстінде қалқиды
   o.position.z += (m.z - o.position.z) * Math.min(1, dt * 8);   // ыдыспен бір тереңдікке келеді
   plane.set(V(0, 0, 1), -o.position.z);
   if (R.intersectPlane(plane, hitP)) { d.rx = clamp(hitP.x - d.off.x, -5.8, 5.8); d.ry = clamp(hitP.y - d.off.y, 0, 6.5); }
@@ -462,13 +464,13 @@ W.canvas.addEventListener("pointerdown", e => {
   if (anim || mv || drag || e.button > 0) return;
   const o = hitObj(e.clientX, e.clientY); if (!o) return;
   lastP.x = e.clientX; lastP.y = e.clientY;
-  if (o === naPiece) drag = { o, na: true };
+  if (o === naPiece) drag = { o, na: true, x0: e.clientX, y0: e.clientY };
   else {
     const id = o.userData.sub; pick(id);
     if (id === "na") {
       if (C.piece) { toast("Алдыңғы кесек әлі әрекеттесіп жатыр"); return; }
-      if (C.prep > 0) { toast("Кесек алынып қойған: соның өзін сүйре"); return; }
-      naTake(); ui(); drag = { o: naPiece, na: true };
+      if (C.prep > 0) { toast("Кесек алынып қойған: енді кесектің өзін бас немесе сүйре"); return; }
+      naTake(); ui(); drag = { o: naPiece, na: true, took: true, x0: e.clientX, y0: e.clientY };
     } else {
       plane.set(V(0, 0, 1), -o.position.z); pRay(e.clientX, e.clientY).ray.intersectPlane(plane, hitP);
       delete o.userData.settle;
@@ -481,7 +483,11 @@ W.canvas.addEventListener("pointerdown", e => {
 window.addEventListener("pointermove", e => { lastP.x = e.clientX; lastP.y = e.clientY; if (!drag && e.target === W.canvas && !e.buttons) W.canvas.style.cursor = hitObj(e.clientX, e.clientY) ? "grab" : ""; });
 function endDrag() {
   if (!drag) return; const d = drag, o = d.o, m = mouth(); drag = null; W.ctl.enabled = true; W.canvas.style.cursor = "";
-  if (d.na) { naRelease(); return; }
+  if (d.na) { const tw = tools.userData.tw; tw.position.copy(tw.userData.home); tw.rotation.set(0, -0.3, 0);
+    const click = Math.hypot(lastP.x - d.x0, lastP.y - d.y0) < 8;
+    if (click && d.took) { moveTo(naPiece, PAPER, 0.7); ui(); }          // банканы немесе пинцетті жай басса: кесек қағазға қойылады
+    else if (click) naAction();                                        // кесектің өзін басса: келесі қадам
+    else naRelease(); return; }
   endPour(d);
   const vr = cur === "volcano" ? 1.35 : cur === "elephant" ? 0.95 : 1.95; let x = o.position.x;
   if (Math.abs(x - m.x) < vr + 0.5) x = m.x + (x < m.x ? -1 : 1) * (vr + 0.5);   // ыдыстың үстіне қоймайды
