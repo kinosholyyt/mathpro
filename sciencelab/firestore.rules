@@ -1,11 +1,11 @@
 rules_version = '2';
 
-// MathPro дерекқорының ережелері.
+// Дерекқордың қорғаныс ережелері.
 // Firebase консолі → Firestore Database → Rules бөліміне осыны қойып, Publish бас.
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Әкімші — тек admin@mathpro.app аккаунты
+    // Әкімші аккаунты
     function akimshiMa() {
       return request.auth != null && request.auth.token.email == "admin@mathpro.app";
     }

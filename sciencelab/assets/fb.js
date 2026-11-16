@@ -1,9 +1,8 @@
 // =====================================================
-// ScienceLab · Firebase (MathPro жобасымен ортақ)
-// Аккаунттар MathPro-мен ортақ: бір логинмен екі сайтқа да кіруге болады.
+// ScienceLab · Firebase: аккаунт, нәтижені сақтау, тәжірибені жабу
 // ScienceLab деректері бөлек "sciencelab" жинағында сақталады,
-// MathPro-ның "oqushylar" жинағына тиіспейді.
-// Әкімші: admin@mathpro.app (логин: admin)
+// Басқа жинақтарға жазбайды.
+// Әкімші: логин admin
 // =====================================================
 (function () {
   const cfg = {
@@ -34,7 +33,7 @@
         const d = await ref().get();
         if (d.exists) S.data = Object.assign({ upai: 0, jetistik: {}, suraq: {}, tajiribe: {}, kirgen: {} }, d.data());
         else {
-          // MathPro-дан келген оқушы: атын сол жақтан аламыз
+          // Бұрыннан бар аккаунт: атын бар профильден аламыз
           const login = u.email.split("@")[0]; let aty = S.pendingName || login;
           if (!S.pendingName) { try { const m = await db.collection("oqushylar").doc(u.uid).get(); if (m.exists && m.data().aty) aty = m.data().aty; } catch (e) { } }
           S.data = S.bos(aty, login); await ref().set(S.data);

@@ -61,7 +61,7 @@ table.st td.n{font-family:var(--mono)}
   <div class="gate hide" id="gate">
     <div class="kick">Әкімші панелі</div>
     <h1>Мұғалімге кіру</h1>
-    <p class="mut" style="margin-bottom:24px">MathPro-ның әкімші аккаунтымен кір (логин: <span class="mono">admin</span>).</p>
+    <p class="mut" style="margin-bottom:24px">Әкімші аккаунтымен кір (логин: <span class="mono">admin</span>).</p>
     <div class="f"><label>Логин</label><input id="gL" value="admin" autocomplete="username"></div>
     <div class="f"><label>Құпия сөз</label><input id="gP" type="password" autocomplete="current-password"></div>
     <p class="err" id="gE"></p>
@@ -206,7 +206,7 @@ function detail(uid) {
     <div class="sec" style="margin-top:22px"><h4>Жетістіктер <span>${j.length}</span></h4><div class="log" style="max-height:none">${j.length ? j.map(([k, v]) => `<div><i>+${v.upai}</i><span>${esc(v.aty)} <span style="color:var(--dim)">· ${ago(v.t)}</span></span></div>`).join("") : `<span class="empty">Әзірге жоқ</span>`}</div></div></div>`;
   $("dx").onclick = () => $("det").innerHTML = "";
   $("dd").onclick = () => {
-    if (!confirm(`«${o.aty}» оқушысының ScienceLab-тағы барлық нәтижесі өшеді. MathPro-дағы деректері мен аккаунты қалады. Жалғастырайық па?`)) return;
+    if (!confirm(`«${o.aty}» оқушысының ScienceLab-тағы барлық нәтижесі өшеді. Аккаунты сақталады. Жалғастырайық па?`)) return;
     Y.db.collection("sciencelab").doc(uid).delete().then(() => { $("det").innerHTML = ""; load(); }).catch(e => alert("Өшірілмеді: " + (e.code || e.message)));
   };
   $("det").scrollIntoView({ behavior: "smooth", block: "start" });
